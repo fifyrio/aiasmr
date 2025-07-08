@@ -125,3 +125,4 @@ GOOGLE_CLIENT_SECRET=你的客户端密钥
 1. 使用Google账号一键登录
 2. 自动创建用户档案
 3. 无缝访问AI ASMR生成功能
+
