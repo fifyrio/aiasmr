@@ -9,7 +9,9 @@
       "Bash(npm uninstall:*)",
       "Bash(npm run build:*)",
       "Bash(vercel:*)",
-      "Bash(npx vercel --prod)"
+      "Bash(npx vercel --prod)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
