@@ -11,7 +11,8 @@
       "Bash(vercel:*)",
       "Bash(npx vercel --prod)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   }

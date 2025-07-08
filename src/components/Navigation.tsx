@@ -34,6 +34,14 @@ const Navigation = () => {
               >
                 Create
               </Link>
+              {user && (
+                <Link 
+                  href="/my-videos" 
+                  className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  My Videos
+                </Link>
+              )}
               <Link 
                 href="/explore" 
                 className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -123,6 +131,11 @@ const Navigation = () => {
             <Link href="/create" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
               Create
             </Link>
+            {user && (
+              <Link href="/my-videos" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
+                My Videos
+              </Link>
+            )}
             <Link href="/explore" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
               Explore
             </Link>
