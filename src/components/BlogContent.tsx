@@ -49,6 +49,23 @@ const BlogContent = () => {
           const mockPosts: BlogPost[] = [
           {
             id: '1',
+            title: 'What is ASMR Video? The Complete Guide to Relaxing Content',
+            slug: 'what-is-asmr-video-complete-guide',
+            excerpt: 'Discover the fascinating world of ASMR videos - from understanding what they are to creating your own AI-generated content. Learn about triggers, benefits, and proven templates.',
+            content: '',
+            thumbnail_url: '/api/placeholder/600/400',
+            published_at: '2024-01-20T10:00:00Z',
+            tag: 'Guide',
+            status: 'published',
+            author: {
+              name: 'AI ASMR Team',
+              avatar: '/api/placeholder/40/40'
+            },
+            read_time: '8 min read',
+            featured: true
+          },
+          {
+            id: '2',
             title: 'How to Create ASMR Videos with AI',
             slug: 'how-to-create-asmr-videos-with-ai',
             excerpt: 'Generate stunning ASMR videos from text prompts using cutting-edge AI technology. Learn the complete process step by step.',
@@ -62,10 +79,10 @@ const BlogContent = () => {
               avatar: '/api/placeholder/40/40'
             },
             read_time: '5 min read',
-            featured: true
+            featured: false
           },
           {
-            id: '2',
+            id: '3',
             title: 'Best ASMR Triggers for Relaxation',
             slug: 'best-asmr-triggers-for-relaxation',
             excerpt: 'Discover the most effective ASMR triggers that help people relax and fall asleep. From soap cutting to water sounds.',
@@ -81,7 +98,7 @@ const BlogContent = () => {
             read_time: '7 min read'
           },
           {
-            id: '3',
+            id: '4',
             title: 'AI Video Generation Technology Explained',
             slug: 'ai-video-generation-technology-explained',
             excerpt: 'Understanding how AI transforms text descriptions into realistic ASMR videos. The technology behind our platform.',
@@ -97,7 +114,7 @@ const BlogContent = () => {
             read_time: '10 min read'
           },
           {
-            id: '4',
+            id: '5',
             title: 'Creating Commercial ASMR Content',
             slug: 'creating-commercial-asmr-content',
             excerpt: 'Learn how to create professional ASMR content for commercial use. Tips, tricks, and best practices.',
@@ -113,7 +130,7 @@ const BlogContent = () => {
             read_time: '8 min read'
           },
           {
-            id: '5',
+            id: '6',
             title: 'ASMR Video Optimization Tips',
             slug: 'asmr-video-optimization-tips',
             excerpt: 'Optimize your ASMR videos for better engagement and reach. Technical tips for creators.',
@@ -129,7 +146,7 @@ const BlogContent = () => {
             read_time: '6 min read'
           },
           {
-            id: '6',
+            id: '7',
             title: 'Future of AI in ASMR Creation',
             slug: 'future-of-ai-in-asmr-creation',
             excerpt: 'Explore what the future holds for AI-generated ASMR content. Emerging trends and possibilities.',

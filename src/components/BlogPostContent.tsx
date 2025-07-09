@@ -62,6 +62,13 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({ post }) => {
 
   const relatedPosts = [
     {
+      title: 'What is ASMR Video? The Complete Guide to Relaxing Content',
+      slug: 'what-is-asmr-video-complete-guide',
+      excerpt: 'Discover the fascinating world of ASMR videos - from understanding what they are to creating your own AI-generated content.',
+      tag: 'Guide',
+      read_time: '8 min read'
+    },
+    {
       title: 'Best ASMR Triggers for Relaxation',
       slug: 'best-asmr-triggers-for-relaxation',
       excerpt: 'Discover the most effective ASMR triggers that help people relax and fall asleep.',
@@ -74,13 +81,6 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({ post }) => {
       excerpt: 'Understanding how AI transforms text descriptions into realistic ASMR videos.',
       tag: 'Technology',
       read_time: '10 min read'
-    },
-    {
-      title: 'ASMR Video Optimization Tips',
-      slug: 'asmr-video-optimization-tips',
-      excerpt: 'Optimize your ASMR videos for better engagement and reach.',
-      tag: 'Tips',
-      read_time: '6 min read'
     }
   ]
 
