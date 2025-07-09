@@ -60,29 +60,8 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({ post }) => {
     return colors[tag] || 'bg-gray-100 text-gray-800'
   }
 
-  const relatedPosts = [
-    {
-      title: 'What is ASMR Video? The Complete Guide to Relaxing Content',
-      slug: 'what-is-asmr-video-complete-guide',
-      excerpt: 'Discover the fascinating world of ASMR videos - from understanding what they are to creating your own AI-generated content.',
-      tag: 'Guide',
-      read_time: '8 min read'
-    },
-    {
-      title: 'Best ASMR Triggers for Relaxation',
-      slug: 'best-asmr-triggers-for-relaxation',
-      excerpt: 'Discover the most effective ASMR triggers that help people relax and fall asleep.',
-      tag: 'Guide',
-      read_time: '7 min read'
-    },
-    {
-      title: 'AI Video Generation Technology Explained',
-      slug: 'ai-video-generation-technology-explained',
-      excerpt: 'Understanding how AI transforms text descriptions into realistic ASMR videos.',
-      tag: 'Technology',
-      read_time: '10 min read'
-    }
-  ]
+  // Since we only have one blog post, we'll show suggested next steps instead
+  const relatedPosts = []
 
   return (
     <div className="min-h-screen pt-16">
@@ -216,64 +195,111 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({ post }) => {
         </div>
       </section>
 
-      {/* Related Posts */}
+      {/* Next Steps Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12" data-aos="fade-up">
             <h2 className="text-3xl font-bold gradient-text mb-4">
-              Related Articles
+              What&apos;s Next?
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Continue learning with these related articles and guides.
+              Now that you understand ASMR videos, explore our platform and start creating your own content.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {relatedPosts.map((relatedPost, index) => (
-              <article
-                key={relatedPost.slug}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
-                <div className="h-48 bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
-                  <div className="text-white text-center">
-                    <i className="ri-article-line text-4xl mb-2 opacity-80"></i>
-                    <p className="text-sm opacity-80">Related Article</p>
-                  </div>
+            <article
+              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              data-aos="fade-up"
+              data-aos-delay="0"
+            >
+              <div className="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                <div className="text-white text-center">
+                  <i className="ri-magic-line text-4xl mb-2 opacity-80"></i>
+                  <p className="text-sm opacity-80">Start Creating</p>
                 </div>
+              </div>
+              
+              <div className="p-6">
+                <h3 className="text-lg font-semibold mb-3 text-gray-900">
+                  Create Your First ASMR Video
+                </h3>
                 
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getTagColor(relatedPost.tag)}`}>
-                      {relatedPost.tag}
-                    </span>
-                    {relatedPost.read_time && (
-                      <span className="text-xs text-gray-500 flex items-center">
-                        <i className="ri-time-line mr-1"></i>
-                        {relatedPost.read_time}
-                      </span>
-                    )}
-                  </div>
-                  
-                  <h3 className="text-lg font-semibold mb-3 text-gray-900 line-clamp-2">
-                    {relatedPost.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 mb-4 line-clamp-3">
-                    {relatedPost.excerpt}
-                  </p>
-                  
-                  <Link
-                    href={`/blog/${relatedPost.slug}`}
-                    className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium text-sm"
-                  >
-                    Read article
-                    <i className="ri-arrow-right-line ml-1"></i>
-                  </Link>
+                <p className="text-gray-600 mb-4">
+                  Use our AI platform to generate your first ASMR video with just a text prompt. No equipment needed!
+                </p>
+                
+                <Link
+                  href="/create"
+                  className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium text-sm"
+                >
+                  Start creating
+                  <i className="ri-arrow-right-line ml-1"></i>
+                </Link>
+              </div>
+            </article>
+
+            <article
+              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div className="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                <div className="text-white text-center">
+                  <i className="ri-compass-line text-4xl mb-2 opacity-80"></i>
+                  <p className="text-sm opacity-80">Explore Gallery</p>
                 </div>
-              </article>
-            ))}
+              </div>
+              
+              <div className="p-6">
+                <h3 className="text-lg font-semibold mb-3 text-gray-900">
+                  Explore AI-Generated Videos
+                </h3>
+                
+                <p className="text-gray-600 mb-4">
+                  Browse our gallery of AI-generated ASMR videos for inspiration and to see what&apos;s possible.
+                </p>
+                
+                <Link
+                  href="/explore"
+                  className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium text-sm"
+                >
+                  Explore gallery
+                  <i className="ri-arrow-right-line ml-1"></i>
+                </Link>
+              </div>
+            </article>
+
+            <article
+              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div className="h-48 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                <div className="text-white text-center">
+                  <i className="ri-price-tag-3-line text-4xl mb-2 opacity-80"></i>
+                  <p className="text-sm opacity-80">View Plans</p>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <h3 className="text-lg font-semibold mb-3 text-gray-900">
+                  Choose Your Plan
+                </h3>
+                
+                <p className="text-gray-600 mb-4">
+                  Select from our flexible pricing plans to get more credits and unlock premium features.
+                </p>
+                
+                <Link
+                  href="/pricing"
+                  className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium text-sm"
+                >
+                  View pricing
+                  <i className="ri-arrow-right-line ml-1"></i>
+                </Link>
+              </div>
+            </article>
           </div>
         </div>
       </section>
