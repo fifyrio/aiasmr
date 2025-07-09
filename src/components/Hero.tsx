@@ -3,7 +3,28 @@
 import React, { useEffect } from 'react'
 import AOS from 'aos'
 
-const Hero = () => {
+interface SiteStats {
+  totalVideos: number
+  totalUsers: number
+  totalViews: number
+  error: string | null
+}
+
+interface HeroProps {
+  siteStats?: SiteStats
+}
+
+// 本地格式化数字函数
+function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M'
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K'
+  }
+  return num.toString()
+}
+
+const Hero: React.FC<HeroProps> = ({ siteStats }) => {
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -67,6 +88,32 @@ const Hero = () => {
             <p className="text-white/80">Get your ASMR videos in 1-2 minutes with our optimized pipeline</p>
           </div>
         </div>
+        
+        {/* 动态统计数据 */}
+        {siteStats && !siteStats.error && (
+          <div data-aos="fade-up" data-aos-delay="1000" className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-300 mb-2">
+                {formatNumber(siteStats.totalVideos)}+
+              </div>
+              <p className="text-white/80 text-sm">Videos Generated</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-300 mb-2">
+                {formatNumber(siteStats.totalUsers)}+
+              </div>
+              <p className="text-white/80 text-sm">Active Creators</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-4xl font-bold text-yellow-300 mb-2">
+                {formatNumber(siteStats.totalViews)}+
+              </div>
+              <p className="text-white/80 text-sm">Total Views</p>
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/70 animate-bounce">

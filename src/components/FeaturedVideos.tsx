@@ -6,7 +6,41 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import FsLightbox from 'fslightbox-react'
 import AOS from 'aos'
 
-const FeaturedVideos = () => {
+// 视频类型定义（本地副本）
+interface FeaturedVideo {
+  id: string
+  title: string
+  description: string
+  thumbnail_url: string
+  preview_url: string
+  category: string
+  duration: string
+  views_count: number
+  likes_count: number
+  is_featured: boolean
+  is_public: boolean
+  created_at: string
+  author?: {
+    full_name: string
+    avatar_url?: string
+  }
+}
+
+// 本地格式化数字函数
+function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M'
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'K'
+  }
+  return num.toString()
+}
+
+interface FeaturedVideosProps {
+  videos: FeaturedVideo[]
+}
+
+const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
   const [lightboxController, setLightboxController] = useState({
     toggler: false,
     slide: 1
@@ -20,74 +54,19 @@ const FeaturedVideos = () => {
     })
   }, [])
 
-  const featuredVideos = [
-    {
-      id: 1,
-      title: 'Soap Cutting ASMR',
-      description: 'Satisfying soap cutting sounds with colorful soaps',
-      thumbnail: '/api/placeholder/400/300',
-      video: '/api/placeholder/video/1',
-      category: 'Cutting',
-      duration: '3:42',
-      views: '12.5K',
-      likes: '1.2K'
-    },
-    {
-      id: 2,
-      title: 'Water Droplets',
-      description: 'Relaxing water droplet sounds on different surfaces',
-      thumbnail: '/api/placeholder/400/300',
-      video: '/api/placeholder/video/2',
-      category: 'Water',
-      duration: '5:18',
-      views: '8.9K',
-      likes: '892'
-    },
-    {
-      id: 3,
-      title: 'Honey Dripping',
-      description: 'Sweet honey dripping ASMR with golden visuals',
-      thumbnail: '/api/placeholder/400/300',
-      video: '/api/placeholder/video/3',
-      category: 'Object',
-      duration: '4:25',
-      views: '15.2K',
-      likes: '1.8K'
-    },
-    {
-      id: 4,
-      title: 'Page Turning',
-      description: 'Gentle page turning sounds from vintage books',
-      thumbnail: '/api/placeholder/400/300',
-      video: '/api/placeholder/video/4',
-      category: 'Pages',
-      duration: '6:12',
-      views: '7.3K',
-      likes: '654'
-    },
-    {
-      id: 5,
-      title: 'Ice Crushing',
-      description: 'Satisfying ice crushing and breaking sounds',
-      thumbnail: '/api/placeholder/400/300',
-      video: '/api/placeholder/video/5',
-      category: 'Ice',
-      duration: '2:58',
-      views: '11.7K',
-      likes: '1.1K'
-    },
-    {
-      id: 6,
-      title: 'Sponge Squeezing',
-      description: 'Colorful sponge squeezing with water sounds',
-      thumbnail: '/api/placeholder/400/300',
-      video: '/api/placeholder/video/6',
-      category: 'Sponge',
-      duration: '4:33',
-      views: '9.8K',
-      likes: '967'
-    }
-  ]
+  // 转换数据格式以兼容现有UI
+  const displayVideos = videos.map((video, index) => ({
+    id: video.id,
+    title: video.title,
+    description: video.description,
+    thumbnail: video.thumbnail_url,
+    video: video.preview_url,
+    category: video.category,
+    duration: video.duration,
+    views: formatNumber(video.views_count),
+    likes: formatNumber(video.likes_count),
+    author: video.author
+  }))
 
   const openLightbox = (index: number) => {
     setLightboxController({
@@ -96,7 +75,7 @@ const FeaturedVideos = () => {
     })
   }
 
-  const videoSources = featuredVideos.map(video => video.video)
+  const videoSources = displayVideos.map(video => video.video)
 
   return (
     <section className="py-20 bg-gray-50">
@@ -134,7 +113,7 @@ const FeaturedVideos = () => {
             }}
             className="featured-videos-swiper"
           >
-            {featuredVideos.map((video, index) => (
+            {displayVideos.map((video, index) => (
               <SwiperSlide key={video.id}>
                 <div className="video-card group cursor-pointer" onClick={() => openLightbox(index)}>
                   <div className="relative overflow-hidden">
