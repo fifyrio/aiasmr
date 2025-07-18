@@ -156,7 +156,10 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   if (!post) {
     return {
       title: 'Post Not Found - AIASMR Video',
-      description: 'The requested blog post could not be found.'
+      description: 'The requested blog post could not be found.',
+      alternates: {
+        canonical: 'https://aiasmr.so/blog',
+      },
     }
   }
 
@@ -164,10 +167,14 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     title: post.meta_title || `${post.title} - AIASMR Video`,
     description: post.meta_description || post.excerpt,
     keywords: `ASMR, AI video generation, ${post.tag}, tutorial, guide`,
+    alternates: {
+      canonical: `https://aiasmr.so/blog/${params.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: 'article',
+      url: `https://aiasmr.so/blog/${params.slug}`,
       publishedTime: post.published_at,
       authors: [post.author.name],
       images: [

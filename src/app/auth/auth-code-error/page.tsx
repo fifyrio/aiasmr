@@ -38,4 +38,7 @@ export default function AuthCodeErrorPage() {
 export const metadata = {
   title: 'Authentication Error - AIASMR Video',
   description: 'An error occurred during authentication. Please try again.',
+  alternates: {
+    canonical: 'https://aiasmr.so/auth/auth-code-error',
+  },
 }

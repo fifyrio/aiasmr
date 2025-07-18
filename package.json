@@ -6,15 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:veo2": "node scripts/test-veo2.js"
   },
   "dependencies": {
+    "@google-cloud/aiplatform": "^4.2.0",
+    "@google-cloud/storage": "^7.16.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.3",
     "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.2",
     "aos": "2.3.4",
+    "dotenv": "^17.1.0",
     "fslightbox-react": "^1.7.6",
+    "googleapis": "^152.0.0",
     "next": "14.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",

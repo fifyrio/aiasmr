@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AOS from 'aos';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const triggers = [
   { id: 'soap', name: 'Soap', icon: '🧼', color: 'from-blue-400 to-cyan-400' },
@@ -17,12 +18,14 @@ const triggers = [
 ];
 
 export default function CreatePage() {
+  const { user } = useAuth();
   const [prompt, setPrompt] = useState('');
   const [selectedTriggers, setSelectedTriggers] = useState(['soap']);
   const [isGenerating, setIsGenerating] = useState(false);
   const [credits, setCredits] = useState(20);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
 
   const maxChars = 500;
 
@@ -35,21 +38,36 @@ export default function CreatePage() {
   }, []);
 
   const handleTriggerToggle = (triggerId: string) => {
-    setSelectedTriggers(prev => 
-      prev.includes(triggerId) 
-        ? prev.filter(id => id !== triggerId)
-        : [...prev, triggerId]
-    );
+    setSelectedTriggers(prev => {
+      const isCurrentlySelected = prev.includes(triggerId);
+      
+      if (isCurrentlySelected) {
+        // If trying to deselect and it's the only selected trigger, keep it selected
+        if (prev.length === 1) {
+          return prev;
+        }
+        // Otherwise, remove it from selection
+        return prev.filter(id => id !== triggerId);
+      } else {
+        // Add to selection
+        return [...prev, triggerId];
+      }
+    });
   };
 
   const handleGenerate = async () => {
     if (!prompt.trim() || credits <= 0) return;
+    if (!user) {
+      setError('Please login to generate videos.');
+      return;
+    }
 
     setIsGenerating(true);
     setError(null);
 
     try {
-      const response = await fetch('/api/generate', {
+      // 生成视频
+      const generateResponse = await fetch('/api/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,15 +78,36 @@ export default function CreatePage() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Generation failed');
+      if (!generateResponse.ok) {
+        const errorData = await generateResponse.json();
+        throw new Error(errorData.error || 'Generation failed');
       }
 
-      const data = await response.json();
-      setGeneratedVideo(data.videoUrl);
+      const generateData = await generateResponse.json();
+      setGeneratedVideo(generateData.videoUrl);
+
+      // 保存视频记录到数据库
+      const saveResponse = await fetch('/api/videos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          videoUrl: generateData.videoUrl,
+          prompt: prompt.trim(),
+          triggers: selectedTriggers,
+          userId: user.id,
+        }),
+      });
+
+      if (saveResponse.ok) {
+        const saveData = await saveResponse.json();
+        setVideoId(saveData.video.id);
+      }
+
       setCredits(prev => prev - 1);
     } catch (err) {
-      setError('Failed to generate video. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to generate video. Please try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -90,6 +129,14 @@ export default function CreatePage() {
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Transform your ideas into immersive ASMR experiences with our AI-powered generation
             </p>
+            {!user && (
+              <div className="mt-6 bg-yellow-500/20 backdrop-blur-sm border border-yellow-400/50 rounded-xl p-4">
+                <p className="text-yellow-200 font-medium">
+                  <i className="ri-information-line mr-2"></i>
+                  Please login to generate videos and save your creations.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Main Content */}
@@ -137,7 +184,11 @@ export default function CreatePage() {
                 {triggers.map((trigger, index) => (
                   <button
                     key={trigger.id}
-                    onClick={() => handleTriggerToggle(trigger.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleTriggerToggle(trigger.id);
+                    }}
                     data-aos="fade-up"
                     data-aos-delay={500 + index * 100}
                     className={`relative p-6 rounded-xl transition-all duration-300 transform hover:scale-105 ${
@@ -222,7 +273,28 @@ export default function CreatePage() {
                     Your browser does not support the video tag.
                   </video>
                   <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <button 
+                      onClick={async () => {
+                        if (videoId) {
+                          try {
+                            const response = await fetch(`/api/videos/${videoId}/download`);
+                            if (response.ok) {
+                              const data = await response.json();
+                              // 创建下载链接
+                              const link = document.createElement('a');
+                              link.href = data.downloadUrl;
+                              link.download = data.filename;
+                              document.body.appendChild(link);
+                              link.click();
+                              document.body.removeChild(link);
+                            }
+                          } catch (error) {
+                            console.error('Download failed:', error);
+                          }
+                        }
+                      }}
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    >
                       <i className="ri-download-line mr-2"></i>
                       Download HD
                     </button>

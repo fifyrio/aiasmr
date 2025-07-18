@@ -7,6 +7,9 @@ export const metadata = {
   title: 'Blog - AIASMR Video | AI ASMR Video Generation Tips & Guides',
   description: 'Explore guides, tips, and insights for creating stunning ASMR videos with AI technology. Learn about ASMR video generation, techniques, and best practices.',
   keywords: 'ASMR blog, AI video generation, ASMR tips, video creation guides, AI ASMR tutorials',
+  alternates: {
+    canonical: 'https://aiasmr.so/blog',
+  },
   openGraph: {
     title: 'Blog - AIASMR Video',
     description: 'Explore guides, tips, and insights for creating stunning ASMR videos with AI technology',

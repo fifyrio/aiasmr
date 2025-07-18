@@ -7,4 +7,7 @@ export default function LoginPage() {
 export const metadata = {
   title: 'Sign In - AIASMR Video',
   description: 'Sign in to your AIASMR Video account to access premium features and generate AI-powered ASMR videos.',
+  alternates: {
+    canonical: 'https://aiasmr.so/auth/login',
+  },
 }

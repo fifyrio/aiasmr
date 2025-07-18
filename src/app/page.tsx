@@ -13,6 +13,9 @@ export const metadata = {
   title: 'AIASMR Video - Generate ASMR Videos with AI in Seconds',
   description: 'Create high-quality, AI-powered ASMR videos from text prompts, images, or reference videos. Generate immersive 4K looped ASMR content with advanced AI technology.',
   keywords: 'ASMR videos, AI video generation, text to video, ASMR creation, relaxation videos, sleep sounds',
+  alternates: {
+    canonical: 'https://aiasmr.so',
+  },
   openGraph: {
     title: 'AIASMR Video - Generate ASMR Videos with AI',
     description: 'Create high-quality, AI-powered ASMR videos from text prompts. Generate immersive 4K looped ASMR content with advanced AI technology.',

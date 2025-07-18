@@ -3,10 +3,12 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
+import { useCredits } from '@/hooks/useCredits'
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, loading, signOut } = useAuth()
+  const { credits, loading: creditsLoading } = useCredits()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -80,6 +82,12 @@ const Navigation = () => {
             ) : user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 bg-purple-50 rounded-full px-3 py-1">
+                    <span className="text-purple-600 font-medium">💎</span>
+                    <span className="text-purple-700 text-sm font-medium">
+                      {creditsLoading ? '...' : credits ?? 0}
+                    </span>
+                  </div>
                   <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
                       {user.email?.charAt(0).toUpperCase()}
@@ -153,6 +161,12 @@ const Navigation = () => {
               ) : user ? (
                 <div className="space-y-2">
                   <div className="flex items-center px-3 py-2 space-x-2">
+                    <div className="flex items-center space-x-2 bg-purple-50 rounded-full px-3 py-1">
+                      <span className="text-purple-600 font-medium">💎</span>
+                      <span className="text-purple-700 text-sm font-medium">
+                        {creditsLoading ? '...' : credits ?? 0}
+                      </span>
+                    </div>
                     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {user.email?.charAt(0).toUpperCase()}

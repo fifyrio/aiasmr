@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
+import Link from 'next/link'
 import AOS from 'aos'
 
 interface SiteStats {
@@ -53,14 +54,14 @@ const Hero: React.FC<HeroProps> = ({ siteStats }) => {
         </div>
         
         <div data-aos="fade-up" data-aos-delay="600" className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button className="btn-primary text-lg px-10 py-4 hover:scale-110 transition-transform">
+          <Link href="/create" className="btn-primary text-lg px-10 py-4 hover:scale-110 transition-transform inline-flex items-center">
             <i className="ri-play-circle-line mr-2"></i>
             Get Started Free
-          </button>
-          <button className="btn-secondary text-lg px-10 py-4 bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm">
+          </Link>
+          <Link href="/pricing" className="btn-secondary text-lg px-10 py-4 bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm inline-flex items-center">
             <i className="ri-price-tag-3-line mr-2"></i>
             View Pricing
-          </button>
+          </Link>
         </div>
         
         <div data-aos="fade-up" data-aos-delay="800" className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">

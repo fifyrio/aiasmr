@@ -8,15 +8,20 @@ import { AuthProvider } from '@/contexts/AuthContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://aiasmr.so'),
   title: 'AIASMR Video - Generate ASMR videos with AI in seconds',
   description: 'Create high-quality, AI-powered ASMR videos from text prompts, images, or reference videos. Generate immersive 4K looped ASMR content with our advanced AI technology.',
   keywords: 'ASMR, AI video generation, video creation, ASMR videos, AI technology',
   authors: [{ name: 'AIASMR Video Team' }],
+  alternates: {
+    canonical: 'https://aiasmr.so',
+  },
   openGraph: {
     title: 'AIASMR Video - Generate ASMR videos with AI in seconds',
     description: 'Create high-quality, AI-powered ASMR videos from text prompts, images, or reference videos.',
     type: 'website',
     locale: 'en_US',
+    url: 'https://aiasmr.so',
   },
   twitter: {
     card: 'summary_large_image',
