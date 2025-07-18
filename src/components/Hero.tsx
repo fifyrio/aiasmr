@@ -64,7 +64,13 @@ const Hero: React.FC<HeroProps> = ({ siteStats }) => {
           </Link>
         </div>
         
-        <div data-aos="fade-up" data-aos-delay="800" className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div data-aos="fade-up" data-aos-delay="700" className="mt-12 mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
+            Why Choose AI ASMR Video Generation?
+          </h2>
+        </div>
+        
+        <div data-aos="fade-up" data-aos-delay="800" className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
             <div className="text-3xl mb-2">
               <i className="ri-magic-line"></i>
@@ -92,26 +98,31 @@ const Hero: React.FC<HeroProps> = ({ siteStats }) => {
         
         {/* 动态统计数据 */}
         {siteStats && !siteStats.error && (
-          <div data-aos="fade-up" data-aos-delay="1000" className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-300 mb-2">
-                {formatNumber(siteStats.totalVideos)}+
+          <div data-aos="fade-up" data-aos-delay="1000" className="mt-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
+              Join Our Growing Community
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-yellow-300 mb-2">
+                  {formatNumber(siteStats.totalVideos)}+
+                </div>
+                <p className="text-white/80 text-sm">Videos Generated</p>
               </div>
-              <p className="text-white/80 text-sm">Videos Generated</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-300 mb-2">
-                {formatNumber(siteStats.totalUsers)}+
+              
+              <div className="text-center">
+                <div className="text-4xl font-bold text-yellow-300 mb-2">
+                  {formatNumber(siteStats.totalUsers)}+
+                </div>
+                <p className="text-white/80 text-sm">Active Creators</p>
               </div>
-              <p className="text-white/80 text-sm">Active Creators</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-300 mb-2">
-                {formatNumber(siteStats.totalViews)}+
+              
+              <div className="text-center">
+                <div className="text-4xl font-bold text-yellow-300 mb-2">
+                  {formatNumber(siteStats.totalViews)}+
+                </div>
+                <p className="text-white/80 text-sm">Total Views</p>
               </div>
-              <p className="text-white/80 text-sm">Total Views</p>
             </div>
           </div>
         )}
