@@ -35,7 +35,7 @@ const Hero: React.FC<HeroProps> = ({ siteStats }) => {
   }, [])
 
   return (
-    <section className="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section className="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden pt-32">
       <div className="absolute inset-0 bg-black/30"></div>
       
       {/* Purple particles effect */}
