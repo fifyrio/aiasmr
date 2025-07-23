@@ -5,13 +5,13 @@ export const metadata: Metadata = {
   description: 'Select the perfect pricing plan for your ASMR video generation needs. Compare features, credits, and pricing for our AI-powered video creation platform.',
   keywords: 'ASMR video pricing, AI video generation cost, subscription plans, video credits, pricing comparison',
   alternates: {
-    canonical: 'https://aiasmr.so/pricing',
+    canonical: 'https://www.aiasmr.vip/pricing',
   },
   openGraph: {
     title: 'Pricing - AIASMR Video',
     description: 'Select the perfect pricing plan for your ASMR video generation needs. Compare features, credits, and pricing.',
     type: 'website',
-    url: 'https://aiasmr.so/pricing',
+    url: 'https://www.aiasmr.vip/pricing',
   },
   twitter: {
     card: 'summary_large_image',

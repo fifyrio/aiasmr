@@ -5,13 +5,13 @@ export const metadata: Metadata = {
   description: 'Create stunning ASMR videos with AI technology. Generate high-quality, relaxing content from text prompts with our advanced AI video generator.',
   keywords: 'ASMR video creator, AI video generator, create ASMR, video generation, AI content creation',
   alternates: {
-    canonical: 'https://aiasmr.so/create',
+    canonical: 'https://www.aiasmr.vip/create',
   },
   openGraph: {
     title: 'Create ASMR Video - AIASMR Video',
     description: 'Create stunning ASMR videos with AI technology. Generate high-quality, relaxing content from text prompts.',
     type: 'website',
-    url: 'https://aiasmr.so/create',
+    url: 'https://www.aiasmr.vip/create',
   },
   twitter: {
     card: 'summary_large_image',

@@ -6,18 +6,18 @@ The project was missing canonical URLs, which could cause search engines to rank
 ## Changes Made
 
 ### 1. Root Layout (`src/app/layout.tsx`)
-- Added `metadataBase: new URL('https://aiasmr.so')` to fix social media image warnings
-- Added `alternates: { canonical: 'https://aiasmr.so' }` for homepage canonical URL
-- Added `url: 'https://aiasmr.so'` to OpenGraph metadata
+- Added `metadataBase: new URL('https://www.aiasmr.vip')` to fix social media image warnings
+- Added `alternates: { canonical: 'https://www.aiasmr.vip' }` for homepage canonical URL
+- Added `url: 'https://www.aiasmr.vip'` to OpenGraph metadata
 
 ### 2. Homepage (`src/app/page.tsx`)
-- Added `alternates: { canonical: 'https://aiasmr.so' }` to metadata
+- Added `alternates: { canonical: 'https://www.aiasmr.vip' }` to metadata
 
 ### 3. Blog Page (`src/app/blog/page.tsx`)
-- Added `alternates: { canonical: 'https://aiasmr.so/blog' }` to metadata
+- Added `alternates: { canonical: 'https://www.aiasmr.vip/blog' }` to metadata
 
 ### 4. Blog Post Page (`src/app/blog/[slug]/page.tsx`)
-- Added dynamic canonical URLs for individual blog posts: `https://aiasmr.so/blog/${slug}`
+- Added dynamic canonical URLs for individual blog posts: `https://www.aiasmr.vip/blog/${slug}`
 - Added `url` to OpenGraph metadata for blog posts
 - Added canonical URL for 404 case
 
@@ -25,28 +25,28 @@ The project was missing canonical URLs, which could cause search engines to rank
 Created layout files for client components that can't export metadata directly:
 
 #### Create Page (`src/app/create/layout.tsx`)
-- Added metadata with canonical URL: `https://aiasmr.so/create`
+- Added metadata with canonical URL: `https://www.aiasmr.vip/create`
 
 #### Explore Page (`src/app/explore/layout.tsx`)
-- Added metadata with canonical URL: `https://aiasmr.so/explore`
+- Added metadata with canonical URL: `https://www.aiasmr.vip/explore`
 
 #### My Videos Page (`src/app/my-videos/layout.tsx`)
-- Added metadata with canonical URL: `https://aiasmr.so/my-videos`
+- Added metadata with canonical URL: `https://www.aiasmr.vip/my-videos`
 
 #### Pricing Page (`src/app/pricing/layout.tsx`)
-- Added metadata with canonical URL: `https://aiasmr.so/pricing`
+- Added metadata with canonical URL: `https://www.aiasmr.vip/pricing`
 
 ### 6. Auth Pages
 Updated existing metadata to include canonical URLs:
 
 #### Login Page (`src/app/auth/login/page.tsx`)
-- Added `alternates: { canonical: 'https://aiasmr.so/auth/login' }`
+- Added `alternates: { canonical: 'https://www.aiasmr.vip/auth/login' }`
 
 #### Signup Page (`src/app/auth/signup/page.tsx`)
-- Added `alternates: { canonical: 'https://aiasmr.so/auth/signup' }`
+- Added `alternates: { canonical: 'https://www.aiasmr.vip/auth/signup' }`
 
 #### Auth Error Page (`src/app/auth/auth-code-error/page.tsx`)
-- Added `alternates: { canonical: 'https://aiasmr.so/auth/auth-code-error' }`
+- Added `alternates: { canonical: 'https://www.aiasmr.vip/auth/auth-code-error' }`
 
 ### 7. SEO Utilities (`src/lib/seo.ts`)
 - Created utility functions for generating canonical URLs and metadata

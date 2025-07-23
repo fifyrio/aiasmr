@@ -64,7 +64,7 @@ export const metadata = {
     title: 'AIASMR Video - Generate ASMR Videos with AI',
     description: 'Create high-quality, AI-powered ASMR videos...',
     type: 'website',
-    url: 'https://aiasmr.so',
+    url: 'https://www.aiasmr.vip',
     images: [...]
   },
   twitter: {...}

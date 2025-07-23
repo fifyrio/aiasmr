@@ -78,13 +78,13 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
   const videoSources = displayVideos.map(video => video.video)
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
-            Featured AI-Generated Videos
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Featured <span className="text-purple-400">AI-Generated</span> Videos
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-purple-200/80 max-w-2xl mx-auto">
             Discover amazing ASMR videos created by our AI. Get inspired and create your own masterpiece.
           </p>
         </div>
@@ -117,7 +117,7 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
               <SwiperSlide key={video.id}>
                 <div className="video-card group cursor-pointer" onClick={() => openLightbox(index)}>
                   <div className="relative overflow-hidden">
-                    <div className="w-full h-64 bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                    <div className="w-full h-64 bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center border border-purple-500/30">
                       <div className="text-white text-center">
                         <i className="ri-play-circle-line text-6xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
                         <p className="text-sm opacity-80">Click to Preview</p>
@@ -141,13 +141,13 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
                   </div>
                   
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                    <h3 className="text-xl font-semibold mb-2 text-white">
                       {video.title}
                     </h3>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-purple-200/80 mb-4">
                       {video.description}
                     </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center justify-between text-sm text-purple-300/80">
                       <div className="flex items-center space-x-4">
                         <span className="flex items-center">
                           <i className="ri-eye-line mr-1"></i>
@@ -159,10 +159,10 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <button className="text-gray-400 hover:text-red-500 transition-colors">
+                        <button className="text-purple-400 hover:text-red-400 transition-colors">
                           <i className="ri-heart-line"></i>
                         </button>
-                        <button className="text-gray-400 hover:text-blue-500 transition-colors">
+                        <button className="text-purple-400 hover:text-blue-400 transition-colors">
                           <i className="ri-share-line"></i>
                         </button>
                       </div>

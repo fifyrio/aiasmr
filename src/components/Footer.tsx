@@ -3,28 +3,28 @@ import Link from 'next/link'
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-900/95 backdrop-blur-sm text-white border-t border-purple-500/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="text-2xl font-bold gradient-text">
-              AIASMR Video
+            <Link href="/" className="text-2xl font-bold text-white">
+              AIASMR <span className="text-purple-400">Video</span>
             </Link>
             <p className="mt-4 text-gray-400 max-w-md">
               Generate high-quality, AI-powered ASMR videos from text prompts, images, or reference videos. 
               Create immersive 4K looped ASMR content with our advanced AI technology.
             </p>
             <div className="mt-6 flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors">
                 <i className="ri-twitter-line text-xl"></i>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors">
                 <i className="ri-facebook-line text-xl"></i>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors">
                 <i className="ri-instagram-line text-xl"></i>
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors">
                 <i className="ri-youtube-line text-xl"></i>
               </a>
             </div>
@@ -34,7 +34,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Navigation</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/create" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/create" className="text-purple-300 hover:text-purple-200 transition-colors">
                   Create
                 </Link>
               </li>

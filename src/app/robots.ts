@@ -12,6 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         '/admin/',
       ],
     },
-    sitemap: 'https://aiasmr.so/sitemap.xml',
+    sitemap: 'https://www.aiasmr.vip/sitemap.xml',
   }
 } 

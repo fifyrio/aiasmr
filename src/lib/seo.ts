@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-const SITE_URL = 'https://aiasmr.so'
+const SITE_URL = 'https://www.aiasmr.vip'
 
 export function generateCanonicalUrl(path: string = ''): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`

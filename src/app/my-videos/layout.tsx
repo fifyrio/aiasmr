@@ -5,13 +5,13 @@ export const metadata: Metadata = {
   description: 'Access and manage your AI-generated ASMR videos. Download, share, and organize your personal collection of relaxing content.',
   keywords: 'my videos, ASMR video management, download videos, personal content, AI-generated videos',
   alternates: {
-    canonical: 'https://aiasmr.so/my-videos',
+    canonical: 'https://www.aiasmr.vip/my-videos',
   },
   openGraph: {
     title: 'My Videos - AIASMR Video',
     description: 'Access and manage your AI-generated ASMR videos. Download, share, and organize your personal collection.',
     type: 'website',
-    url: 'https://aiasmr.so/my-videos',
+    url: 'https://www.aiasmr.vip/my-videos',
   },
   twitter: {
     card: 'summary_large_image',
