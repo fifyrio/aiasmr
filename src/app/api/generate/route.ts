@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // 返回Mock视频URL
-    const videoUrl = `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`;
+    const videoUrl = `https://aiasmr.vip/cut-apple.mp4`;
     const provider = 'mock';
 
     return NextResponse.json({
