@@ -61,10 +61,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signInWithGoogle = async () => {
+    const getRedirectUrl = () => {
+      if (typeof window !== 'undefined') {
+        // 在浏览器环境中，使用当前域名
+        const origin = window.location.origin
+        return `${origin}/auth/callback`
+      }
+      // 服务端或其他环境，使用环境变量
+      return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiasmr.so'}/auth/callback`
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${process.env.NEXTAUTH_URL || window.location.origin}/auth/callback`,
+        redirectTo: getRedirectUrl(),
       },
     })
     return { error }

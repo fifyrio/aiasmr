@@ -59,7 +59,8 @@
    
    已获授权的JavaScript来源：
    - http://localhost:3000
-   - https://你的域名.com（生产环境）
+   - http://localhost:3001
+   - https://www.aiasmr.vip（生产环境）
    
    已获授权的重定向URI：
    - https://xwthsruuafryyqspqyss.supabase.co/auth/v1/callback
@@ -93,7 +94,12 @@
 # Google OAuth
 GOOGLE_CLIENT_ID=你的客户端ID.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=你的客户端密钥
+
+# Site Configuration (生产环境必需)
+NEXT_PUBLIC_SITE_URL=https://www.aiasmr.vip
 ```
+
+**重要**：在生产环境中，务必设置正确的 `NEXT_PUBLIC_SITE_URL` 环境变量，否则 Google 登录后会重定向到错误的地址。
 
 ## 6. 测试配置
 
