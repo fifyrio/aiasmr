@@ -4,6 +4,8 @@ import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { AuthProvider } from '@/contexts/AuthContext'
+import Script from 'next/script'
+import { GA_TRACKING_ID } from '@/lib/analytics'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,6 +44,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        {GA_TRACKING_ID && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+            />
+            <Script
+              id="gtag-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_TRACKING_ID}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
         <AuthProvider>
           {children}
           <Analytics />

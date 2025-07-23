@@ -20,6 +20,7 @@
     "dotenv": "^17.1.0",
     "fslightbox-react": "^1.7.6",
     "googleapis": "^152.0.0",
+    "gtag": "^1.0.1",
     "next": "14.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
