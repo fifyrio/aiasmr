@@ -12,7 +12,9 @@
       "Bash(npx vercel --prod)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "WebFetch(domain:replicate.com)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

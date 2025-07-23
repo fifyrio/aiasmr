@@ -237,7 +237,7 @@ export default function CreatePage() {
                       </div>
                     </div>
                     <h3 className="text-white text-xl font-semibold mt-4 mb-2">Creating your ASMR video...</h3>
-                    <p className="text-white/70">This usually takes 1-2 minutes</p>
+                    <p className="text-white/70">Generating demo video...</p>
                     <div className="mt-4 bg-white/20 rounded-full h-2 w-64 overflow-hidden">
                       <div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-full animate-pulse"></div>
                     </div>
