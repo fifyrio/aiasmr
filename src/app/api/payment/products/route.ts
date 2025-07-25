@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ALL_PRODUCTS, getCreditPackages, getSubscriptionPlans } from '@/lib/payment/products';
 
+// Force dynamic rendering for API routes that use request.url
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

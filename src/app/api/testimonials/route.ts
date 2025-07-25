@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Force dynamic rendering for API routes that use request.url
+export const dynamic = 'force-dynamic';
+
 // Mock testimonials data
 const mockTestimonials = [
   {

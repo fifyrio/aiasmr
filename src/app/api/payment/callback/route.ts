@@ -2,15 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createMockPaymentClient } from '@/lib/payment/client';
 import { createClient } from '@/lib/supabase/server';
 
+// Force dynamic rendering for payment callbacks
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const checkoutId = searchParams.get('checkout_id');
     const status = searchParams.get('status');
     const signature = searchParams.get('signature');
+    
+    // Get base URL for absolute redirects
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(request.url).origin;
 
     if (!checkoutId) {
-      return NextResponse.redirect('/payment/error?message=Missing checkout ID');
+      return NextResponse.redirect(`${baseUrl}/payment/error?message=Missing checkout ID`);
     }
 
     // Verify callback signature (simplified for mock)
@@ -22,7 +28,7 @@ export async function GET(request: NextRequest) {
       const expectedSignature = paymentClient.createCallbackSignature(params);
       if (signature !== expectedSignature) {
         console.error('Invalid signature in payment callback');
-        return NextResponse.redirect('/payment/error?message=Invalid signature');
+        return NextResponse.redirect(`${baseUrl}/payment/error?message=Invalid signature`);
       }
     }
 
@@ -31,18 +37,19 @@ export async function GET(request: NextRequest) {
     if (status === 'success') {
       // Handle successful payment
       await handlePaymentSuccess(checkoutId, supabase);
-      return NextResponse.redirect('/payment/success');
+      return NextResponse.redirect(`${baseUrl}/payment/success`);
     } else if (status === 'cancel') {
       // Handle cancelled payment
       await handlePaymentCancel(checkoutId, supabase);
-      return NextResponse.redirect('/payment/cancel');
+      return NextResponse.redirect(`${baseUrl}/payment/cancel`);
     } else {
-      return NextResponse.redirect('/payment/error?message=Unknown status');
+      return NextResponse.redirect(`${baseUrl}/payment/error?message=Unknown status`);
     }
 
   } catch (error) {
     console.error('Payment callback error:', error);
-    return NextResponse.redirect('/payment/error?message=Callback processing failed');
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aiasmr.so';
+    return NextResponse.redirect(`${baseUrl}/payment/error?message=Callback processing failed`);
   }
 }
 
