@@ -60,19 +60,19 @@ export const PLANS: Product[] = [
     popular: true,
   },
   {
-    product_id: 'pro_yearly',
-    product_name: 'AI ASMR Pro (Yearly)',
-    price: 8990, // $89.9 in cents
-    originalPrice: 11990, // $119.9 in cents
-    credits: 1500,
-    videos: 150,
-    pricePerVideo: 0.60,
+    product_id: 'pro_monthly',
+    product_name: 'AI ASMR Pro',
+    price: 2990, // $29.9 in cents
+    originalPrice: 3990, // $39.9 in cents
+    credits: 500,
+    videos: 50,
+    pricePerVideo: 0.59,
     pricePerCredit: 0.059,
     duration: '8s',
     resolution: '1080p',
     commercial: true,
     type: 'subscription',
-    billing_period: 'yearly',
+    billing_period: 'monthly',
     features: [
       'All Basic features included',
       '1080p video resolution',
@@ -83,9 +83,9 @@ export const PLANS: Product[] = [
       'Commercial usage rights',
       'Priority support',
       'Global availability',
-      'Annual subscription discount',
+      'Pro-level features',
     ],
-    buttonText: 'Go Pro Yearly 🔥',
+    buttonText: 'Go Pro 🔥',
     buttonColor: 'from-purple-600 to-pink-500',
     popular: false,
   },

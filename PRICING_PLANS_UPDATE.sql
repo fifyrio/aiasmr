@@ -86,26 +86,26 @@ INSERT INTO products (
   true
 ),
 (
-  'pro_yearly',
-  'AI ASMR Pro (Yearly)',
-  8990,
-  11990,
-  1500,
-  150,
-  0.60,
+  'pro_monthly',
+  'AI ASMR Pro',
+  2990,
+  3990,
+  500,
+  50,
+  0.59,
   0.059,
   '8s',
   '1080p',
   true,
   'subscription',
-  '["All Basic features included", "1080p video resolution", "Advanced whisper sync", "Premium binaural audio", "Full ASMR trigger library", "Fastest processing", "Commercial usage rights", "Priority support", "Global availability", "Annual subscription discount"]'::jsonb,
-  'Go Pro Yearly 🔥',
+  '["All Basic features included", "1080p video resolution", "Advanced whisper sync", "Premium binaural audio", "Full ASMR trigger library", "Fastest processing", "Commercial usage rights", "Priority support", "Global availability", "Pro-level features"]'::jsonb,
+  'Go Pro 🔥',
   false
 );
 
 -- Update billing_period for subscription plans
 UPDATE products SET billing_period = 'monthly' WHERE product_id = 'basic';
-UPDATE products SET billing_period = 'yearly' WHERE product_id = 'pro_yearly';
+UPDATE products SET billing_period = 'monthly' WHERE product_id = 'pro_monthly';
 
 -- Create index for better performance
 CREATE INDEX IF NOT EXISTS idx_products_product_id ON products(product_id);
@@ -136,6 +136,6 @@ CREATE TRIGGER update_products_updated_at
 DO $$
 BEGIN
     RAISE NOTICE 'Simplified pricing plans database schema updated successfully!';
-    RAISE NOTICE 'New plans: AI ASMR Trial ($7.9), AI ASMR Basic ($19.9/month), AI ASMR Pro Yearly ($89.9/year)';
+    RAISE NOTICE 'New plans: AI ASMR Trial ($7.9), AI ASMR Basic ($19.9/month), AI ASMR Pro ($29.9/month)';
     RAISE NOTICE 'Products table created with RLS policies and proper indexing.';
 END $$;
