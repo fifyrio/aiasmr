@@ -49,8 +49,7 @@ const PricingPage = () => {
         throw new Error(data.error || 'Failed to create order');
       }
     } catch (error) {
-      console.error('Payment error:', error);
-      alert('Failed to process payment. Please try again.');
+      alert(`Failed to process payment: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
     } finally {
       setLoading(null);
     }
