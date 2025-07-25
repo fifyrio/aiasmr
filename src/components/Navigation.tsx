@@ -8,6 +8,7 @@ import { useCredits } from '@/hooks/useCredits'
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, loading, signOut } = useAuth()
+  // Only fetch credits when user is logged in to reduce unnecessary API calls
   const { credits, loading: creditsLoading } = useCredits()
 
   const toggleMenu = () => {

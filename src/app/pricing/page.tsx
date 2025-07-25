@@ -1,23 +1,33 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import AOS from 'aos'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { useAuth } from '@/contexts/AuthContext'
 import { PLANS, formatPrice } from '@/lib/payment/products'
 
 const PricingPage = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
+  const [pageReady, setPageReady] = useState(false);
   // Remove plan type toggle since we have simplified plans
 
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 100,
-    })
+    // Initialize AOS asynchronously to improve page load speed
+    const initAOS = async () => {
+      const AOS = await import('aos')
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100,
+      })
+    }
+    
+    // Delay AOS initialization to not block initial render
+    setTimeout(() => {
+      initAOS()
+      setPageReady(true)
+    }, 100)
   }, [])
 
   const handlePurchase = async (productId: string) => {
@@ -56,6 +66,18 @@ const PricingPage = () => {
   };
 
   const displayPlans = PLANS;
+
+  // Show loading state while auth or page is loading
+  if (authLoading || !pageReady) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading pricing plans...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50">

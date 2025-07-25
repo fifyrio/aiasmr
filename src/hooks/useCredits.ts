@@ -22,6 +22,12 @@ export const useCredits = () => {
 
   const fetchCredits = useCallback(async () => {
     if (!user) {
+      setCredits({
+        credits: 0,
+        planType: 'free',
+        totalCreditsSpent: 0,
+        totalVideosCreated: 0
+      });
       setLoading(false);
       return;
     }
@@ -71,6 +77,13 @@ export const useCredits = () => {
     } catch (err) {
       console.error('Error fetching credits:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch credits');
+      // Set default values on error to prevent UI blocking
+      setCredits({
+        credits: 0,
+        planType: 'free',
+        totalCreditsSpent: 0,
+        totalVideosCreated: 0
+      });
     } finally {
       setLoading(false);
     }
