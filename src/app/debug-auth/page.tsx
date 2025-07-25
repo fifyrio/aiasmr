@@ -74,7 +74,7 @@ export default function DebugAuthPage() {
           <div className="space-y-2">
             {Object.entries(envInfo.envVars || {}).map(([key, value]) => (
               <div key={key}>
-                <strong>{key}:</strong> {value}
+                <strong>{key}:</strong> {String(value)}
               </div>
             ))}
           </div>

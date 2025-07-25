@@ -43,7 +43,7 @@ const TermsPage = () => {
                 <strong>Last updated:</strong> February 27, 2025
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Welcome to AIASMR Video. These Terms of Service ("Terms") govern your use of our AI-powered ASMR video generation platform. By accessing or using our service, you agree to be bound by these Terms.
+                Welcome to AIASMR Video. These Terms of Service (&quot;Terms&quot;) govern your use of our AI-powered ASMR video generation platform. By accessing or using our service, you agree to be bound by these Terms.
               </p>
             </div>
 

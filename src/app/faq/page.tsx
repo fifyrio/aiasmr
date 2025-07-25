@@ -185,7 +185,7 @@ const FAQPage = () => {
                 Still Need Help?
               </h2>
               <p className="text-gray-700 mb-4">
-                Can't find the answer you're looking for? Our support team is here to help you with any questions or technical issues.
+                Can&apos;t find the answer you&apos;re looking for? Our support team is here to help you with any questions or technical issues.
               </p>
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center text-purple-600">

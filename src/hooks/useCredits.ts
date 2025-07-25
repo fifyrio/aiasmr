@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 
@@ -20,14 +20,14 @@ export const useCredits = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient();
-
-  const fetchCredits = async () => {
+  const fetchCredits = useCallback(async () => {
     if (!user) {
       setLoading(false);
       return;
     }
 
+    const supabase = createClient();
+    
     try {
       setError(null);
       
@@ -74,11 +74,13 @@ export const useCredits = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   const deductCredits = async (amount: number, description?: string) => {
     if (!user) return false;
 
+    const supabase = createClient();
+    
     try {
       setError(null);
 
@@ -138,6 +140,8 @@ export const useCredits = () => {
   const addCredits = async (amount: number, description?: string) => {
     if (!user) return false;
 
+    const supabase = createClient();
+    
     try {
       setError(null);
 
@@ -185,7 +189,7 @@ export const useCredits = () => {
 
   useEffect(() => {
     fetchCredits();
-  }, [user]);
+  }, [fetchCredits]);
 
   return {
     credits,
