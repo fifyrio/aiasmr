@@ -5,6 +5,7 @@ import AOS from 'aos';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCredits } from '@/hooks/useCredits';
 
 const triggers = [
   { id: 'soap', name: 'Soap', icon: '🧼', color: 'from-blue-400 to-cyan-400' },
@@ -19,10 +20,10 @@ const triggers = [
 
 export default function CreatePage() {
   const { user } = useAuth();
+  const { credits: userCredits } = useCredits();
   const [prompt, setPrompt] = useState('');
   const [selectedTriggers, setSelectedTriggers] = useState(['soap']);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [credits, setCredits] = useState(20);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
@@ -140,7 +141,7 @@ export default function CreatePage() {
   };
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || credits <= 0) return;
+    if (!prompt.trim() || userCredits.credits <= 0) return;
     if (!user) {
       setError('Please login to generate videos.');
       return;
@@ -173,7 +174,6 @@ export default function CreatePage() {
 
       const generateData = await generateResponse.json();
       setTaskId(generateData.taskId);
-      setCredits(prev => prev - 1);
 
       // Start polling for completion
       await pollTaskStatus(generateData.taskId);
@@ -184,7 +184,7 @@ export default function CreatePage() {
     }
   };
 
-  const isGenerateDisabled = !prompt.trim() || credits <= 0 || isGenerating;
+  const isGenerateDisabled = !prompt.trim() || userCredits.credits <= 0 || isGenerating;
 
   return (
     <div className="min-h-screen hero-bg">
@@ -217,7 +217,7 @@ export default function CreatePage() {
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
                 <span className="text-white font-semibold">
                   <i className="ri-coin-line mr-2"></i>
-                  {credits} credits remaining
+                  {userCredits.credits} credits remaining
                 </span>
               </div>
             </div>

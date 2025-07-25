@@ -85,7 +85,7 @@ const Navigation = () => {
                   <div className="flex items-center space-x-2 bg-purple-50 rounded-full px-3 py-1">
                     <span className="text-purple-600 font-medium">💎</span>
                     <span className="text-purple-700 text-sm font-medium">
-                      {creditsLoading ? '...' : credits ?? 0}
+                      {creditsLoading ? '...' : credits.credits ?? 0}
                     </span>
                   </div>
                   <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -164,7 +164,7 @@ const Navigation = () => {
                     <div className="flex items-center space-x-2 bg-purple-50 rounded-full px-3 py-1">
                       <span className="text-purple-600 font-medium">💎</span>
                       <span className="text-purple-700 text-sm font-medium">
-                        {creditsLoading ? '...' : credits ?? 0}
+                        {creditsLoading ? '...' : credits.credits ?? 0}
                       </span>
                     </div>
                     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
