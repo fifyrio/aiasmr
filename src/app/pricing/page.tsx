@@ -1,11 +1,17 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import AOS from 'aos'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { useAuth } from '@/contexts/AuthContext'
+import { SUBSCRIPTION_PLANS, CREDIT_PACKAGES, formatPrice } from '@/lib/payment/products'
 
 const PricingPage = () => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState<string | null>(null);
+  const [planType, setPlanType] = useState<'subscriptions' | 'credits'>('subscriptions');
+
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -14,84 +20,43 @@ const PricingPage = () => {
     })
   }, [])
 
-  const plans = [
-    {
-      name: 'AI ASMR Trial',
-      price: '$7.9',
-      originalPrice: '$9.9',
-      credits: 100,
-      videos: 10,
-      pricePerVideo: '$0.79',
-      pricePerCredit: '$0.079',
-      duration: '8s',
-      resolution: '720p',
-      commercial: false,
-      features: [
-        'Google Veo 3 ASMR support',
-        'Max 8s video duration',
-        '720p resolution',
-        'Binaural audio effects',
-        'ASMR trigger library',
-      ],
-      buttonText: 'Try AI ASMR ⚡',
-      buttonColor: 'from-blue-500 to-purple-600',
-      popular: false,
-    },
-    {
-      name: 'AI ASMR Basic',
-      price: '$19.9',
-      originalPrice: '$24.9',
-      credits: 301,
-      videos: 30,
-      pricePerVideo: '$0.66',
-      pricePerCredit: '$0.066',
-      duration: '8s',
-      resolution: '720p',
-      commercial: true,
-      priceIncrease: true,
-      features: [
-        'Google Veo 3 ASMR support',
-        'Max 8s video duration',
-        '720p resolution',
-        'Whisper & voice sync',
-        'Binaural audio effects',
-        'ASMR trigger library',
-        'Commercial usage rights',
-        'Standard processing',
-        'Basic support',
-        'Global availability',
-      ],
-      buttonText: 'Subscribe to Basic ⚡',
-      buttonColor: 'from-blue-500 to-purple-600',
-      popular: true,
-    },
-    {
-      name: 'AI ASMR Pro',
-      price: '$49.9',
-      originalPrice: '$59.9',
-      credits: 1001,
-      videos: 100,
-      pricePerVideo: '$0.50',
-      pricePerCredit: '$0.050',
-      duration: '8s',
-      resolution: '1080p',
-      commercial: true,
-      features: [
-        'All Basic features included',
-        '1080p video resolution',
-        'Advanced whisper sync',
-        'Premium binaural audio',
-        'Full ASMR trigger library',
-        'Fastest processing',
-        'Commercial usage rights',
-        'Priority support',
-        'Global availability',
-      ],
-      buttonText: 'Subscribe to Pro ⚡',
-      buttonColor: 'from-purple-500 to-pink-600',
-      popular: false,
-    },
-  ]
+  const handlePurchase = async (productId: string) => {
+    if (!user) {
+      // Redirect to login
+      window.location.href = '/auth/login?redirect=' + encodeURIComponent('/pricing');
+      return;
+    }
+
+    setLoading(productId);
+
+    try {
+      const response = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: productId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Redirect to payment page
+        window.location.href = data.payment_url;
+      } else {
+        throw new Error(data.error || 'Failed to create order');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Failed to process payment. Please try again.');
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const displayPlans = planType === 'subscriptions' ? SUBSCRIPTION_PLANS : CREDIT_PACKAGES;
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -108,6 +73,32 @@ const PricingPage = () => {
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
               Select the perfect plan for your ASMR video generation needs. All plans include our advanced AI technology and premium features.
             </p>
+            
+            {/* Plan Type Toggle */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/20">
+                <button
+                  onClick={() => setPlanType('subscriptions')}
+                  className={`px-6 py-2 rounded-full font-semibold transition-all duration-200 ${
+                    planType === 'subscriptions'
+                      ? 'bg-white text-gray-900 shadow-lg'
+                      : 'text-white hover:bg-white/20'
+                  }`}
+                >
+                  Monthly Plans
+                </button>
+                <button
+                  onClick={() => setPlanType('credits')}
+                  className={`px-6 py-2 rounded-full font-semibold transition-all duration-200 ${
+                    planType === 'credits'
+                      ? 'bg-white text-gray-900 shadow-lg'
+                      : 'text-white hover:bg-white/20'
+                  }`}
+                >
+                  Credit Packages
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -115,81 +106,97 @@ const PricingPage = () => {
       {/* Pricing Cards */}
       <section className="py-16 -mt-8 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {plans.map((plan, index) => (
-              <div
-                key={plan.name}
-                data-aos="fade-up"
-                data-aos-delay={200 + index * 100}
-                className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${
-                  plan.popular ? 'ring-4 ring-purple-500/20' : ''
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-2 text-sm font-semibold">
-                    Most Popular
-                  </div>
-                )}
-                
-                <div className="p-8">
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                      <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                      <div className="text-left">
-                        <div className="text-gray-500 line-through text-sm">{plan.originalPrice}</div>
-                        {plan.name !== 'AI ASMR Trial' && <div className="text-sm text-gray-600">/month</div>}
+          <div className={`grid gap-8 ${displayPlans.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+            {displayPlans.map((plan, index) => {
+              const isPopular = plan.product_id === 'basic_monthly' || plan.product_id === 'credits_100';
+              const isLoading = loading === plan.product_id;
+              
+              return (
+                <div
+                  key={plan.product_id}
+                  data-aos="fade-up"
+                  data-aos-delay={200 + index * 100}
+                  className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${
+                    isPopular ? 'ring-4 ring-purple-500/20' : ''
+                  }`}
+                >
+                  {isPopular && (
+                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-2 text-sm font-semibold">
+                      Most Popular
+                    </div>
+                  )}
+                  
+                  <div className="p-8">
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.product_name}</h3>
+                      <div className="flex items-center justify-center gap-2 mb-4">
+                        <span className="text-4xl font-bold text-gray-900">{formatPrice(plan.price)}</span>
+                        {plan.type === 'subscription' && (
+                          <div className="text-left">
+                            <div className="text-sm text-gray-600">
+                              /{plan.billing_period === 'yearly' ? 'year' : 'month'}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {plan.billing_period === 'yearly' && (
+                        <div className="bg-green-100 border border-green-400 text-green-800 px-3 py-1 rounded-full text-xs font-medium mb-4">
+                          💰 Save 2 months!
+                        </div>
+                      )}
+                      
+                      <div className="grid grid-cols-1 gap-4 mb-6 text-sm">
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <div className="font-semibold text-gray-900">{plan.credits}</div>
+                          <div className="text-gray-600">
+                            {plan.type === 'subscription' ? 'Credits per month' : 'Total Credits'}
+                          </div>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <div className="font-semibold text-gray-900">{formatPrice(Math.round(plan.price / plan.credits))}</div>
+                          <div className="text-gray-600">per credit</div>
+                        </div>
                       </div>
                     </div>
                     
-                    {plan.priceIncrease && (
-                      <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium mb-4">
-                        ⚠️ Price increase coming soon
-                      </div>
-                    )}
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="font-semibold text-gray-900">{plan.credits}</div>
-                        <div className="text-gray-600">Credits</div>
-                      </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="font-semibold text-gray-900">{plan.videos}</div>
-                        <div className="text-gray-600">Videos</div>
-                      </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="font-semibold text-gray-900">{plan.pricePerVideo}</div>
-                        <div className="text-gray-600">per video</div>
-                      </div>
-                      <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="font-semibold text-gray-900">{plan.pricePerCredit}</div>
-                        <div className="text-gray-600">per credit</div>
-                      </div>
+                    <div className="mb-8">
+                      <h4 className="font-semibold text-gray-900 mb-4">Features included:</h4>
+                      <ul className="space-y-3">
+                        {plan.features?.map((feature, featureIndex) => (
+                          <li key={featureIndex} className="flex items-center text-sm">
+                            <i className="ri-check-line text-green-500 mr-3 text-lg"></i>
+                            <span className="text-gray-700">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {plan.description && (
+                        <p className="mt-4 text-sm text-gray-600">{plan.description}</p>
+                      )}
                     </div>
+                    
+                    <button 
+                      onClick={() => handlePurchase(plan.product_id)}
+                      disabled={isLoading}
+                      className={`w-full bg-gradient-to-r ${
+                        isPopular 
+                          ? 'from-purple-500 to-pink-600' 
+                          : 'from-blue-500 to-purple-600'
+                      } text-white py-4 px-6 rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Processing...
+                        </div>
+                      ) : (
+                        `${plan.type === 'subscription' ? 'Subscribe to' : 'Buy'} ${plan.product_name}`
+                      )}
+                    </button>
                   </div>
-                  
-                  <div className="mb-8">
-                    <h4 className="font-semibold text-gray-900 mb-4">Features included:</h4>
-                    <ul className="space-y-3">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center text-sm">
-                          <i className="ri-check-line text-green-500 mr-3 text-lg"></i>
-                          <span className="text-gray-700">{feature}</span>
-                        </li>
-                      ))}
-                      <li className="flex items-center text-sm">
-                        <i className={`${plan.commercial ? 'ri-check-line text-green-500' : 'ri-close-line text-red-500'} mr-3 text-lg`}></i>
-                        <span className="text-gray-700">Commercial usage rights</span>
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <button className={`w-full bg-gradient-to-r ${plan.buttonColor} text-white py-4 px-6 rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105`}>
-                    {plan.buttonText}
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

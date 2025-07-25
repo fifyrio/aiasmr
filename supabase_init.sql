@@ -111,6 +111,39 @@ CREATE TABLE credit_transactions (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Orders table (for payment processing)
+CREATE TABLE orders (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  product_id TEXT NOT NULL,
+  product_name TEXT NOT NULL,
+  price INTEGER NOT NULL, -- Price in cents
+  credits INTEGER NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('once', 'subscription')),
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'cancelled', 'refunded')),
+  checkout_id TEXT UNIQUE,
+  payment_method TEXT DEFAULT 'mock',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  completed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- User profiles table (updated to match auth context)
+CREATE TABLE user_profiles (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  email TEXT,
+  full_name TEXT,
+  avatar_url TEXT,
+  plan_type TEXT DEFAULT 'free' CHECK (plan_type IN ('free', 'basic', 'pro')),
+  credits INTEGER DEFAULT 20,
+  total_credits_spent INTEGER DEFAULT 0,
+  total_videos_created INTEGER DEFAULT 0,
+  is_verified BOOLEAN DEFAULT FALSE,
+  language_preference TEXT DEFAULT 'en',
+  timezone TEXT DEFAULT 'UTC',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- 1.2 Content Management Tables
 -- ----------------------------
 
