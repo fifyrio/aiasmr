@@ -17,6 +17,7 @@
     "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.2",
     "aos": "2.3.4",
+    "axios": "^1.11.0",
     "dotenv": "^17.1.0",
     "fslightbox-react": "^1.7.6",
     "googleapis": "^152.0.0",

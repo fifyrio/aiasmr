@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { User, AuthError } from '@supabase/supabase-js'
+import { getCallbackUrl } from '@/lib/environment'
 
 type AuthContextType = {
   user: User | null
@@ -61,22 +62,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signInWithGoogle = async () => {
-    const getRedirectUrl = () => {
-      if (typeof window !== 'undefined') {
-        // 在浏览器环境中，使用当前域名
-        const origin = window.location.origin
-        return `${origin}/auth/callback`
-      }
-      // 服务端或其他环境，使用环境变量
-      return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aiasmr.so'}/auth/callback`
-    }
-
+    const callbackUrl = getCallbackUrl('/auth/callback');
+    console.log('Google OAuth redirect URL:', callbackUrl);
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: getRedirectUrl(),
+        redirectTo: callbackUrl,
       },
     })
+    
+    if (error) {
+      console.error('Google OAuth error:', error);
+    }
+    
     return { error }
   }
 

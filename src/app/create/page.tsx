@@ -26,6 +26,10 @@ export default function CreatePage() {
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
+  const [taskId, setTaskId] = useState<string | null>(null);
+  const [generationProgress, setGenerationProgress] = useState<string>('Starting generation...');
+  const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16'>('16:9');
+  const [model, setModel] = useState<'veo3' | 'veo3_fast'>('veo3');
 
   const maxChars = 500;
 
@@ -36,6 +40,86 @@ export default function CreatePage() {
       offset: 100,
     });
   }, []);
+
+  const pollTaskStatus = async (taskId: string) => {
+    const maxAttempts = 60; // Poll for up to 5 minutes (60 * 5s = 300s)
+    let attempts = 0;
+
+    const poll = async () => {
+      attempts++;
+      try {
+        const response = await fetch(`/api/generate/status?taskId=${taskId}`);
+        if (!response.ok) {
+          throw new Error('Failed to check status');
+        }
+
+        const data = await response.json();
+        
+        switch (data.status) {
+          case 'pending':
+            setGenerationProgress('Task queued, waiting to start...');
+            break;
+          case 'processing':
+            setGenerationProgress(`Generating video... ${data.progress || 0}%`);
+            break;
+          case 'completed':
+            if (data.result?.videoUrl) {
+              setGeneratedVideo(data.result.videoUrl);
+              setGenerationProgress('Video generated successfully!');
+              setIsGenerating(false);
+              
+              // Save video to database
+              try {
+                const saveResponse = await fetch('/api/videos', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    videoUrl: data.result.videoUrl,
+                    prompt: prompt.trim(),
+                    triggers: selectedTriggers,
+                    userId: user?.id,
+                    taskId: taskId,
+                  }),
+                });
+
+                if (saveResponse.ok) {
+                  const saveData = await saveResponse.json();
+                  setVideoId(saveData.video.id);
+                }
+              } catch (saveError) {
+                console.error('Failed to save video:', saveError);
+              }
+              return;
+            }
+            break;
+          case 'failed':
+            setError(data.error || 'Video generation failed');
+            setIsGenerating(false);
+            return;
+        }
+
+        // Continue polling if not completed/failed and haven't exceeded max attempts
+        if (attempts < maxAttempts && (data.status === 'pending' || data.status === 'processing')) {
+          setTimeout(poll, 5000); // Poll every 5 seconds
+        } else if (attempts >= maxAttempts) {
+          setError('Video generation timed out. Please try again.');
+          setIsGenerating(false);
+        }
+      } catch (error) {
+        console.error('Error polling status:', error);
+        if (attempts < maxAttempts) {
+          setTimeout(poll, 5000);
+        } else {
+          setError('Failed to check generation status');
+          setIsGenerating(false);
+        }
+      }
+    };
+
+    poll();
+  };
 
   const handleTriggerToggle = (triggerId: string) => {
     setSelectedTriggers(prev => {
@@ -64,9 +148,11 @@ export default function CreatePage() {
 
     setIsGenerating(true);
     setError(null);
+    setGeneratedVideo(null);
+    setGenerationProgress('Starting generation...');
 
     try {
-      // 生成视频
+      // Generate video with KIE Veo3
       const generateResponse = await fetch('/api/generate', {
         method: 'POST',
         headers: {
@@ -75,6 +161,8 @@ export default function CreatePage() {
         body: JSON.stringify({
           prompt: prompt.trim(),
           triggers: selectedTriggers,
+          aspectRatio,
+          model,
         }),
       });
 
@@ -84,31 +172,14 @@ export default function CreatePage() {
       }
 
       const generateData = await generateResponse.json();
-      setGeneratedVideo(generateData.videoUrl);
-
-      // 保存视频记录到数据库
-      const saveResponse = await fetch('/api/videos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          videoUrl: generateData.videoUrl,
-          prompt: prompt.trim(),
-          triggers: selectedTriggers,
-          userId: user.id,
-        }),
-      });
-
-      if (saveResponse.ok) {
-        const saveData = await saveResponse.json();
-        setVideoId(saveData.video.id);
-      }
-
+      setTaskId(generateData.taskId);
       setCredits(prev => prev - 1);
+
+      // Start polling for completion
+      await pollTaskStatus(generateData.taskId);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate video. Please try again.');
-    } finally {
       setIsGenerating(false);
     }
   };
@@ -209,6 +280,73 @@ export default function CreatePage() {
               </div>
             </div>
 
+            {/* Generation Settings */}
+            <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="500">
+              {/* Model Selection */}
+              <div>
+                <label className="block text-lg font-medium text-white mb-4">
+                  <i className="ri-cpu-line mr-2"></i>
+                  Generation Model
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setModel('veo3')}
+                    className={`p-4 rounded-xl transition-all duration-300 border ${
+                      model === 'veo3'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-lg'
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    <div className="font-semibold">Veo3</div>
+                    <div className="text-sm opacity-80">High Quality</div>
+                  </button>
+                  <button
+                    onClick={() => setModel('veo3_fast')}
+                    className={`p-4 rounded-xl transition-all duration-300 border ${
+                      model === 'veo3_fast'
+                        ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white border-transparent shadow-lg'
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    <div className="font-semibold">Veo3 Fast</div>
+                    <div className="text-sm opacity-80">Quick Generate</div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Aspect Ratio Selection */}
+              <div>
+                <label className="block text-lg font-medium text-white mb-4">
+                  <i className="ri-aspect-ratio-line mr-2"></i>
+                  Aspect Ratio
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setAspectRatio('16:9')}
+                    className={`p-4 rounded-xl transition-all duration-300 border ${
+                      aspectRatio === '16:9'
+                        ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white border-transparent shadow-lg'
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    <div className="font-semibold">16:9</div>
+                    <div className="text-sm opacity-80">Landscape</div>
+                  </button>
+                  <button
+                    onClick={() => setAspectRatio('9:16')}
+                    className={`p-4 rounded-xl transition-all duration-300 border ${
+                      aspectRatio === '9:16'
+                        ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-lg'
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    <div className="font-semibold">9:16</div>
+                    <div className="text-sm opacity-80">Portrait</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Generate Button */}
             <div className="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="600">
               <button
@@ -237,7 +375,7 @@ export default function CreatePage() {
                       </div>
                     </div>
                     <h3 className="text-white text-xl font-semibold mt-4 mb-2">Creating your ASMR video...</h3>
-                    <p className="text-white/70">Generating demo video...</p>
+                    <p className="text-white/70">{generationProgress}</p>
                     <div className="mt-4 bg-white/20 rounded-full h-2 w-64 overflow-hidden">
                       <div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-full animate-pulse"></div>
                     </div>
