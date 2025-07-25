@@ -2,10 +2,10 @@
 
 import { Product } from './types';
 
-// Simplified pricing plans
+// Creem.io integrated pricing plans
 export const PLANS: Product[] = [
   {
-    product_id: 'trial',
+    product_id: 'prod_6JrHGnC707qbtiMBiLGlkX', // 真实的Creem.io产品ID
     product_name: 'AI ASMR Trial',
     price: 790, // $7.9 in cents
     originalPrice: 990, // $9.9 in cents
@@ -27,6 +27,8 @@ export const PLANS: Product[] = [
     buttonText: 'Try AI ASMR ⚡',
     buttonColor: 'from-blue-500 to-purple-600',
     popular: false,
+    // Creem.io直接支付URL
+    directPaymentUrl: 'https://www.creem.io/payment/prod_6JrHGnC707qbtiMBiLGlkX',
   },
   {
     product_id: 'basic',

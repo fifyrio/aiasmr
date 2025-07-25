@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMockPaymentClient } from '@/lib/payment/client';
+import { createCreemPaymentClient } from '@/lib/payment/creem-client';
 import { createClient } from '@/lib/supabase/server';
 
 // Force dynamic rendering for payment callbacks

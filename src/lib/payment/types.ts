@@ -20,6 +20,9 @@ export interface Product {
   buttonText?: string;
   buttonColor?: string;
   popular?: boolean;
+  // Creem.io 集成字段
+  directPaymentUrl?: string; // 直接支付URL
+  useCreemApi?: boolean; // 是否使用Creem API
 }
 
 export interface Order {
