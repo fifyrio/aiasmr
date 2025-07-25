@@ -62,12 +62,12 @@ export const PLANS: Product[] = [
   {
     product_id: 'pro_monthly',
     product_name: 'AI ASMR Pro',
-    price: 2990, // $29.9 in cents
-    originalPrice: 3990, // $39.9 in cents
-    credits: 500,
-    videos: 50,
-    pricePerVideo: 0.59,
-    pricePerCredit: 0.059,
+    price: 4990, // $49.9 in cents
+    originalPrice: 5990, // $59.9 in cents
+    credits: 1500,
+    videos: 150,
+    pricePerVideo: 0.33,
+    pricePerCredit: 0.033,
     duration: '8s',
     resolution: '1080p',
     commercial: true,

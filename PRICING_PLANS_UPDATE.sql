@@ -88,12 +88,12 @@ INSERT INTO products (
 (
   'pro_monthly',
   'AI ASMR Pro',
-  2990,
-  3990,
-  500,
-  50,
-  0.59,
-  0.059,
+  4990,
+  5990,
+  1500,
+  150,
+  0.33,
+  0.033,
   '8s',
   '1080p',
   true,
@@ -136,6 +136,6 @@ CREATE TRIGGER update_products_updated_at
 DO $$
 BEGIN
     RAISE NOTICE 'Simplified pricing plans database schema updated successfully!';
-    RAISE NOTICE 'New plans: AI ASMR Trial ($7.9), AI ASMR Basic ($19.9/month), AI ASMR Pro ($29.9/month)';
+    RAISE NOTICE 'New plans: AI ASMR Trial ($7.9), AI ASMR Basic ($19.9/month), AI ASMR Pro ($49.9/month)';
     RAISE NOTICE 'Products table created with RLS policies and proper indexing.';
 END $$;
