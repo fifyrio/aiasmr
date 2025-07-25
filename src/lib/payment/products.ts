@@ -1,145 +1,104 @@
-// Product configurations based on AIASMR pricing structure
+// Simplified AIASMR pricing plans
 
 import { Product } from './types';
 
-// Credit packages (one-time purchases)
-export const CREDIT_PACKAGES: Product[] = [
+// Simplified pricing plans
+export const PLANS: Product[] = [
   {
-    product_id: 'credits_50',
-    product_name: '50 Credits Pack',
-    price: 999, // $9.99 in cents
-    credits: 50,
-    type: 'once',
-    description: 'Perfect for trying out our AI ASMR video generation',
-    features: [
-      '50 video generation credits',
-      'Standard quality videos',
-      'Basic triggers selection',
-      'Download in HD'
-    ]
-  },
-  {
-    product_id: 'credits_100',
-    product_name: '100 Credits Pack',
-    price: 1899, // $18.99 in cents
+    product_id: 'trial',
+    product_name: 'AI ASMR Trial',
+    price: 790, // $7.9 in cents
+    originalPrice: 990, // $9.9 in cents
     credits: 100,
+    videos: 10,
+    pricePerVideo: 0.79,
+    pricePerCredit: 0.079,
+    duration: '8s',
+    resolution: '720p',
+    commercial: false,
     type: 'once',
-    description: 'Great value for regular users',
     features: [
-      '100 video generation credits',
-      'Standard quality videos',
-      'All triggers available',
-      'Download in HD',
-      '10% bonus credits'
-    ]
+      'Google Veo 3 ASMR support',
+      'Max 8s video duration',
+      '720p resolution',
+      'Binaural audio effects',
+      'ASMR trigger library',
+    ],
+    buttonText: 'Try AI ASMR ⚡',
+    buttonColor: 'from-blue-500 to-purple-600',
+    popular: false,
   },
   {
-    product_id: 'credits_250',
-    product_name: '250 Credits Pack',
-    price: 4499, // $44.99 in cents
-    credits: 250,
-    type: 'once',
-    description: 'Best value for power users',
-    features: [
-      '250 video generation credits',
-      'High quality videos',
-      'All triggers available',
-      'Download in 4K',
-      '25% bonus credits',
-      'Priority generation queue'
-    ]
-  }
-];
-
-// Subscription plans
-export const SUBSCRIPTION_PLANS: Product[] = [
-  {
-    product_id: 'basic_monthly',
-    product_name: 'Basic Plan',
-    price: 1390, // $13.90 in cents
-    credits: 50, // Monthly credits
+    product_id: 'basic',
+    product_name: 'AI ASMR Basic',
+    price: 1990, // $19.9 in cents
+    originalPrice: 2490, // $24.9 in cents
+    credits: 300,
+    videos: 30,
+    pricePerVideo: 0.66,
+    pricePerCredit: 0.066,
+    duration: '8s',
+    resolution: '720p',
+    commercial: true,
+    priceIncrease: true,
     type: 'subscription',
     billing_period: 'monthly',
-    description: 'Everything you need to get started with AI ASMR videos',
     features: [
-      '50 credits per month',
-      'Standard quality videos',
-      'All ASMR triggers',
-      'Download in HD',
-      'Email support',
-      'No watermark'
-    ]
-  },
-  {
-    product_id: 'pro_monthly',
-    product_name: 'Pro Plan',
-    price: 1990, // $19.90 in cents
-    credits: 100, // Monthly credits
-    type: 'subscription',
-    billing_period: 'monthly',
-    description: 'Perfect for content creators and enthusiasts',
-    features: [
-      '100 credits per month',
-      'High quality videos',
-      'All ASMR triggers',
-      'Download in 4K',
-      'Priority support',
-      'No watermark',
+      'Google Veo 3 ASMR support',
+      'Max 8s video duration',
+      '720p resolution',
+      'Whisper & voice sync',
+      'Binaural audio effects',
+      'ASMR trigger library',
       'Commercial usage rights',
-      'Advanced customization',
-      'Priority generation queue'
-    ]
-  },
-  {
-    product_id: 'basic_yearly',
-    product_name: 'Basic Plan (Yearly)',
-    price: 13900, // $139.00 in cents (2 months free)
-    credits: 50, // Monthly credits
-    type: 'subscription',
-    billing_period: 'yearly',
-    description: 'Save 17% with yearly billing',
-    features: [
-      '50 credits per month',
-      'Standard quality videos',
-      'All ASMR triggers',
-      'Download in HD',
-      'Email support',
-      'No watermark',
-      '2 months FREE!'
-    ]
+      'Standard processing',
+      'Basic support',
+      'Global availability',
+    ],
+    buttonText: 'Subscribe to Basic ⚡',
+    buttonColor: 'from-blue-500 to-purple-600',
+    popular: true,
   },
   {
     product_id: 'pro_yearly',
-    product_name: 'Pro Plan (Yearly)',
-    price: 19900, // $199.00 in cents (2 months free)
-    credits: 100, // Monthly credits
+    product_name: 'AI ASMR Pro (Yearly)',
+    price: 8990, // $89.9 in cents
+    originalPrice: 11990, // $119.9 in cents
+    credits: 1500,
+    videos: 150,
+    pricePerVideo: 0.60,
+    pricePerCredit: 0.059,
+    duration: '8s',
+    resolution: '1080p',
+    commercial: true,
     type: 'subscription',
     billing_period: 'yearly',
-    description: 'Best value for serious creators',
     features: [
-      '100 credits per month',
-      'High quality videos',
-      'All ASMR triggers',
-      'Download in 4K',
-      'Priority support',
-      'No watermark',
+      'All Basic features included',
+      '1080p video resolution',
+      'Advanced whisper sync',
+      'Premium binaural audio',
+      'Full ASMR trigger library',
+      'Fastest processing',
       'Commercial usage rights',
-      'Advanced customization',
-      'Priority generation queue',
-      '2 months FREE!'
-    ]
-  }
+      'Priority support',
+      'Global availability',
+      'Annual subscription discount',
+    ],
+    buttonText: 'Go Pro Yearly 🔥',
+    buttonColor: 'from-purple-600 to-pink-500',
+    popular: false,
+  },
 ];
 
-// All products combined
-export const ALL_PRODUCTS: Product[] = [
-  ...CREDIT_PACKAGES,
-  ...SUBSCRIPTION_PLANS
-];
+// For backward compatibility
+export const ALL_PRODUCTS: Product[] = PLANS;
+export const CREDIT_PACKAGES: Product[] = PLANS.filter(plan => plan.type === 'once');
+export const SUBSCRIPTION_PLANS: Product[] = PLANS.filter(plan => plan.type === 'subscription');
 
 // Helper functions
 export const getProductById = (productId: string): Product | undefined => {
-  return ALL_PRODUCTS.find(product => product.product_id === productId);
+  return PLANS.find(product => product.product_id === productId);
 };
 
 export const getCreditPackages = (): Product[] => {

@@ -5,12 +5,12 @@ import AOS from 'aos'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { useAuth } from '@/contexts/AuthContext'
-import { SUBSCRIPTION_PLANS, CREDIT_PACKAGES, formatPrice } from '@/lib/payment/products'
+import { PLANS, formatPrice } from '@/lib/payment/products'
 
 const PricingPage = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
-  const [planType, setPlanType] = useState<'subscriptions' | 'credits'>('subscriptions');
+  // Remove plan type toggle since we have simplified plans
 
   useEffect(() => {
     AOS.init({
@@ -55,7 +55,7 @@ const PricingPage = () => {
     }
   };
 
-  const displayPlans = planType === 'subscriptions' ? SUBSCRIPTION_PLANS : CREDIT_PACKAGES;
+  const displayPlans = PLANS;
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -73,31 +73,6 @@ const PricingPage = () => {
               Select the perfect plan for your ASMR video generation needs. All plans include our advanced AI technology and premium features.
             </p>
             
-            {/* Plan Type Toggle */}
-            <div className="flex justify-center mb-8">
-              <div className="bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/20">
-                <button
-                  onClick={() => setPlanType('subscriptions')}
-                  className={`px-6 py-2 rounded-full font-semibold transition-all duration-200 ${
-                    planType === 'subscriptions'
-                      ? 'bg-white text-gray-900 shadow-lg'
-                      : 'text-white hover:bg-white/20'
-                  }`}
-                >
-                  Monthly Plans
-                </button>
-                <button
-                  onClick={() => setPlanType('credits')}
-                  className={`px-6 py-2 rounded-full font-semibold transition-all duration-200 ${
-                    planType === 'credits'
-                      ? 'bg-white text-gray-900 shadow-lg'
-                      : 'text-white hover:bg-white/20'
-                  }`}
-                >
-                  Credit Packages
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -107,7 +82,7 @@ const PricingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`grid gap-8 ${displayPlans.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
             {displayPlans.map((plan, index) => {
-              const isPopular = plan.product_id === 'basic_monthly' || plan.product_id === 'credits_100';
+              const isPopular = plan.popular || plan.product_id === 'basic';
               const isLoading = loading === plan.product_id;
               
               return (
@@ -129,7 +104,14 @@ const PricingPage = () => {
                     <div className="text-center mb-6">
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.product_name}</h3>
                       <div className="flex items-center justify-center gap-2 mb-4">
-                        <span className="text-4xl font-bold text-gray-900">{formatPrice(plan.price)}</span>
+                        <div className="text-center">
+                          <span className="text-4xl font-bold text-gray-900">{formatPrice(plan.price)}</span>
+                          {plan.originalPrice && (
+                            <div className="text-sm text-gray-500 line-through">
+                              {formatPrice(plan.originalPrice)}
+                            </div>
+                          )}
+                        </div>
                         {plan.type === 'subscription' && (
                           <div className="text-left">
                             <div className="text-sm text-gray-600">
@@ -145,16 +127,22 @@ const PricingPage = () => {
                         </div>
                       )}
                       
-                      <div className="grid grid-cols-1 gap-4 mb-6 text-sm">
-                        <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                        <div className="bg-gray-50 p-3 rounded-lg text-center">
                           <div className="font-semibold text-gray-900">{plan.credits}</div>
-                          <div className="text-gray-600">
-                            {plan.type === 'subscription' ? 'Credits per month' : 'Total Credits'}
-                          </div>
+                          <div className="text-gray-600">Credits</div>
                         </div>
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <div className="font-semibold text-gray-900">{formatPrice(Math.round(plan.price / plan.credits))}</div>
-                          <div className="text-gray-600">per credit</div>
+                        <div className="bg-gray-50 p-3 rounded-lg text-center">
+                          <div className="font-semibold text-gray-900">{plan.videos}</div>
+                          <div className="text-gray-600">Videos</div>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-lg text-center">
+                          <div className="font-semibold text-gray-900">{plan.resolution}</div>
+                          <div className="text-gray-600">Resolution</div>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-lg text-center">
+                          <div className="font-semibold text-gray-900">{plan.duration}</div>
+                          <div className="text-gray-600">Duration</div>
                         </div>
                       </div>
                     </div>
@@ -178,9 +166,9 @@ const PricingPage = () => {
                       onClick={() => handlePurchase(plan.product_id)}
                       disabled={isLoading}
                       className={`w-full bg-gradient-to-r ${
-                        isPopular 
+                        plan.buttonColor || (isPopular 
                           ? 'from-purple-500 to-pink-600' 
-                          : 'from-blue-500 to-purple-600'
+                          : 'from-blue-500 to-purple-600')
                       } text-white py-4 px-6 rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
                     >
                       {isLoading ? (
@@ -189,7 +177,7 @@ const PricingPage = () => {
                           Processing...
                         </div>
                       ) : (
-                        `${plan.type === 'subscription' ? 'Subscribe to' : 'Buy'} ${plan.product_name}`
+                        plan.buttonText || `${plan.type === 'subscription' ? 'Subscribe to' : 'Buy'} ${plan.product_name}`
                       )}
                     </button>
                   </div>

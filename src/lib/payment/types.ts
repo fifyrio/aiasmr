@@ -4,11 +4,22 @@ export interface Product {
   product_id: string;
   product_name: string;
   price: number;
+  originalPrice?: number;
   credits: number;
+  videos?: number;
+  pricePerVideo?: number;
+  pricePerCredit?: number;
+  duration?: string;
+  resolution?: string;
+  commercial?: boolean;
   type: 'once' | 'subscription';
+  priceIncrease?: boolean;
   description?: string;
   features?: string[];
   billing_period?: 'monthly' | 'yearly';
+  buttonText?: string;
+  buttonColor?: string;
+  popular?: boolean;
 }
 
 export interface Order {
