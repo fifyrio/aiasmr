@@ -80,4 +80,4 @@ npm run type-check   # Run TypeScript checks (if configured)
 - Commercial use only for paid users
 - Average generation time: 1-2 minutes (up to 4 during peak)
 - 7-day refund policy for subscriptions
-- Email-only support: support@aiasmr.so
+- Email-only support: support@aiasmr.vip

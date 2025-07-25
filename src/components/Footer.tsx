@@ -75,7 +75,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="mailto:support@aiasmr.so" className="text-gray-400 hover:text-white transition-colors">
+                <a href="mailto:support@aiasmr.vip" className="text-gray-400 hover:text-white transition-colors">
                   Support
                 </a>
               </li>

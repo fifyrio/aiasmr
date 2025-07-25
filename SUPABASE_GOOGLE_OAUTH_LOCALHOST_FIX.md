@@ -36,7 +36,7 @@ https://www.aiasmr.vip/auth/callback
 **Client Secret**: `your-google-client-secret`
 
 **Redirect URL（重要）**：
-应该显示类似：`https://xwthsruuafryyqspqyss.supabase.co/auth/v1/callback`
+应该显示类似：`https://your-project-id.supabase.co/auth/v1/callback`
 
 ### 2. 更新Google Cloud Console
 
@@ -50,14 +50,14 @@ https://www.aiasmr.vip/auth/callback
 **Authorized JavaScript origins**:
 ```
 http://localhost:3000
-https://xwthsruuafryyqspqyss.supabase.co
+https://your-project-id.supabase.co
 https://www.aiasmr.vip
 ```
 
 **Authorized redirect URIs**:
 ```
 http://localhost:3000/auth/callback
-https://xwthsruuafryyqspqyss.supabase.co/auth/v1/callback
+https://your-project-id.supabase.co/auth/v1/callback
 https://www.aiasmr.vip/auth/callback
 ```
 
@@ -67,8 +67,8 @@ https://www.aiasmr.vip/auth/callback
 
 ```bash
 # Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=https://xwthsruuafryyqspqyss.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3dGhzcnV1YWZyeXlxc3BxeXNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NDE3NzksImV4cCI6MjA2NzUxNzc3OX0.YROJJwApXLOVrhRFEkIHG4RsrqZPuvyaiacP_aQ3oVs
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 # Environment-specific URLs
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -102,7 +102,7 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 #### 错误: "redirect_uri_mismatch"
 **原因**: Google Cloud Console中的重定向URI不匹配
-**解决**: 确保添加了 `https://xwthsruuafryyqspqyss.supabase.co/auth/v1/callback`
+**解决**: 确保添加了 `https://your-project-id.supabase.co/auth/v1/callback`
 
 #### 错误: "Invalid redirect URL"
 **原因**: Supabase的Site URL设置错误
