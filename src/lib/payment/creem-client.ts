@@ -1,12 +1,14 @@
 // Real Creem.io payment client
 import { CreateCheckoutRequest, CreateCheckoutResponse } from './types';
+import { getPaymentConfig } from './config';
 
 export class CreemPaymentClient {
   private apiKey: string;
   private baseUrl = 'https://api.creem.io/v1';
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || process.env.CREEM_API_KEY || '';
+    const config = getPaymentConfig();
+    this.apiKey = apiKey || config.apiKey;
     if (!this.apiKey) {
       throw new Error('Creem API key is required');
     }
@@ -59,7 +61,8 @@ export class CreemPaymentClient {
       
       // 使用你的webhook secret进行HMAC验证
       const crypto = require('crypto');
-      const webhookSecret = process.env.CREEM_WEBHOOK_SECRET || '';
+      const config = getPaymentConfig();
+      const webhookSecret = config.webhookSecret;
       const expectedSignature = crypto
         .createHmac('sha256', webhookSecret)
         .update(sortedParams)
@@ -68,6 +71,28 @@ export class CreemPaymentClient {
       return signature === expectedSignature;
     } catch (error) {
       console.error('Signature verification failed:', error);
+      return false;
+    }
+  }
+
+  // 验证webhook签名（用于POST请求）
+  verifyWebhookSignature(payload: string, signature: string): boolean {
+    try {
+      const crypto = require('crypto');
+      const config = getPaymentConfig();
+      const webhookSecret = config.webhookSecret;
+      
+      // 移除signature的前缀（如果有的话）
+      const cleanSignature = signature.replace(/^sha256=/, '');
+      
+      const expectedSignature = crypto
+        .createHmac('sha256', webhookSecret)
+        .update(payload, 'utf8')
+        .digest('hex');
+      
+      return cleanSignature === expectedSignature;
+    } catch (error) {
+      console.error('Webhook signature verification failed:', error);
       return false;
     }
   }
