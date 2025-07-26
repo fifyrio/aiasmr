@@ -16,8 +16,27 @@ export async function GET(request: NextRequest) {
     const signature = searchParams.get('signature');
     const orderId = searchParams.get('order_id');
     
-    // If no status is provided, assume success if we have checkout_id and product_id
-    if (!status && checkoutId && searchParams.get('product_id')) {
+    // If no status is provided, verify with Creem.io API
+    if (!status && checkoutId && checkoutId.startsWith('ch_')) {
+      console.log('No status parameter found, verifying with Creem.io API');
+      try {
+        const paymentClient = createCreemPaymentClient();
+        const checkoutStatus = await paymentClient.getCheckoutStatus(checkoutId);
+        
+        if (checkoutStatus && checkoutStatus.status === 'completed') {
+          status = 'success';
+          console.log('Creem.io API verification: payment completed');
+        } else {
+          status = 'pending';
+          console.log('Creem.io API verification: payment not completed, status:', checkoutStatus?.status);
+        }
+      } catch (apiError) {
+        console.error('Failed to verify payment status with Creem.io API:', apiError);
+        // If API call fails, assume success if we got a callback with checkout_id
+        status = 'success';
+        console.log('API verification failed, assuming success due to callback presence');
+      }
+    } else if (!status && checkoutId && searchParams.get('product_id')) {
       status = 'success';
       console.log('No status parameter found, inferring success from presence of checkout_id and product_id');
     }

@@ -96,6 +96,35 @@ export class CreemPaymentClient {
       return false;
     }
   }
+
+  // 获取 checkout 状态（用于验证支付）
+  async getCheckoutStatus(checkoutId: string): Promise<any> {
+    try {
+      const config = getPaymentConfig();
+      const baseUrl = config.paymentUrl.includes('test') ? 'https://test-api.creem.io' : 'https://api.creem.io';
+      
+      const response = await fetch(`${baseUrl}/v1/checkouts?checkout_id=${checkoutId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': this.apiKey,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Creem API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
+      }
+
+      const data = await response.json();
+      console.log('Checkout status response:', data);
+      
+      return data;
+    } catch (error) {
+      console.error('Failed to get checkout status:', error);
+      throw error;
+    }
+  }
 }
 
 export const createCreemPaymentClient = () => {

@@ -104,63 +104,15 @@ export async function POST(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     
-    // 检查是否使用直接支付URL（如Trial计划）
-    if (product.directPaymentUrl) {
-      console.log('Using direct payment URL for product:', product.product_id);
-      
-      // 生成唯一的checkout_id并更新订单
-      const checkoutId = `direct_${order.id}_${Date.now()}`;
-      console.log('Generated checkout_id:', checkoutId);
-      
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({ checkout_id: checkoutId })
-        .eq('id', order.id);
-        
-      if (updateError) {
-        console.error('Failed to update order with checkout_id:', {
-          error: updateError,
-          orderId: order.id,
-          checkoutId: checkoutId
-        });
-      }
-      
-      // 构建包含回调参数的支付URL
-      const successUrl = `${baseUrl}/api/payment/callback?status=success&checkout_id=${checkoutId}&order_id=${order.id}`;
-      const cancelUrl = `${baseUrl}/api/payment/callback?status=cancel&checkout_id=${checkoutId}&order_id=${order.id}`;
-      
-      console.log('Callback URLs generated:', {
-        successUrl,
-        cancelUrl
-      });
-      
-      // 如果支付URL支持自定义回调参数，添加它们
-      const paymentUrl = new URL(product.directPaymentUrl);
-      paymentUrl.searchParams.set('success_url', successUrl);
-      paymentUrl.searchParams.set('cancel_url', cancelUrl);
-      paymentUrl.searchParams.set('customer_email', user.email || '');
-      paymentUrl.searchParams.set('order_id', order.id);
-      
-      console.log('Final payment URL:', paymentUrl.toString());
-      console.log('=== Direct Payment Order Creation Completed ===');
-      
-      return NextResponse.json({
-        success: true,
-        order_id: order.id,
-        checkout_id: checkoutId,
-        payment_url: paymentUrl.toString()
-      });
-    }
-    
-    // 对于其他计划，使用Creem.io API创建checkout
+    // 使用 Creem.io API 创建 checkout (统一使用API方式)
     console.log('Using Creem.io API for checkout creation');
     try {
       const paymentClient = createCreemPaymentClient();
       const checkoutRequest = {
         product_id: product.product_id,
         customer_email: user.email || '',
-        success_url: `${baseUrl}/payment/success?order_id=${order.id}`,
-        cancel_url: `${baseUrl}/payment/cancel?order_id=${order.id}`,
+        success_url: `${baseUrl}/api/payment/callback?order_id=${order.id}`,
+        cancel_url: `${baseUrl}/api/payment/callback?status=cancel&order_id=${order.id}`,
         metadata: {
           order_id: order.id,
           user_id: user.id
@@ -200,6 +152,59 @@ export async function POST(request: NextRequest) {
         payment_url: checkout.payment_url
       });
     } catch (creem_error) {
+      console.error('Creem.io payment failed, falling back to direct payment:', {
+        error: creem_error instanceof Error ? {
+          message: creem_error.message,
+          stack: creem_error.stack
+        } : creem_error,
+        productId: product.product_id,
+        orderId: order.id,
+        timestamp: new Date().toISOString()
+      });
+      
+      // 如果API失败，回退到直接支付URL
+      if (product.directPaymentUrl) {
+        console.log('Falling back to direct payment URL');
+        
+        // 生成唯一的checkout_id并更新订单
+        const checkoutId = `direct_${order.id}_${Date.now()}`;
+        console.log('Generated checkout_id:', checkoutId);
+        
+        const { error: updateError } = await supabase
+          .from('orders')
+          .update({ checkout_id: checkoutId })
+          .eq('id', order.id);
+          
+        if (updateError) {
+          console.error('Failed to update order with checkout_id:', updateError);
+        }
+        
+        // 构建包含回调参数的支付URL
+        const successUrl = `${baseUrl}/api/payment/callback?order_id=${order.id}`;
+        const cancelUrl = `${baseUrl}/api/payment/callback?status=cancel&order_id=${order.id}`;
+        
+        const paymentUrl = new URL(product.directPaymentUrl);
+        paymentUrl.searchParams.set('success_url', successUrl);
+        paymentUrl.searchParams.set('cancel_url', cancelUrl);
+        paymentUrl.searchParams.set('customer_email', user.email || '');
+        paymentUrl.searchParams.set('order_id', order.id);
+        
+        console.log('Fallback to direct payment URL:', paymentUrl.toString());
+        
+        return NextResponse.json({
+          success: true,
+          order_id: order.id,
+          checkout_id: checkoutId,
+          payment_url: paymentUrl.toString()
+        });
+      } else {
+        // 如果没有直接支付URL，则继续尝试mock
+        console.log('No direct payment URL available, trying mock payment');
+      }
+    }
+    
+    // 最后的Mock回退
+    try {
       console.error('Creem.io payment failed, falling back to mock:', {
         error: creem_error instanceof Error ? {
           message: creem_error.message,
