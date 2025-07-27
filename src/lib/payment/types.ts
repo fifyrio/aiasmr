@@ -86,9 +86,9 @@ export interface Refund {
 
 export interface CreateCheckoutRequest {
   product_id: string;
-  customer_email: string;
   success_url: string;
-  cancel_url: string;
+  cancel_url?: string; // Keep in interface but may not be sent to API
+  customer_email?: string; // Keep in interface but may not be sent to API
   metadata?: Record<string, string>;
 }
 

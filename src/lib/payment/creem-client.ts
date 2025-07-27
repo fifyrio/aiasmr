@@ -29,13 +29,19 @@ export class CreemPaymentClient {
   }
 
   async createCheckout(request: CreateCheckoutRequest): Promise<CreateCheckoutResponse> {
-    const requestBody = {
+    // Based on the API error, try with minimal required fields first
+    const requestBody: any = {
       product_id: request.product_id,
-      customer_email: request.customer_email,
-      success_url: request.success_url,
-      cancel_url: request.cancel_url,
-      metadata: request.metadata,
     };
+    
+    // Only add optional fields if they exist and are supported
+    if (request.success_url) {
+      requestBody.success_url = request.success_url;
+    }
+    
+    if (request.metadata && Object.keys(request.metadata).length > 0) {
+      requestBody.metadata = request.metadata;
+    }
     
     console.log('Creem API request details:', {
       url: `${this.baseUrl}/checkouts`,
