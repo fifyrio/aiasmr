@@ -204,60 +204,47 @@ export async function POST(request: NextRequest) {
     }
     
     // 最后的Mock回退
-    try {
-      console.error('Creem.io payment failed, falling back to mock:', {
-        error: creem_error instanceof Error ? {
-          message: creem_error.message,
-          stack: creem_error.stack
-        } : creem_error,
-        productId: product.product_id,
-        orderId: order.id,
-        timestamp: new Date().toISOString()
-      });
-      
-      // 如果Creem.io API失败，回退到mock
-      console.log('Falling back to mock payment system');
-      
-      const mockPaymentClient = createMockPaymentClient();
-      const mockCheckout = await mockPaymentClient.createCheckout({
-        product_id: product.product_id,
-        customer_email: user.email || '',
-        success_url: `${baseUrl}/payment/success?order_id=${order.id}`,
-        cancel_url: `${baseUrl}/payment/cancel?order_id=${order.id}`,
-        metadata: {
-          order_id: order.id,
-          user_id: user.id
-        }
-      });
-      
-      console.log('Mock payment checkout created:', {
-        checkoutId: mockCheckout.checkout_id,
-        paymentUrl: mockCheckout.payment_url
-      });
-      
-      // Update order with checkout ID
-      const { error: mockUpdateError } = await supabase
-        .from('orders')
-        .update({ checkout_id: mockCheckout.checkout_id })
-        .eq('id', order.id);
-        
-      if (mockUpdateError) {
-        console.error('Failed to update order with mock checkout_id:', {
-          error: mockUpdateError,
-          orderId: order.id,
-          checkoutId: mockCheckout.checkout_id
-        });
-      }
-      
-      console.log('=== Mock Payment Order Creation Completed ===');
-        
-      return NextResponse.json({
-        success: true,
+    console.log('Falling back to mock payment system');
+    
+    const mockPaymentClient = createMockPaymentClient();
+    const mockCheckout = await mockPaymentClient.createCheckout({
+      product_id: product.product_id,
+      customer_email: user.email || '',
+      success_url: `${baseUrl}/payment/success?order_id=${order.id}`,
+      cancel_url: `${baseUrl}/payment/cancel?order_id=${order.id}`,
+      metadata: {
         order_id: order.id,
-        checkout_id: mockCheckout.checkout_id,
-        payment_url: mockCheckout.payment_url
+        user_id: user.id
+      }
+    });
+    
+    console.log('Mock payment checkout created:', {
+      checkoutId: mockCheckout.checkout_id,
+      paymentUrl: mockCheckout.payment_url
+    });
+    
+    // Update order with checkout ID
+    const { error: mockUpdateError } = await supabase
+      .from('orders')
+      .update({ checkout_id: mockCheckout.checkout_id })
+      .eq('id', order.id);
+      
+    if (mockUpdateError) {
+      console.error('Failed to update order with mock checkout_id:', {
+        error: mockUpdateError,
+        orderId: order.id,
+        checkoutId: mockCheckout.checkout_id
       });
     }
+    
+    console.log('=== Mock Payment Order Creation Completed ===');
+      
+    return NextResponse.json({
+      success: true,
+      order_id: order.id,
+      checkout_id: mockCheckout.checkout_id,
+      payment_url: mockCheckout.payment_url
+    });
 
   } catch (error) {
     console.error('=== CRITICAL ERROR in create-order ===');
