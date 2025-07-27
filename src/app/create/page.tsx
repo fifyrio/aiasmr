@@ -30,9 +30,10 @@ export default function CreatePage() {
   const [taskId, setTaskId] = useState<string | null>(null);
   const [generationProgress, setGenerationProgress] = useState<string>('Starting generation...');
   const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16'>('16:9');
-  const [model, setModel] = useState<'veo3' | 'veo3_fast'>('veo3');
+  const [duration, setDuration] = useState<5 | 8>(5);
+  const [quality, setQuality] = useState<'720p' | '1080p'>('720p');
 
-  const maxChars = 500;
+  const maxChars = 1000;
 
   useEffect(() => {
     AOS.init({
@@ -163,7 +164,8 @@ export default function CreatePage() {
           prompt: prompt.trim(),
           triggers: selectedTriggers,
           aspectRatio,
-          model,
+          duration,
+          quality,
         }),
       });
 
@@ -282,73 +284,105 @@ export default function CreatePage() {
 
             {/* Generation Settings */}
             <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="500">
-              {/* Model Selection */}
+              {/* Duration Selection */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
-                  <i className="ri-cpu-line mr-2"></i>
-                  Generation Model
+                  <i className="ri-time-line mr-2"></i>
+                  Video Duration
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => setModel('veo3')}
+                    onClick={() => setDuration(5)}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
-                      model === 'veo3'
+                      duration === 5
                         ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-lg'
                         : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                     }`}
                   >
-                    <div className="font-semibold">Veo3</div>
-                    <div className="text-sm opacity-80">High Quality</div>
+                    <div className="font-semibold">5 Seconds</div>
+                    <div className="text-sm opacity-80">Quick Generation</div>
                   </button>
                   <button
-                    onClick={() => setModel('veo3_fast')}
+                    onClick={() => setDuration(8)}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
-                      model === 'veo3_fast'
+                      duration === 8
                         ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white border-transparent shadow-lg'
                         : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                     }`}
                   >
-                    <div className="font-semibold">Veo3 Fast</div>
-                    <div className="text-sm opacity-80">Quick Generate</div>
+                    <div className="font-semibold">8 Seconds</div>
+                    <div className="text-sm opacity-80">Extended Experience</div>
                   </button>
                 </div>
               </div>
 
-              {/* Aspect Ratio Selection */}
+              {/* Quality Selection */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
-                  <i className="ri-aspect-ratio-line mr-2"></i>
-                  Aspect Ratio
+                  <i className="ri-hd-line mr-2"></i>
+                  Video Quality
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => setAspectRatio('16:9')}
+                    onClick={() => setQuality('720p')}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
-                      aspectRatio === '16:9'
+                      quality === '720p'
                         ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white border-transparent shadow-lg'
                         : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                     }`}
                   >
-                    <div className="font-semibold">16:9</div>
-                    <div className="text-sm opacity-80">Landscape</div>
+                    <div className="font-semibold">720p HD</div>
+                    <div className="text-sm opacity-80">Standard Quality</div>
                   </button>
                   <button
-                    onClick={() => setAspectRatio('9:16')}
+                    onClick={() => setQuality('1080p')}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
-                      aspectRatio === '9:16'
-                        ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-lg'
+                      quality === '1080p'
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-transparent shadow-lg'
                         : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                     }`}
                   >
-                    <div className="font-semibold">9:16</div>
-                    <div className="text-sm opacity-80">Portrait</div>
+                    <div className="font-semibold">1080p Full HD</div>
+                    <div className="text-sm opacity-80">High Quality</div>
                   </button>
                 </div>
               </div>
             </div>
 
+            {/* Aspect Ratio - moved to its own section */}
+            <div className="mb-8" data-aos="fade-up" data-aos-delay="600">
+              <label className="block text-lg font-medium text-white mb-4">
+                <i className="ri-aspect-ratio-line mr-2"></i>
+                Aspect Ratio
+              </label>
+              <div className="grid grid-cols-2 gap-3 max-w-md">
+                <button
+                  onClick={() => setAspectRatio('16:9')}
+                  className={`p-4 rounded-xl transition-all duration-300 border ${
+                    aspectRatio === '16:9'
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
+                      : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                  }`}
+                >
+                  <div className="font-semibold">16:9</div>
+                  <div className="text-sm opacity-80">Landscape</div>
+                </button>
+                <button
+                  onClick={() => setAspectRatio('9:16')}
+                  className={`p-4 rounded-xl transition-all duration-300 border ${
+                    aspectRatio === '9:16'
+                      ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-lg'
+                      : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                  }`}
+                >
+                  <div className="font-semibold">9:16</div>
+                  <div className="text-sm opacity-80">Portrait</div>
+                </button>
+              </div>
+            </div>
+
             {/* Generate Button */}
-            <div className="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="600">
+            <div className="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="700">
               <button
                 onClick={handleGenerate}
                 disabled={isGenerateDisabled}
@@ -436,10 +470,17 @@ export default function CreatePage() {
                       <i className="ri-download-line mr-2"></i>
                       Download HD
                     </button>
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                      <span className="text-white text-sm font-medium">
-                        Triggers: {selectedTriggers.join(', ')}
-                      </span>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                        <span className="text-white text-xs font-medium">
+                          {duration}s • {quality} • {aspectRatio}
+                        </span>
+                      </div>
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                        <span className="text-white text-xs font-medium">
+                          Triggers: {selectedTriggers.join(', ')}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

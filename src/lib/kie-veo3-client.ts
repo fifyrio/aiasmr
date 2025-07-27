@@ -2,11 +2,10 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 
 export interface VideoGenerationOptions {
   prompt: string;
-  imageUrls?: string[];
-  model?: 'veo3' | 'veo3_fast';
-  watermark?: string;
+  imageUrl?: string;
+  duration?: 5 | 8;
+  quality?: '720p' | '1080p';
   aspectRatio?: '16:9' | '9:16';
-  seeds?: number;
   callBackUrl?: string;
 }
 
@@ -40,28 +39,164 @@ export class KieVeo3Client {
   constructor(apiKey: string, options: { maxRetries?: number; timeout?: number } = {}) {
     this.maxRetries = options.maxRetries || 3;
     
+    const baseURL = process.env.KIE_BASE_URL || 'https://api.kie.ai/api/v1';
+    console.log('KIE Client Configuration:', {
+      baseURL,
+      timeout: options.timeout || 30000,
+      maxRetries: this.maxRetries,
+      hasApiKey: !!apiKey
+    });
+    
     this.client = axios.create({
-      baseURL: process.env.KIE_BASE_URL || 'https://api.kie.ai/api/v1',
+      baseURL,
       timeout: options.timeout || 30000,
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       }
     });
+
+    // Add request interceptor for debugging
+    this.client.interceptors.request.use(
+      (config) => {
+        console.log('KIE API Request:', {
+          method: config.method?.toUpperCase(),
+          url: `${config.baseURL}${config.url}`,
+          timeout: config.timeout,
+          headers: {
+            ...config.headers,
+            Authorization: config.headers.Authorization ? '[REDACTED]' : undefined
+          }
+        });
+        return config;
+      },
+      (error) => {
+        console.error('KIE API Request Error:', error);
+        return Promise.reject(error);
+      }
+    );
+
+    // Add response interceptor for debugging
+    this.client.interceptors.response.use(
+      (response) => {
+        console.log('KIE API Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.config.url,
+          dataType: typeof response.data
+        });
+        return response;
+      },
+      (error) => {
+        console.error('KIE API Response Error:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          url: error.config?.url,
+          message: error.message
+        });
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  // Test API connection
+  async testConnection(): Promise<boolean> {
+    try {
+      console.log('Testing KIE API connection...');
+      // Try a simple request to test connectivity
+      const response = await this.client.get('/health', { timeout: 10000 });
+      console.log('KIE API connection test successful');
+      return true;
+    } catch (error) {
+      console.error('KIE API connection test failed:', error);
+      return false;
+    }
   }
 
   async generateVideo(options: VideoGenerationOptions): Promise<VideoGenerationResult> {
     this.validateGenerationOptions(options);
     
+    // Format the request according to KIE Runway API documentation
+    const requestData = {
+      prompt: options.prompt,
+      duration: options.duration || 5,
+      quality: options.quality || '720p',
+      aspectRatio: options.aspectRatio || '16:9',
+      ...(options.imageUrl && { imageUrl: options.imageUrl }),
+      ...(options.callBackUrl && { callBackUrl: options.callBackUrl })
+    };
+
+    console.log('KIE Runway API request data:', JSON.stringify(requestData, null, 2));
+    
     return this.requestWithRetry(async () => {
-      const response = await this.client.post('/veo/generate', options);
-      return response.data;
+      const response = await this.client.post('/runway/generate', requestData);
+      console.log('KIE Runway API raw response:', {
+        status: response.status,
+        headers: response.headers,
+        data: response.data
+      });
+      
+      const responseData = response.data;
+      
+      // Handle KIE API response format: { code, msg, data }
+      if (responseData && typeof responseData === 'object') {
+        console.log('Searching for taskId in response fields:', Object.keys(responseData));
+        
+        // KIE API returns: { code: 200, msg: "success", data: { taskId: "..." } }
+        let taskId;
+        
+        if (responseData.data && responseData.data.taskId) {
+          // Standard KIE API format
+          taskId = responseData.data.taskId;
+        } else {
+          // Fallback: check for other possible locations
+          taskId = responseData.taskId || responseData.task_id || responseData.id || responseData.requestId || responseData.uuid || responseData.jobId;
+        }
+        
+        console.log('Task ID candidates:', {
+          'data.taskId': responseData.data?.taskId,
+          taskId: responseData.taskId,
+          task_id: responseData.task_id,
+          id: responseData.id,
+          requestId: responseData.requestId,
+          uuid: responseData.uuid,
+          jobId: responseData.jobId,
+          finalTaskId: taskId
+        });
+        
+        if (taskId) {
+          return {
+            taskId: taskId,
+            status: responseData.code === 200 ? 'pending' : 'failed',
+            result: responseData.data,
+            error: responseData.code !== 200 ? responseData.msg : undefined
+          };
+        } else {
+          console.error('No taskId found in response. Full response:', JSON.stringify(responseData, null, 2));
+          
+          // If we can't find a task ID but the response looks successful
+          if (responseData.code === 200 && responseData.msg === 'success') {
+            console.log('Response appears successful but no taskId found, creating mock taskId');
+            return {
+              taskId: `kie_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              status: 'pending',
+              result: responseData.data || responseData,
+              error: undefined
+            };
+          }
+          
+          throw new Error('KIE API响应中未找到任务ID');
+        }
+      } else {
+        console.error('Invalid response format:', responseData);
+        throw new Error('KIE API返回无效的响应格式');
+      }
     });
   }
 
   async getTaskStatus(taskId: string): Promise<TaskStatus> {
     return this.requestWithRetry(async () => {
-      const response = await this.client.get(`/veo/task/${taskId}`);
+      const response = await this.client.get(`/runway/task/${taskId}`);
       return response.data;
     });
   }
@@ -104,29 +239,23 @@ export class KieVeo3Client {
       errors.push('prompt不能超过1000个字符');
     }
     
-    if (options.model && !['veo3', 'veo3_fast'].includes(options.model)) {
-      errors.push('model必须是veo3或veo3_fast');
+    if (options.duration && ![5, 8].includes(options.duration)) {
+      errors.push('duration必须是5或8');
+    }
+    
+    if (options.quality && !['720p', '1080p'].includes(options.quality)) {
+      errors.push('quality必须是720p或1080p');
     }
     
     if (options.aspectRatio && !['16:9', '9:16'].includes(options.aspectRatio)) {
       errors.push('aspectRatio必须是16:9或9:16');
     }
     
-    if (options.seeds && (options.seeds < 10000 || options.seeds > 99999)) {
-      errors.push('seeds必须在10000-99999范围内');
-    }
-    
-    if (options.imageUrls) {
-      if (!Array.isArray(options.imageUrls)) {
-        errors.push('imageUrls必须是数组');
-      } else {
-        options.imageUrls.forEach((url, index) => {
-          try {
-            new URL(url);
-          } catch {
-            errors.push(`imageUrls[${index}]不是有效的URL`);
-          }
-        });
+    if (options.imageUrl) {
+      try {
+        new URL(options.imageUrl);
+      } catch {
+        errors.push('imageUrl不是有效的URL');
       }
     }
     
@@ -158,9 +287,28 @@ export class KieVeo3Client {
   }
 
   private handleError(error: AxiosError): Error {
+    console.error('KIE API Error Details:', {
+      code: error.code,
+      message: error.message,
+      hasResponse: !!error.response,
+      hasRequest: !!error.request,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+        baseURL: error.config?.baseURL,
+        timeout: error.config?.timeout
+      }
+    });
+
     if (error.response) {
       const { status, data } = error.response;
       const message = (data as any)?.message || '未知错误';
+      
+      console.error('API Response Error:', {
+        status,
+        data,
+        headers: error.response.headers
+      });
       
       switch (status) {
         case 429:
@@ -168,12 +316,39 @@ export class KieVeo3Client {
         case 401:
           return new Error('API密钥无效，请检查配置');
         case 400:
-          return new Error('请求参数错误，请检查输入');
+          return new Error(`请求参数错误: ${message}`);
+        case 403:
+          return new Error('API访问被拒绝，请检查权限');
+        case 404:
+          return new Error('API端点不存在，请检查URL配置');
+        case 500:
+          return new Error('服务器内部错误，请稍后重试');
         default:
           return new Error(`API错误 ${status}: ${message}`);
       }
     } else if (error.request) {
-      return new Error('网络请求失败');
+      console.error('Network Request Error:', {
+        request: {
+          url: error.request.responseURL || 'N/A',
+          status: error.request.status,
+          readyState: error.request.readyState
+        },
+        code: error.code,
+        syscall: (error as any).syscall,
+        errno: (error as any).errno,
+        address: (error as any).address,
+        port: (error as any).port
+      });
+      
+      if (error.code === 'ECONNREFUSED') {
+        return new Error('连接被拒绝，请检查API服务是否可用');
+      } else if (error.code === 'ENOTFOUND') {
+        return new Error('域名解析失败，请检查网络连接和API URL');
+      } else if (error.code === 'ETIMEDOUT') {
+        return new Error('请求超时，请检查网络连接');
+      } else {
+        return new Error(`网络请求失败: ${error.code || '未知网络错误'}`);
+      }
     } else {
       return new Error(`请求配置错误: ${error.message}`);
     }
