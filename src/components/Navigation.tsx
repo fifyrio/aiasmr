@@ -94,7 +94,12 @@ const Navigation = () => {
                       {user.email?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-gray-700 text-sm">{user.email}</span>
+                  <Link 
+                    href="/user" 
+                    className="text-gray-700 text-sm hover:text-purple-600 transition-colors cursor-pointer"
+                  >
+                    {user.email}
+                  </Link>
                 </div>
                 <button 
                   onClick={handleSignOut}
@@ -173,7 +178,13 @@ const Navigation = () => {
                         {user.email?.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <span className="text-gray-700 text-sm">{user.email}</span>
+                    <Link 
+                      href="/user" 
+                      className="text-gray-700 text-sm hover:text-purple-600 transition-colors cursor-pointer"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {user.email}
+                    </Link>
                   </div>
                   <button 
                     onClick={handleSignOut}

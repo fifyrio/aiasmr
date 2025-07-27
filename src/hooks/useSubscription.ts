@@ -92,7 +92,7 @@ export const useSubscription = () => {
           planType: planType as any
         });
       } else {
-        // No active subscription, determine plan based on recent orders
+        // No active subscription, use plan_type from user_profiles and get recent order info
         const { data: recentOrder, error: orderError } = await supabase
           .from('orders')
           .select('product_name, status, created_at')
@@ -105,28 +105,38 @@ export const useSubscription = () => {
           console.error('Error fetching recent orders:', orderError);
         }
 
+        // Use planType from user_profiles (already fetched above)
         let productName = 'Free Plan';
         let status: UserSubscription['status'] = 'none';
-        let planTypeResult: UserSubscription['planType'] = 'free';
 
-        if (recentOrder?.[0]) {
+        // Map plan_type to product name
+        switch (planType) {
+          case 'trial':
+            productName = 'AI ASMR Trial';
+            status = 'active';
+            break;
+          case 'basic':
+            productName = 'AI ASMR Basic';
+            status = 'active';
+            break;
+          case 'pro':
+            productName = 'AI ASMR Pro';
+            status = 'active';
+            break;
+          default:
+            productName = 'Free Plan';
+            status = 'none';
+        }
+
+        // If user has a plan but also has recent orders, use the more recent product name
+        if (recentOrder?.[0] && planType !== 'free') {
           productName = recentOrder[0].product_name;
-          status = 'active'; // If they have a completed order, consider them as having access
-          
-          // Determine plan type from product name
-          if (productName.includes('Trial')) {
-            planTypeResult = 'trial';
-          } else if (productName.includes('Basic')) {
-            planTypeResult = 'basic';
-          } else if (productName.includes('Pro')) {
-            planTypeResult = 'pro';
-          }
         }
 
         setSubscription({
           productName,
           status,
-          planType: planTypeResult
+          planType: planType as any // Use planType from user_profiles
         });
       }
     } catch (err) {

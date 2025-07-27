@@ -27,8 +27,10 @@ export async function GET(request: NextRequest) {
           status = 'success';
           console.log('Creem.io API verification: payment completed');
         } else {
-          status = 'pending';
+          // Don't process incomplete payments as success
           console.log('Creem.io API verification: payment not completed, status:', checkoutStatus?.status);
+          console.log('Skipping callback processing for incomplete payment');
+          return NextResponse.redirect(`${baseUrl}/payment/pending?checkout_id=${checkoutId}`);
         }
       } catch (apiError) {
         console.error('Failed to verify payment status with Creem.io API:', apiError);
@@ -124,16 +126,23 @@ export async function GET(request: NextRequest) {
 
     if (status === 'success' || status === 'completed') {
       // Handle successful payment
-      console.log('Processing successful payment...');
+      console.log('Processing successful payment...', {
+        checkoutId,
+        status,
+        orderId,
+        timestamp: new Date().toISOString()
+      });
       try {
         await handlePaymentSuccess(checkoutId, supabase, orderId || undefined);
-        console.log('Payment success handling completed, redirecting to home page');
+        console.log('Payment success handling completed successfully, redirecting to home page');
         return NextResponse.redirect(`${baseUrl}/`);
       } catch (successError) {
         console.error('Error handling payment success:', {
           error: successError instanceof Error ? successError.message : successError,
+          stack: successError instanceof Error ? successError.stack : undefined,
           checkoutId,
-          status
+          status,
+          orderId
         });
         return NextResponse.redirect(`${baseUrl}/payment/error?message=Payment processing failed`);
       }
@@ -338,15 +347,19 @@ async function handlePaymentSuccess(checkoutId: string, supabase: any, orderId?:
         console.log('Order found by order_id');
         
         // Update the order with the Creem.io checkout_id for future reference
-        const { error: updateError } = await supabase
+        const { data: updatedOrderData, error: updateError } = await supabase
           .from('orders')
           .update({ checkout_id: checkoutId })
-          .eq('id', orderId);
+          .eq('id', orderId)
+          .select()
+          .single();
           
         if (updateError) {
           console.error('Failed to update order with Creem checkout_id:', updateError);
         } else {
           console.log('Updated order with Creem checkout_id:', checkoutId);
+          // Use the updated order data
+          order = updatedOrderData;
         }
       } else {
         orderError = idError;
@@ -374,24 +387,86 @@ async function handlePaymentSuccess(checkoutId: string, supabase: any, orderId?:
     });
 
     // Update order status
-    console.log('Updating order status to completed...');
-    const { error: updateError } = await supabase
+    console.log('Updating order status to completed...', {
+      orderId: order.id,
+      currentStatus: order.status,
+      checkoutId: checkoutId
+    });
+    
+    // First, let's verify the order exists and get its current state
+    const { data: orderCheck, error: checkError } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('id', order.id)
+      .single();
+      
+    if (checkError || !orderCheck) {
+      console.error('Order verification failed before update:', {
+        error: checkError,
+        orderId: order.id
+      });
+      throw new Error(`Order not found for update: ${order.id}`);
+    }
+    
+    console.log('Order verified before update:', {
+      orderId: orderCheck.id,
+      currentStatus: orderCheck.status,
+      checkoutId: orderCheck.checkout_id
+    });
+    
+    // Now update the order
+    const { data: updatedOrder, error: updateError } = await supabase
       .from('orders')
       .update({ 
         status: 'completed',
         completed_at: new Date().toISOString()
       })
-      .eq('id', order.id);
+      .eq('id', order.id)
+      .select()
+      .single();
       
     if (updateError) {
       console.error('Failed to update order status:', {
         error: updateError,
-        orderId: order.id
+        orderId: order.id,
+        currentStatus: order.status,
+        orderExists: !!orderCheck
       });
-      throw new Error(`Failed to update order status: ${updateError.message}`);
+      
+      // Try a simpler update without returning data
+      console.log('Attempting simple update without select...');
+      const { error: simpleUpdateError } = await supabase
+        .from('orders')
+        .update({ 
+          status: 'completed',
+          completed_at: new Date().toISOString()
+        })
+        .eq('id', order.id);
+        
+      if (simpleUpdateError) {
+        console.error('Simple update also failed:', simpleUpdateError);
+        throw new Error(`Failed to update order status: ${updateError.message}`);
+      } else {
+        console.log('Simple update succeeded');
+        // Get the updated order separately
+        const { data: finalOrder } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('id', order.id)
+          .single();
+        console.log('Order status updated successfully (via simple update):', {
+          orderId: finalOrder?.id,
+          newStatus: finalOrder?.status,
+          completedAt: finalOrder?.completed_at
+        });
+      }
+    } else {
+      console.log('Order status updated successfully:', {
+        orderId: updatedOrder.id,
+        newStatus: updatedOrder.status,
+        completedAt: updatedOrder.completed_at
+      });
     }
-    
-    console.log('Order status updated to completed');
 
     // Add credits to user account
     console.log('Adding credits to user account...');
