@@ -4,36 +4,70 @@ import { getPaymentConfig } from './config';
 
 export class CreemPaymentClient {
   private apiKey: string;
-  private baseUrl = 'https://api.creem.io/v1';
+  private baseUrl: string;
 
   constructor(apiKey?: string) {
     const config = getPaymentConfig();
     this.apiKey = apiKey || config.apiKey;
+    
+    // Determine API base URL based on environment
+    if (config.paymentUrl.includes('test') || this.apiKey.includes('test')) {
+      this.baseUrl = 'https://test-api.creem.io/v1';
+    } else {
+      this.baseUrl = 'https://api.creem.io/v1';
+    }
+    
+    console.log('CreemPaymentClient initialized:', {
+      hasApiKey: !!this.apiKey,
+      apiKeyPrefix: this.apiKey.substring(0, 10) + '...',
+      baseUrl: this.baseUrl
+    });
+    
     if (!this.apiKey) {
       throw new Error('Creem API key is required');
     }
   }
 
   async createCheckout(request: CreateCheckoutRequest): Promise<CreateCheckoutResponse> {
+    const requestBody = {
+      product_id: request.product_id,
+      customer_email: request.customer_email,
+      success_url: request.success_url,
+      cancel_url: request.cancel_url,
+      metadata: request.metadata,
+    };
+    
+    console.log('Creem API request details:', {
+      url: `${this.baseUrl}/checkouts`,
+      method: 'POST',
+      body: requestBody
+    });
+
     try {
       const response = await fetch(`${this.baseUrl}/checkouts`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
+          'x-api-key': this.apiKey,  // Use x-api-key instead of Authorization Bearer
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          product_id: request.product_id,
-          customer_email: request.customer_email,
-          success_url: request.success_url,
-          cancel_url: request.cancel_url,
-          metadata: request.metadata,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('Creem API response status:', response.status);
+      console.log('Creem API response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`Creem API error: ${response.status} - ${errorData.message || 'Unknown error'}`);
+        let errorData;
+        const responseText = await response.text();
+        console.log('Creem API error response text:', responseText);
+        
+        try {
+          errorData = JSON.parse(responseText);
+        } catch {
+          errorData = { message: responseText || 'Unknown error' };
+        }
+        
+        throw new Error(`Creem API error: ${response.status} - ${errorData.message || errorData.error || 'Unknown error'}`);
       }
 
       const data = await response.json();
@@ -100,10 +134,10 @@ export class CreemPaymentClient {
   // 获取 checkout 状态（用于验证支付）
   async getCheckoutStatus(checkoutId: string): Promise<any> {
     try {
-      const config = getPaymentConfig();
-      const baseUrl = config.paymentUrl.includes('test') ? 'https://test-api.creem.io' : 'https://api.creem.io';
+      console.log('Getting checkout status for:', checkoutId);
+      console.log('Using API base URL:', this.baseUrl);
       
-      const response = await fetch(`${baseUrl}/v1/checkouts?checkout_id=${checkoutId}`, {
+      const response = await fetch(`${this.baseUrl}/checkouts?checkout_id=${checkoutId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
