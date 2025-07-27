@@ -6,13 +6,24 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function PaymentSuccessPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
-    if (!user) {
-      router.push('/auth/login');
+    // 如果仍在加载中，等待
+    if (loading) {
       return;
+    }
+
+    // 如果用户未登录，等待一段时间再检查（给认证时间完成）
+    if (!user) {
+      const authCheckTimeout = setTimeout(() => {
+        if (!user) {
+          router.push('/auth/login');
+        }
+      }, 2000); // 等待2秒让认证完成
+
+      return () => clearTimeout(authCheckTimeout);
     }
 
     const timer = setInterval(() => {
@@ -26,11 +37,28 @@ export default function PaymentSuccessPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [user, router]);
+  }, [user, loading, router]);
 
   const handleContinue = () => {
     router.push('/create');
   };
+
+  // 如果仍在加载认证状态，显示加载页面
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-8 text-center">
+            <div className="mx-auto w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+            </div>
+            <h1 className="text-2xl font-bold text-white mb-2">Processing...</h1>
+            <p className="text-green-100">Verifying your payment</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">

@@ -127,8 +127,8 @@ export async function GET(request: NextRequest) {
       console.log('Processing successful payment...');
       try {
         await handlePaymentSuccess(checkoutId, supabase, orderId || undefined);
-        console.log('Payment success handling completed, redirecting to success page');
-        return NextResponse.redirect(`${baseUrl}/payment/success`);
+        console.log('Payment success handling completed, redirecting to home page');
+        return NextResponse.redirect(`${baseUrl}/`);
       } catch (successError) {
         console.error('Error handling payment success:', {
           error: successError instanceof Error ? successError.message : successError,
