@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createMockPaymentClient } from '@/lib/payment/client';
 import { createCreemPaymentClient } from '@/lib/payment/creem-client';
 import { getProductById } from '@/lib/payment/products';
 import { createClient } from '@/lib/supabase/server';
@@ -62,8 +61,7 @@ export async function POST(request: NextRequest) {
       productId: product.product_id,
       productName: product.product_name,
       price: product.price,
-      credits: product.credits,
-      hasDirectPaymentUrl: !!product.directPaymentUrl
+      credits: product.credits
     });
 
     // Create order record in database
@@ -104,146 +102,51 @@ export async function POST(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     
-    // 使用 Creem.io API 创建 checkout (统一使用API方式)
-    console.log('Using Creem.io API for checkout creation');
-    try {
-      const paymentClient = createCreemPaymentClient();
-      const checkoutRequest = {
-        product_id: product.product_id,
-        customer_email: user.email || '',
-        success_url: `${baseUrl}/api/payment/callback?order_id=${order.id}`,
-        cancel_url: `${baseUrl}/api/payment/callback?status=cancel&order_id=${order.id}`,
-        metadata: {
-          order_id: order.id,
-          user_id: user.id
-        }
-      };
-      
-      console.log('Creem.io checkout request:', JSON.stringify(checkoutRequest, null, 2));
-      
-      const checkout = await paymentClient.createCheckout(checkoutRequest);
-      
-      console.log('Creem.io checkout response:', {
-        checkoutId: checkout.checkout_id,
-        paymentUrl: checkout.payment_url,
-        status: checkout.status
-      });
-      
-      // Update order with checkout ID
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({ checkout_id: checkout.checkout_id })
-        .eq('id', order.id);
-        
-      if (updateError) {
-        console.error('Failed to update order with Creem checkout_id:', {
-          error: updateError,
-          orderId: order.id,
-          checkoutId: checkout.checkout_id
-        });
-      }
-      
-      console.log('=== Creem.io API Order Creation Completed ===');
-        
-      return NextResponse.json({
-        success: true,
-        order_id: order.id,
-        checkout_id: checkout.checkout_id,
-        payment_url: checkout.payment_url
-      });
-    } catch (creem_error) {
-      console.error('Creem.io payment failed, falling back to direct payment:', {
-        error: creem_error instanceof Error ? {
-          message: creem_error.message,
-          stack: creem_error.stack
-        } : creem_error,
-        productId: product.product_id,
-        orderId: order.id,
-        timestamp: new Date().toISOString()
-      });
-      
-      // 如果API失败，回退到直接支付URL
-      if (product.directPaymentUrl) {
-        console.log('Falling back to direct payment URL');
-        
-        // 生成唯一的checkout_id并更新订单
-        const checkoutId = `direct_${order.id}_${Date.now()}`;
-        console.log('Generated checkout_id:', checkoutId);
-        
-        const { error: updateError } = await supabase
-          .from('orders')
-          .update({ checkout_id: checkoutId })
-          .eq('id', order.id);
-          
-        if (updateError) {
-          console.error('Failed to update order with checkout_id:', updateError);
-        }
-        
-        // 构建包含回调参数的支付URL
-        const successUrl = `${baseUrl}/api/payment/callback?order_id=${order.id}`;
-        const cancelUrl = `${baseUrl}/api/payment/callback?status=cancel&order_id=${order.id}`;
-        
-        const paymentUrl = new URL(product.directPaymentUrl);
-        paymentUrl.searchParams.set('success_url', successUrl);
-        paymentUrl.searchParams.set('cancel_url', cancelUrl);
-        paymentUrl.searchParams.set('customer_email', user.email || '');
-        paymentUrl.searchParams.set('order_id', order.id);
-        
-        console.log('Fallback to direct payment URL:', paymentUrl.toString());
-        
-        return NextResponse.json({
-          success: true,
-          order_id: order.id,
-          checkout_id: checkoutId,
-          payment_url: paymentUrl.toString()
-        });
-      } else {
-        // 如果没有直接支付URL，则继续尝试mock
-        console.log('No direct payment URL available, trying mock payment');
-      }
-    }
-    
-    // 最后的Mock回退
-    console.log('Falling back to mock payment system');
-    
-    const mockPaymentClient = createMockPaymentClient();
-    const mockCheckout = await mockPaymentClient.createCheckout({
+    // 使用 Creem.io API 创建 checkout
+    console.log('Creating Creem.io checkout...');
+    const paymentClient = createCreemPaymentClient();
+    const checkoutRequest = {
       product_id: product.product_id,
       customer_email: user.email || '',
-      success_url: `${baseUrl}/payment/success?order_id=${order.id}`,
-      cancel_url: `${baseUrl}/payment/cancel?order_id=${order.id}`,
+      success_url: `${baseUrl}/api/payment/callback?order_id=${order.id}`,
+      cancel_url: `${baseUrl}/api/payment/callback?status=cancel&order_id=${order.id}`,
       metadata: {
         order_id: order.id,
         user_id: user.id
       }
-    });
+    };
     
-    console.log('Mock payment checkout created:', {
-      checkoutId: mockCheckout.checkout_id,
-      paymentUrl: mockCheckout.payment_url
+    console.log('Creem.io checkout request:', JSON.stringify(checkoutRequest, null, 2));
+    
+    const checkout = await paymentClient.createCheckout(checkoutRequest);
+    
+    console.log('Creem.io checkout response:', {
+      checkoutId: checkout.checkout_id,
+      paymentUrl: checkout.payment_url,
+      status: checkout.status
     });
     
     // Update order with checkout ID
-    const { error: mockUpdateError } = await supabase
+    const { error: updateError } = await supabase
       .from('orders')
-      .update({ checkout_id: mockCheckout.checkout_id })
+      .update({ checkout_id: checkout.checkout_id })
       .eq('id', order.id);
       
-    if (mockUpdateError) {
-      console.error('Failed to update order with mock checkout_id:', {
-        error: mockUpdateError,
+    if (updateError) {
+      console.error('Failed to update order with Creem checkout_id:', {
+        error: updateError,
         orderId: order.id,
-        checkoutId: mockCheckout.checkout_id
+        checkoutId: checkout.checkout_id
       });
     }
     
-    console.log('=== Mock Payment Order Creation Completed ===');
+    console.log('=== Creem.io Checkout Creation Completed ===');
       
     return NextResponse.json({
       success: true,
       order_id: order.id,
-      checkout_id: mockCheckout.checkout_id,
-      payment_url: mockCheckout.payment_url
+      checkout_id: checkout.checkout_id,
+      payment_url: checkout.payment_url
     });
 
   } catch (error) {

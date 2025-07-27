@@ -32,8 +32,6 @@ export function getPlans(): Product[] {
       buttonText: 'Try AI ASMR ⚡',
       buttonColor: 'from-blue-500 to-purple-600',
       popular: false,
-      // Environment-aware direct payment URL
-      directPaymentUrl: `${config.paymentUrl}/${config.trialProductId}`,
     },
     {
       product_id: config.basicProductId,
@@ -65,8 +63,6 @@ export function getPlans(): Product[] {
       buttonText: 'Subscribe to Basic ⚡',
       buttonColor: 'from-blue-500 to-purple-600',
       popular: true,
-      // Environment-aware direct payment URL
-      directPaymentUrl: `${config.paymentUrl}/${config.basicProductId}`,
     },
     {
       product_id: config.proProductId,
@@ -97,8 +93,6 @@ export function getPlans(): Product[] {
       buttonText: 'Go Pro 🔥',
       buttonColor: 'from-purple-600 to-pink-500',
       popular: false,
-      // Environment-aware direct payment URL
-      directPaymentUrl: `${config.paymentUrl}/${config.proProductId}`,
     },
   ];
 }
@@ -128,7 +122,6 @@ export const PLANS: Product[] = [
     buttonText: 'Try AI ASMR ⚡',
     buttonColor: 'from-blue-500 to-purple-600',
     popular: false,
-    directPaymentUrl: 'https://www.creem.io/test/payment/prod_4U52gw2XCmcajBDwu6Ru6G',
   },
   {
     product_id: 'prod_2Gj8BYSJ8CPf7AtK9RqtUy', // Default basic product ID
@@ -160,7 +153,6 @@ export const PLANS: Product[] = [
     buttonText: 'Subscribe to Basic ⚡',
     buttonColor: 'from-blue-500 to-purple-600',
     popular: true,
-    directPaymentUrl: 'https://www.creem.io/test/payment/prod_2Gj8BYSJ8CPf7AtK9RqtUy',
   },
   {
     product_id: 'prod_6AmUBfwn7nqjKo6wh4K8U3', // Default pro product ID
@@ -191,7 +183,6 @@ export const PLANS: Product[] = [
     buttonText: 'Go Pro 🔥',
     buttonColor: 'from-purple-600 to-pink-500',
     popular: false,
-    directPaymentUrl: 'https://www.creem.io/test/payment/prod_6AmUBfwn7nqjKo6wh4K8U3',
   },
 ];
 
