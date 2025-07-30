@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -28,7 +28,7 @@ interface CreditTransaction {
 
 export default function UserAccountPage() {
   const { user, loading } = useAuth();
-  const { credits, loading: creditsLoading, refetch: refetchCredits } = useCredits();
+  const { credits, loading: creditsLoading, refreshCredits: refetchCredits } = useCredits();
   const { subscription, loading: subscriptionLoading } = useSubscription();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'info' | 'credits' | 'orders'>('credits');
@@ -44,34 +44,7 @@ export default function UserAccountPage() {
     }
   }, [loading, user, router]);
 
-  // Fetch orders
-  useEffect(() => {
-    if (user && activeTab === 'orders') {
-      fetchOrders();
-    }
-  }, [user, activeTab]);
-
-  // Fetch credit history
-  useEffect(() => {
-    if (user && activeTab === 'credits') {
-      fetchCreditHistory();
-    }
-  }, [user, activeTab]);
-
-  // Debug: Log subscription data to verify it's correct
-  useEffect(() => {
-    if (subscription && !subscriptionLoading) {
-      console.log('User subscription data:', {
-        productName: subscription.productName,
-        status: subscription.status,
-        planType: subscription.planType,
-        currentPeriodEnd: subscription.currentPeriodEnd,
-        userId: user?.id
-      });
-    }
-  }, [subscription, subscriptionLoading, user?.id]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     if (!user) return;
     
     setOrdersLoading(true);
@@ -96,7 +69,34 @@ export default function UserAccountPage() {
     } finally {
       setOrdersLoading(false);
     }
-  };
+  }, [user]);
+
+  // Fetch orders
+  useEffect(() => {
+    if (user && activeTab === 'orders') {
+      fetchOrders();
+    }
+  }, [user, activeTab, fetchOrders]);
+
+  // Fetch credit history
+  useEffect(() => {
+    if (user && activeTab === 'credits') {
+      fetchCreditHistory();
+    }
+  }, [user, activeTab]);
+
+  // Debug: Log subscription data to verify it's correct
+  useEffect(() => {
+    if (subscription && !subscriptionLoading) {
+      console.log('User subscription data:', {
+        productName: subscription.productName,
+        status: subscription.status,
+        planType: subscription.planType,
+        currentPeriodEnd: subscription.currentPeriodEnd,
+        userId: user?.id
+      });
+    }
+  }, [subscription, subscriptionLoading, user?.id]);
 
   const fetchCreditHistory = async () => {
     setCreditHistoryLoading(true);

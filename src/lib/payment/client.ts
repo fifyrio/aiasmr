@@ -24,7 +24,7 @@ export class MockPaymentClient {
     const checkoutId = this.generateId('checkout');
     
     // Mock payment URL with checkout ID
-    const paymentUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/mock-payment?checkout_id=${checkoutId}&product_id=${request.product_id}&email=${encodeURIComponent(request.customer_email)}&success_url=${encodeURIComponent(request.success_url)}&cancel_url=${encodeURIComponent(request.cancel_url)}`;
+    const paymentUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/mock-payment?checkout_id=${checkoutId}&product_id=${request.product_id}&email=${encodeURIComponent(request.customer?.email || '')}&success_url=${encodeURIComponent(request.success_url || '')}&cancel_url=${encodeURIComponent(request.cancel_url || '')}`;
 
     return {
       checkout_id: checkoutId,

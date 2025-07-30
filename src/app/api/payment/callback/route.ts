@@ -10,6 +10,9 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   console.log('=== Payment Callback (GET) Started ===');
   try {
+    // Get base URL for absolute redirects early
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(request.url).origin;
+    
     const { searchParams } = new URL(request.url);
     const checkoutId = searchParams.get('checkout_id');
     let status = searchParams.get('status');
@@ -51,9 +54,6 @@ export async function GET(request: NextRequest) {
       url: request.url,
       timestamp: new Date().toISOString()
     });
-    
-    // Get base URL for absolute redirects
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(request.url).origin;
 
     if (!checkoutId) {
       console.error('Missing checkout_id in callback');

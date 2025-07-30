@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -13,7 +13,7 @@ export default function DebugUserStatusPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [apiData, setApiData] = useState<any>(null);
 
-  const handleRefreshStatus = async () => {
+  const handleRefreshStatus = useCallback(async () => {
     setRefreshing(true);
     try {
       // Call both hooks refresh
@@ -31,13 +31,13 @@ export default function DebugUserStatusPage() {
     } finally {
       setRefreshing(false);
     }
-  };
+  }, [refreshCredits, refreshSubscription]);
 
   useEffect(() => {
     if (user) {
       handleRefreshStatus();
     }
-  }, [user]);
+  }, [user, handleRefreshStatus]);
 
   if (!user) {
     return (

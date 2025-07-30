@@ -37,8 +37,7 @@ export async function GET(request: NextRequest) {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
-        },
-        timeout: 10000
+        }
       });
       
       console.log('KIE API Test Response:', {

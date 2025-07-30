@@ -88,6 +88,7 @@ export interface CreateCheckoutRequest {
   product_id: string;
   request_id?: string;
   success_url?: string;
+  cancel_url?: string;
   customer?: {
     email: string;
   };
