@@ -189,7 +189,7 @@ export async function saveVideoToDatabase(
     console.log(`💾 Saving video to database for task: ${metadata.taskId}`);
     
     const supabase = createClient();
-    
+    console.log('user_id', metadata.userId);
     // Prepare video data
     const videoData = {
       user_id: metadata.userId || null,

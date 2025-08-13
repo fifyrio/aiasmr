@@ -12,8 +12,7 @@ CREATE TABLE public.api_logs (
   ip_address inet,
   user_agent text,
   created_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT api_logs_pkey PRIMARY KEY (id),
-  CONSTRAINT api_logs_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
+  CONSTRAINT api_logs_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.blog_posts (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -32,8 +31,7 @@ CREATE TABLE public.blog_posts (
   published_at timestamp with time zone,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT blog_posts_pkey PRIMARY KEY (id),
-  CONSTRAINT blog_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.profiles(id)
+  CONSTRAINT blog_posts_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.categories (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -58,7 +56,6 @@ CREATE TABLE public.credit_transactions (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT credit_transactions_pkey PRIMARY KEY (id),
   CONSTRAINT fk_credit_transactions_video FOREIGN KEY (video_id) REFERENCES public.videos(id),
-  CONSTRAINT credit_transactions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id),
   CONSTRAINT credit_transactions_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(id)
 );
 CREATE TABLE public.faqs (
@@ -160,24 +157,6 @@ CREATE TABLE public.products (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT products_pkey PRIMARY KEY (id)
 );
-CREATE TABLE public.profiles (
-  id uuid NOT NULL,
-  email text NOT NULL UNIQUE,
-  username text UNIQUE,
-  full_name text,
-  avatar_url text,
-  plan_type text DEFAULT 'free'::text CHECK (plan_type = ANY (ARRAY['free'::text, 'trial'::text, 'basic'::text, 'pro'::text])),
-  credits_remaining integer DEFAULT 20,
-  total_credits_spent integer DEFAULT 0,
-  total_videos_created integer DEFAULT 0,
-  is_verified boolean DEFAULT false,
-  language_preference text DEFAULT 'en'::text,
-  timezone text DEFAULT 'UTC'::text,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT profiles_pkey PRIMARY KEY (id),
-  CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
-);
 CREATE TABLE public.subscription_usage (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id uuid,
@@ -192,7 +171,6 @@ CREATE TABLE public.subscription_usage (
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT subscription_usage_pkey PRIMARY KEY (id),
-  CONSTRAINT subscription_usage_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id),
   CONSTRAINT subscription_usage_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(id)
 );
 CREATE TABLE public.subscriptions (
@@ -207,8 +185,7 @@ CREATE TABLE public.subscriptions (
   cancel_at_period_end boolean DEFAULT false,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT subscriptions_pkey PRIMARY KEY (id),
-  CONSTRAINT subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
+  CONSTRAINT subscriptions_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.system_settings (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -261,8 +238,7 @@ CREATE TABLE public.user_sessions (
   user_agent text,
   expires_at timestamp with time zone NOT NULL,
   created_at timestamp with time zone DEFAULT now(),
-  CONSTRAINT user_sessions_pkey PRIMARY KEY (id),
-  CONSTRAINT user_sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
+  CONSTRAINT user_sessions_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.video_likes (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -270,8 +246,7 @@ CREATE TABLE public.video_likes (
   user_id uuid,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT video_likes_pkey PRIMARY KEY (id),
-  CONSTRAINT video_likes_video_id_fkey FOREIGN KEY (video_id) REFERENCES public.videos(id),
-  CONSTRAINT video_likes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
+  CONSTRAINT video_likes_video_id_fkey FOREIGN KEY (video_id) REFERENCES public.videos(id)
 );
 CREATE TABLE public.video_shares (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -281,8 +256,7 @@ CREATE TABLE public.video_shares (
   share_url text,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT video_shares_pkey PRIMARY KEY (id),
-  CONSTRAINT video_shares_video_id_fkey FOREIGN KEY (video_id) REFERENCES public.videos(id),
-  CONSTRAINT video_shares_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
+  CONSTRAINT video_shares_video_id_fkey FOREIGN KEY (video_id) REFERENCES public.videos(id)
 );
 CREATE TABLE public.video_views (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -293,7 +267,6 @@ CREATE TABLE public.video_views (
   view_duration integer,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT video_views_pkey PRIMARY KEY (id),
-  CONSTRAINT video_views_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id),
   CONSTRAINT video_views_video_id_fkey FOREIGN KEY (video_id) REFERENCES public.videos(id)
 );
 CREATE TABLE public.videos (
@@ -325,5 +298,5 @@ CREATE TABLE public.videos (
   provider text DEFAULT 'kie-runway'::text,
   quality text DEFAULT '720p'::text CHECK (quality = ANY (ARRAY['720p'::text, '1080p'::text])),
   CONSTRAINT videos_pkey PRIMARY KEY (id),
-  CONSTRAINT videos_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
+  CONSTRAINT videos_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
