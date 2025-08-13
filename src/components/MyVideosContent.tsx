@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import FsLightbox from 'fslightbox-react'
 import AOS from 'aos'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface Video {
   id: string
@@ -30,6 +31,7 @@ interface UserStats {
 }
 
 const MyVideosContent = () => {
+  const { user } = useAuth()
   const [videos, setVideos] = useState<Video[]>([])
   const [selectedVideos, setSelectedVideos] = useState<string[]>([])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
@@ -53,154 +55,100 @@ const MyVideosContent = () => {
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const [totalVideos, setTotalVideos] = useState(0)
 
-  const loadVideos = useCallback(async () => {
-    setLoading(true)
+  const loadVideos = useCallback(async (userId: string, page: number = 1, append: boolean = false) => {
+    if (!userId) return
     
-    // Mock data for demonstration
-    const mockVideos: Video[] = [
-      {
-        id: '1',
-        title: 'Soap Cutting ASMR',
-        prompt: 'Create a relaxing soap cutting ASMR video with colorful soaps',
-        triggers: ['cutting', 'soap', 'satisfying'],
-        status: 'ready',
-        credit_cost: 25,
-        created_at: '2024-01-15T14:30:00Z',
-        updated_at: '2024-01-15T14:32:00Z',
-        thumbnail_url: '/api/placeholder/400/300',
-        preview_url: '/api/placeholder/video/1',
-        download_url: '/downloads/video1.mp4',
-        category: 'Cutting',
-        duration: '3:42',
-        views: 245,
-        likes: 32
-      },
-      {
-        id: '2',
-        title: 'Water Droplets',
-        prompt: 'Generate water droplet sounds on different surfaces',
-        triggers: ['water', 'droplets', 'rain'],
-        status: 'processing',
-        credit_cost: 30,
-        created_at: '2024-01-14T10:15:00Z',
-        updated_at: '2024-01-14T10:15:00Z',
-        thumbnail_url: '/api/placeholder/400/300',
-        preview_url: '/api/placeholder/video/2',
-        download_url: '',
-        category: 'Water',
-        duration: '5:18',
-        views: 0,
-        likes: 0
-      },
-      {
-        id: '3',
-        title: 'Honey Dripping',
-        prompt: 'Sweet honey dripping ASMR with golden visuals',
-        triggers: ['honey', 'dripping', 'sweet'],
-        status: 'failed',
-        credit_cost: 20,
-        created_at: '2024-01-13T16:45:00Z',
-        updated_at: '2024-01-13T16:47:00Z',
-        thumbnail_url: '/api/placeholder/400/300',
-        preview_url: '/api/placeholder/video/3',
-        download_url: '',
-        category: 'Object',
-        duration: '4:25',
-        views: 0,
-        likes: 0
-      },
-      {
-        id: '4',
-        title: 'Page Turning',
-        prompt: 'Gentle page turning sounds from vintage books',
-        triggers: ['pages', 'books', 'paper'],
-        status: 'ready',
-        credit_cost: 15,
-        created_at: '2024-01-12T09:20:00Z',
-        updated_at: '2024-01-12T09:22:00Z',
-        thumbnail_url: '/api/placeholder/400/300',
-        preview_url: '/api/placeholder/video/4',
-        download_url: '/downloads/video4.mp4',
-        category: 'Pages',
-        duration: '6:12',
-        views: 189,
-        likes: 28
-      },
-      {
-        id: '5',
-        title: 'Ice Crushing',
-        prompt: 'Satisfying ice crushing and breaking sounds',
-        triggers: ['ice', 'crushing', 'breaking'],
-        status: 'ready',
-        credit_cost: 28,
-        created_at: '2024-01-11T13:10:00Z',
-        updated_at: '2024-01-11T13:12:00Z',
-        thumbnail_url: '/api/placeholder/400/300',
-        preview_url: '/api/placeholder/video/5',
-        download_url: '/downloads/video5.mp4',
-        category: 'Ice',
-        duration: '2:58',
-        views: 412,
-        likes: 65
-      },
-      {
-        id: '6',
-        title: 'Sponge Squeezing',
-        prompt: 'Colorful sponge squeezing with water sounds',
-        triggers: ['sponge', 'squeezing', 'water'],
-        status: 'processing',
-        credit_cost: 22,
-        created_at: '2024-01-10T11:30:00Z',
-        updated_at: '2024-01-10T11:30:00Z',
-        thumbnail_url: '/api/placeholder/400/300',
-        preview_url: '/api/placeholder/video/6',
-        download_url: '',
-        category: 'Sponge',
-        duration: '4:33',
-        views: 0,
-        likes: 0
+    if (!append) setLoading(true)
+    
+    try {
+      const response = await fetch(`/api/videos?userId=${userId}&page=${page}&limit=10`)
+      const data = await response.json()
+      
+      if (data.success && data.videos) {
+        let fetchedVideos = data.videos.map((video: any) => ({
+          id: video.id,
+          title: video.title,
+          prompt: video.prompt,
+          triggers: video.triggers || [],
+          status: video.status,
+          credit_cost: video.credit_cost,
+          created_at: video.created_at,
+          updated_at: video.updated_at,
+          thumbnail_url: video.thumbnail_url || '/api/placeholder/400/300',
+          preview_url: video.preview_url || '/api/placeholder/video/1',
+          download_url: video.download_url || '',
+          category: video.category || 'General',
+          duration: video.duration || '0:00',
+          views: 0, // Add views/likes tracking later if needed
+          likes: 0
+        }))
+        
+        // Apply filters
+        if (filterStatus !== 'all') {
+          fetchedVideos = fetchedVideos.filter((video: Video) => video.status === filterStatus)
+        }
+        
+        if (filterCategory !== 'all') {
+          fetchedVideos = fetchedVideos.filter((video: Video) => video.category === filterCategory)
+        }
+        
+        // Sort videos
+        fetchedVideos.sort((a: Video, b: Video) => {
+          switch (sortBy) {
+            case 'date':
+              return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            case 'cost':
+              return b.credit_cost - a.credit_cost
+            case 'alphabetical':
+              return a.title.localeCompare(b.title)
+            default:
+              return 0
+          }
+        })
+        
+        if (append) {
+          setVideos(prev => [...prev, ...fetchedVideos])
+        } else {
+          setVideos(fetchedVideos)
+        }
+        
+        setHasMore(data.pagination.page < data.pagination.totalPages)
+        setTotalVideos(data.pagination.total)
       }
-    ]
-
-    // Apply filters and sorting
-    let filteredVideos = [...mockVideos]
-    
-    if (filterStatus !== 'all') {
-      filteredVideos = filteredVideos.filter(video => video.status === filterStatus)
+    } catch (error) {
+      console.error('Failed to load videos:', error)
+      if (!append) setVideos([])
     }
     
-    if (filterCategory !== 'all') {
-      filteredVideos = filteredVideos.filter(video => video.category === filterCategory)
-    }
-    
-    // Sort videos
-    filteredVideos.sort((a, b) => {
-      switch (sortBy) {
-        case 'date':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        case 'cost':
-          return b.credit_cost - a.credit_cost
-        case 'alphabetical':
-          return a.title.localeCompare(b.title)
-        default:
-          return 0
-      }
-    })
-
-    setVideos(filteredVideos)
     setLoading(false)
   }, [sortBy, filterStatus, filterCategory])
 
   const loadUserStats = async () => {
-    // Mock user stats
-    const mockStats: UserStats = {
-      total_videos: 24,
-      total_credits_spent: 520,
-      remaining_credits: 180,
-      plan_type: 'basic'
+    try {
+      const response = await fetch('/api/user/profile')
+      const data = await response.json()
+      
+      if (data.success && data.profile) {
+        const profile = data.profile
+        setUserStats({
+          total_videos: profile.total_videos_created || 0,
+          total_credits_spent: profile.total_credits_spent || 0,
+          remaining_credits: profile.credits || 0,
+          plan_type: profile.plan_type || 'free'
+        })
+      }
+    } catch (error) {
+      console.error('Failed to load user stats:', error)
+      // Fallback to default stats
+      setUserStats({
+        total_videos: 0,
+        total_credits_spent: 0,
+        remaining_credits: 0,
+        plan_type: 'free'
+      })
     }
-    setUserStats(mockStats)
   }
 
   useEffect(() => {
@@ -212,9 +160,12 @@ const MyVideosContent = () => {
   }, [])
 
   useEffect(() => {
-    loadVideos()
-    loadUserStats()
-  }, [loadVideos])
+    if (user?.id) {
+      setCurrentPage(1)
+      loadVideos(user.id, 1, false)
+      loadUserStats()
+    }
+  }, [loadVideos, user?.id])
 
   const handleVideoSelect = (videoId: string) => {
     setSelectedVideos(prev => 
@@ -250,23 +201,59 @@ const MyVideosContent = () => {
     setShowRegenerateModal(true)
   }
 
-  const confirmDelete = () => {
-    if (actionVideoId) {
-      setVideos(prev => prev.filter(v => v.id !== actionVideoId))
-      setSelectedVideos(prev => prev.filter(id => id !== actionVideoId))
+  const confirmDelete = async () => {
+    if (!actionVideoId || !user?.id) return
+    
+    try {
+      const response = await fetch(`/api/videos/${actionVideoId}`, {
+        method: 'DELETE'
+      })
+      
+      if (response.ok) {
+        setVideos(prev => prev.filter(v => v.id !== actionVideoId))
+        setSelectedVideos(prev => prev.filter(id => id !== actionVideoId))
+      } else {
+        console.error('Failed to delete video')
+      }
+    } catch (error) {
+      console.error('Error deleting video:', error)
     }
+    
     setShowDeleteModal(false)
     setActionVideoId(null)
   }
 
-  const confirmRegenerate = () => {
-    if (actionVideoId) {
-      setVideos(prev => prev.map(v => 
-        v.id === actionVideoId 
-          ? { ...v, status: 'processing' as const, updated_at: new Date().toISOString() }
-          : v
-      ))
+  const confirmRegenerate = async () => {
+    if (!actionVideoId || !user?.id) return
+    
+    try {
+      const video = videos.find(v => v.id === actionVideoId)
+      if (!video) return
+      
+      const response = await fetch('/api/videos/regenerate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          videoId: actionVideoId,
+          userId: user.id
+        })
+      })
+      
+      if (response.ok) {
+        setVideos(prev => prev.map(v => 
+          v.id === actionVideoId 
+            ? { ...v, status: 'processing' as const, updated_at: new Date().toISOString() }
+            : v
+        ))
+      } else {
+        console.error('Failed to regenerate video')
+      }
+    } catch (error) {
+      console.error('Error regenerating video:', error)
     }
+    
     setShowRegenerateModal(false)
     setActionVideoId(null)
   }
@@ -372,7 +359,11 @@ const MyVideosContent = () => {
               <label className="text-sm font-medium text-gray-700">Sort by:</label>
               <select 
                 value={sortBy} 
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => {
+                  setSortBy(e.target.value as any)
+                  setCurrentPage(1)
+                  if (user?.id) loadVideos(user.id, 1, false)
+                }}
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="date">Date (Newest)</option>
@@ -386,7 +377,11 @@ const MyVideosContent = () => {
               <label className="text-sm font-medium text-gray-700">Status:</label>
               <select 
                 value={filterStatus} 
-                onChange={(e) => setFilterStatus(e.target.value as any)}
+                onChange={(e) => {
+                  setFilterStatus(e.target.value as any)
+                  setCurrentPage(1)
+                  if (user?.id) loadVideos(user.id, 1, false)
+                }}
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="all">All Status</option>
@@ -400,7 +395,11 @@ const MyVideosContent = () => {
               <label className="text-sm font-medium text-gray-700">Category:</label>
               <select 
                 value={filterCategory} 
-                onChange={(e) => setFilterCategory(e.target.value)}
+                onChange={(e) => {
+                  setFilterCategory(e.target.value)
+                  setCurrentPage(1)
+                  if (user?.id) loadVideos(user.id, 1, false)
+                }}
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 {categories.map(category => (
@@ -527,7 +526,21 @@ const MyVideosContent = () => {
 
                   {/* Video Thumbnail */}
                   <div className="relative overflow-hidden h-48 cursor-pointer" onClick={() => openLightbox(video.id)}>
-                    <div className="w-full h-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                    {video.thumbnail_url && video.thumbnail_url !== '/api/placeholder/400/300' ? (
+                      <img 
+                        src={video.thumbnail_url} 
+                        alt={video.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                          target.parentElement?.querySelector('.fallback-thumbnail')?.classList.remove('hidden')
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-full h-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center fallback-thumbnail ${
+                      video.thumbnail_url && video.thumbnail_url !== '/api/placeholder/400/300' ? 'hidden' : ''
+                    }`}>
                       <div className="text-white text-center">
                         <i className="ri-play-circle-line text-4xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
                         <p className="text-sm opacity-80">Click to Preview</p>
@@ -646,7 +659,11 @@ const MyVideosContent = () => {
       {hasMore && videos.length > 0 && (
         <div className="text-center" data-aos="fade-up" data-aos-delay="600">
           <button 
-            onClick={() => setCurrentPage(prev => prev + 1)}
+            onClick={() => {
+              const nextPage = currentPage + 1
+              setCurrentPage(nextPage)
+              if (user?.id) loadVideos(user.id, nextPage, true)
+            }}
             className="btn-secondary"
           >
             <i className="ri-arrow-down-line mr-2"></i>
