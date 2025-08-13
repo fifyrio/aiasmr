@@ -27,29 +27,8 @@ export async function GET(request: NextRequest) {
 
     console.log('🔍 Polling KIE API for task status:', taskId);
 
-    // First check if video already exists in database
+    // No need to check database - rely on KIE API status and processing cache
     const supabase = createClient();
-    const { data: existingVideo } = await supabase
-      .from('videos')
-      .select('id, preview_url, thumbnail_url')
-      .eq('video_id', taskId)
-      .single();
-
-    if (existingVideo) {
-      console.log(`✅ Video already processed for task ${taskId}`);
-      return NextResponse.json({
-        success: true,
-        taskId: taskId,
-        status: 'completed',
-        result: {
-          videoUrl: existingVideo.preview_url,
-          thumbnailUrl: existingVideo.thumbnail_url
-        },
-        error: null,
-        progress: 100,
-        videoId: existingVideo.id
-      });
-    }
 
     // Use KIE API to check task status directly
     const kieClient = createKieVeo3Client();
