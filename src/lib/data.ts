@@ -58,10 +58,7 @@ export async function getFeaturedVideos(): Promise<FeaturedVideo[]> {
         is_featured,
         is_public,
         created_at,
-        user_profiles!videos_user_id_fkey (
-          full_name,
-          avatar_url
-        )
+        user_id
       `)
       .eq('status', 'ready')
       .eq('is_public', true)
@@ -88,10 +85,10 @@ export async function getFeaturedVideos(): Promise<FeaturedVideo[]> {
       is_featured: video.is_featured,
       is_public: video.is_public,
       created_at: video.created_at,
-      author: video.user_profiles ? {
-        full_name: (video.user_profiles as any).full_name || 'Anonymous',
-        avatar_url: (video.user_profiles as any).avatar_url
-      } : undefined
+      author: {
+        full_name: 'AI Creator',
+        avatar_url: undefined
+      }
     }))
 
     // 如果没有数据，返回fallback数据
