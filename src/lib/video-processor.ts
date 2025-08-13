@@ -193,6 +193,7 @@ export async function saveVideoToDatabase(
     // Prepare video data
     const videoData = {
       user_id: metadata.userId || null,
+      task_id: metadata.taskId, // Store the KIE task ID for tracking
       title: `ASMR Video ${new Date().toISOString().slice(0, 10)}`,
       description: 'AI-generated ASMR video via KIE API',
       prompt: metadata.originalPrompt || 'Generated via KIE API',

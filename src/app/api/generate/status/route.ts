@@ -40,7 +40,32 @@ export async function GET(request: NextRequest) {
 
       // If task is completed and has video URL, trigger processing
       if (taskStatus.status === 'completed' && taskStatus.result?.videoUrl) {
-        console.log(`🎬 Task ${taskId} completed, starting video processing...`);
+        console.log(`🎬 Task ${taskId} completed, checking if already processed...`);
+        
+        // First check if video already exists in database (processing completed)
+        const { data: existingVideo } = await supabase
+          .from('videos')
+          .select('id, preview_url, thumbnail_url')
+          .eq('task_id', taskId)
+          .eq('status', 'ready')
+          .single();
+
+        if (existingVideo) {
+          console.log(`✅ Video processing already completed for task ${taskId}, returning result`);
+          return NextResponse.json({
+            success: true,
+            taskId: taskStatus.taskId,
+            status: 'completed',
+            result: {
+              videoUrl: existingVideo.preview_url,
+              thumbnailUrl: existingVideo.thumbnail_url
+            },
+            error: null,
+            progress: 100,
+            message: 'Video processed and ready!',
+            videoId: existingVideo.id
+          });
+        }
         
         // Check if already processing to avoid duplicates
         if (processingTasks.has(taskId)) {
@@ -63,7 +88,7 @@ export async function GET(request: NextRequest) {
           // Process video asynchronously (don't wait for it to complete)
           const processingPromise = completeVideoProcessing(
             taskStatus.result.videoUrl,
-            taskStatus.result.thumbnailUrl, // Use KIE-provided thumbnail URL
+            taskStatus.result.thumbnailUrl || '', // Use KIE-provided thumbnail URL or empty string
             {
               taskId,
               userId: userId || undefined,

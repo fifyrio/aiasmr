@@ -215,8 +215,8 @@ export class KieVeo3Client {
         // Map KIE status to our internal status
         let status: 'pending' | 'processing' | 'completed' | 'failed' = 'pending';
         let progress = 0;
-        let result = null;
-        let error = null;
+        let result: { videoUrl?: string; thumbnailUrl?: string; duration?: number; } | undefined = undefined;
+        let error: string | undefined = undefined;
         
         // Determine status based on KIE API response format
         if (data.state === 'success' && data.videoInfo?.videoUrl) {
