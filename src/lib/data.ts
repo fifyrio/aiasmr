@@ -58,7 +58,7 @@ export async function getFeaturedVideos(): Promise<FeaturedVideo[]> {
         is_featured,
         is_public,
         created_at,
-        profiles!videos_user_id_fkey (
+        user_profiles!videos_user_id_fkey (
           full_name,
           avatar_url
         )
@@ -88,9 +88,9 @@ export async function getFeaturedVideos(): Promise<FeaturedVideo[]> {
       is_featured: video.is_featured,
       is_public: video.is_public,
       created_at: video.created_at,
-      author: video.profiles ? {
-        full_name: (video.profiles as any).full_name || 'Anonymous',
-        avatar_url: (video.profiles as any).avatar_url
+      author: video.user_profiles ? {
+        full_name: (video.user_profiles as any).full_name || 'Anonymous',
+        avatar_url: (video.user_profiles as any).avatar_url
       } : undefined
     }))
 
@@ -230,7 +230,7 @@ export async function getSiteStats() {
         .eq('is_public', true),
       
       supabase
-        .from('profiles')
+        .from('user_profiles')
         .select('id', { count: 'exact' }),
       
       supabase
