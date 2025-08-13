@@ -117,11 +117,27 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
               <SwiperSlide key={video.id}>
                 <div className="video-card group cursor-pointer" onClick={() => openLightbox(index)}>
                   <div className="relative overflow-hidden">
-                    <div className="w-full h-64 bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center border border-purple-500/30">
-                      <div className="text-white text-center">
-                        <i className="ri-play-circle-line text-6xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
-                        <p className="text-sm opacity-80">Click to Preview</p>
-                      </div>
+                    <div className="w-full h-64 relative bg-gray-800">
+                      <img 
+                        src={encodeURI(video.thumbnail)} 
+                        alt={video.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to gradient background if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.classList.add('bg-gradient-to-br', 'from-purple-600', 'to-purple-800', 'flex', 'items-center', 'justify-center');
+                            parent.innerHTML += `
+                              <div class="text-white text-center">
+                                <i class="ri-play-circle-line text-6xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
+                                <p class="text-sm opacity-80">Click to Preview</p>
+                              </div>
+                            `;
+                          }
+                        }}
+                      />
                     </div>
                     <div className="absolute top-4 left-4">
                       <span className="bg-black/70 text-white px-2 py-1 rounded text-sm">

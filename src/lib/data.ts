@@ -108,46 +108,10 @@ function getFallbackVideos(): FeaturedVideo[] {
   return [
     {
       id: 'fallback-1',
-      title: 'Soap Cutting ASMR',
-      description: 'Satisfying soap cutting sounds with colorful soaps',
-      thumbnail_url: '/api/placeholder/400/300',
-      preview_url: '/api/placeholder/video/1',
-      category: 'Cutting',
-      duration: '3:42',
-      views_count: 12500,
-      likes_count: 1200,
-      is_featured: true,
-      is_public: true,
-      created_at: new Date().toISOString(),
-      author: {
-        full_name: 'ASMR Creator',
-        avatar_url: '/api/placeholder/40/40'
-      }
-    },
-    {
-      id: 'fallback-2',
-      title: 'Water Droplets',
-      description: 'Relaxing water droplet sounds on different surfaces',
-      thumbnail_url: '/api/placeholder/400/300',
-      preview_url: '/api/placeholder/video/2',
-      category: 'Water',
-      duration: '5:18',
-      views_count: 8900,
-      likes_count: 892,
-      is_featured: true,
-      is_public: true,
-      created_at: new Date().toISOString(),
-      author: {
-        full_name: 'Nature Sounds',
-        avatar_url: '/api/placeholder/40/40'
-      }
-    },
-    {
-      id: 'fallback-3',
       title: 'Honey Dripping',
       description: 'Sweet honey dripping ASMR with golden visuals',
-      thumbnail_url: '/api/placeholder/400/300',
-      preview_url: '/api/placeholder/video/3',
+      thumbnail_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/thumbnails/thumbnail-Honey Dripping-1755053009500-ze5ex5.jpg',
+      preview_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/videos/video-Honey Dripping-1755053009500-six44h.mp4',
       category: 'Object',
       duration: '4:25',
       views_count: 15200,
@@ -161,29 +125,11 @@ function getFallbackVideos(): FeaturedVideo[] {
       }
     },
     {
-      id: 'fallback-4',
-      title: 'Page Turning',
-      description: 'Gentle page turning sounds from vintage books',
-      thumbnail_url: '/api/placeholder/400/300',
-      preview_url: '/api/placeholder/video/4',
-      category: 'Pages',
-      duration: '6:12',
-      views_count: 7300,
-      likes_count: 654,
-      is_featured: true,
-      is_public: true,
-      created_at: new Date().toISOString(),
-      author: {
-        full_name: 'Book ASMR',
-        avatar_url: '/api/placeholder/40/40'
-      }
-    },
-    {
-      id: 'fallback-5',
+      id: 'fallback-2',
       title: 'Ice Crushing',
       description: 'Satisfying ice crushing and breaking sounds',
-      thumbnail_url: '/api/placeholder/400/300',
-      preview_url: '/api/placeholder/video/5',
+      thumbnail_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/thumbnails/thumbnail-Ice Crushing-1755053014121-ejgufi.jpg',
+      preview_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/videos/video-Ice Crushing-1755053014121-spq0f3.mp4',
       category: 'Ice',
       duration: '2:58',
       views_count: 11700,
@@ -197,11 +143,47 @@ function getFallbackVideos(): FeaturedVideo[] {
       }
     },
     {
-      id: 'fallback-6',
+      id: 'fallback-3',
+      title: 'Page Turning',
+      description: 'Gentle page turning sounds from vintage books',
+      thumbnail_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/thumbnails/thumbnail-Page Turning-1755053018541-m8a4t3.jpg',
+      preview_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/videos/video-Page Turning-1755053018541-x278su.mp4',
+      category: 'Pages',
+      duration: '6:12',
+      views_count: 7300,
+      likes_count: 654,
+      is_featured: true,
+      is_public: true,
+      created_at: new Date().toISOString(),
+      author: {
+        full_name: 'Book ASMR',
+        avatar_url: '/api/placeholder/40/40'
+      }
+    },
+    {
+      id: 'fallback-4',
+      title: 'Soap Cutting ASMR',
+      description: 'Satisfying soap cutting sounds with colorful soaps',
+      thumbnail_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/thumbnails/thumbnail-Soap Cutting ASMR-1755053021439-xs0t66.jpg',
+      preview_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/videos/video-Soap Cutting ASMR-1755053021439-1qb6z5.mp4',
+      category: 'Cutting',
+      duration: '3:42',
+      views_count: 12500,
+      likes_count: 1200,
+      is_featured: true,
+      is_public: true,
+      created_at: new Date().toISOString(),
+      author: {
+        full_name: 'ASMR Creator',
+        avatar_url: '/api/placeholder/40/40'
+      }
+    },
+    {
+      id: 'fallback-5',
       title: 'Sponge Squeezing',
       description: 'Colorful sponge squeezing with water sounds',
-      thumbnail_url: '/api/placeholder/400/300',
-      preview_url: '/api/placeholder/video/6',
+      thumbnail_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/thumbnails/thumbnail-Sponge Squeezing-1755053025168-wj4vfl.jpg',
+      preview_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/videos/video-Sponge Squeezing-1755053025168-u6w4z4.mp4',
       category: 'Sponge',
       duration: '4:33',
       views_count: 9800,
@@ -211,6 +193,24 @@ function getFallbackVideos(): FeaturedVideo[] {
       created_at: new Date().toISOString(),
       author: {
         full_name: 'Sponge ASMR',
+        avatar_url: '/api/placeholder/40/40'
+      }
+    },
+    {
+      id: 'fallback-6',
+      title: 'Water Droplets',
+      description: 'Relaxing water droplet sounds on different surfaces',
+      thumbnail_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/thumbnails/thumbnail-Water Droplets-1755053027738-2ri2pf.jpg',
+      preview_url: 'https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/videos/video-Water Droplets-1755053027738-q9s6zi.mp4',
+      category: 'Water',
+      duration: '5:18',
+      views_count: 8900,
+      likes_count: 892,
+      is_featured: true,
+      is_public: true,
+      created_at: new Date().toISOString(),
+      author: {
+        full_name: 'Nature Sounds',
         avatar_url: '/api/placeholder/40/40'
       }
     }
