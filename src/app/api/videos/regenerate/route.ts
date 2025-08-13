@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     // Check user has enough credits
     const { data: userProfile, error: profileError } = await supabase
       .from('user_profiles')
-      .select('credits')
+      .select('credits, total_credits_spent')
       .eq('id', userId)
       .single();
 
