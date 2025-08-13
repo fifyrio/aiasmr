@@ -20,7 +20,7 @@ export async function GET(
     // 获取视频信息
     const { data: video, error } = await supabase
       .from('videos')
-      .select('*')
+      .select('id, title, download_url, preview_url, file_size')
       .eq('id', videoId)
       .single();
 
@@ -31,22 +31,26 @@ export async function GET(
       );
     }
 
-    // 如果是Google Cloud Storage URL，需要特殊处理
-    if (video.video_url.startsWith('gs://')) {
-      // 这里需要实现Google Cloud Storage的下载逻辑
-      // 或者返回一个签名的下载URL
-      return NextResponse.json({
-        success: true,
-        downloadUrl: video.video_url,
-        filename: `asmr-video-${videoId}.mp4`,
-      });
+    // 使用 download_url 或者 preview_url 作为下载链接
+    const downloadUrl = video.download_url || video.preview_url;
+    
+    if (!downloadUrl) {
+      return NextResponse.json(
+        { error: 'Video download URL not available' },
+        { status: 404 }
+      );
     }
 
-    // 如果是HTTP URL，直接返回
+    // 生成文件名
+    const filename = video.title 
+      ? `${video.title.replace(/[^a-zA-Z0-9-_]/g, '-')}.mp4`
+      : `asmr-video-${videoId}.mp4`;
+
     return NextResponse.json({
       success: true,
-      downloadUrl: video.video_url,
-      filename: `asmr-video-${videoId}.mp4`,
+      downloadUrl: downloadUrl,
+      filename: filename,
+      fileSize: video.file_size,
     });
 
   } catch (error) {

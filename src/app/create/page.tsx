@@ -69,6 +69,12 @@ export default function CreatePage() {
 
         const data = await response.json();
         
+        // Check if KIE API returned success code (200) - stop polling immediately
+        if (data.code === 200) {
+          console.log('KIE API returned success code 200, stopping polling');
+          // Still process the status normally but ensure polling stops
+        }
+        
         switch (data.status) {
           case 'pending':
             setGenerationProgress('Task queued, waiting to start...');
@@ -102,6 +108,11 @@ export default function CreatePage() {
               refreshCredits();
             }, 1000);
             return;
+        }
+
+        // Stop polling if KIE API returned success code 200
+        if (data.code === 200) {
+          return;
         }
 
         // Continue polling if not completed/failed and haven't exceeded max attempts
@@ -492,25 +503,60 @@ export default function CreatePage() {
                   <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <button 
                       onClick={async () => {
+                        console.log('Download button clicked, videoId:', videoId);
                         if (videoId) {
                           try {
+                            console.log('Fetching download URL for video:', videoId);
                             const response = await fetch(`/api/videos/${videoId}/download`);
+                            console.log('Download API response status:', response.status);
+                            
                             if (response.ok) {
                               const data = await response.json();
+                              console.log('Download data received:', data);
+                              
                               // 创建下载链接
                               const link = document.createElement('a');
                               link.href = data.downloadUrl;
                               link.download = data.filename;
+                              link.target = '_blank'; // 在新窗口打开以防下载失败
                               document.body.appendChild(link);
                               link.click();
                               document.body.removeChild(link);
+                            } else {
+                              const errorData = await response.json();
+                              console.error('Download API error:', errorData);
+                              setError(`Download failed: ${errorData.error || 'Unknown error'}`);
                             }
                           } catch (error) {
                             console.error('Download failed:', error);
+                            setError('Failed to download video. Please try again.');
                           }
+                        } else if (generatedVideo) {
+                          // Fallback: download directly from the video URL if videoId is not available
+                          console.log('Using direct video URL for download:', generatedVideo);
+                          try {
+                            const link = document.createElement('a');
+                            link.href = generatedVideo;
+                            link.download = `asmr-video-${Date.now()}.mp4`;
+                            link.target = '_blank';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          } catch (error) {
+                            console.error('Direct download failed:', error);
+                            setError('Failed to download video. Please try again.');
+                          }
+                        } else {
+                          console.error('No video ID or URL available for download');
+                          setError('Video not available for download. Please try regenerating the video.');
                         }
                       }}
-                      className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-full font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      disabled={!videoId && !generatedVideo}
+                      className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 transform shadow-lg ${
+                        !videoId && !generatedVideo 
+                          ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 hover:scale-105'
+                      }`}
                     >
                       <i className="ri-download-line mr-2"></i>
                       Download HD

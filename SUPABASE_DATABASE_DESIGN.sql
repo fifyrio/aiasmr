@@ -55,8 +55,8 @@ CREATE TABLE public.credit_transactions (
   subscription_id uuid,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT credit_transactions_pkey PRIMARY KEY (id),
-  CONSTRAINT fk_credit_transactions_video FOREIGN KEY (video_id) REFERENCES public.videos(id),
-  CONSTRAINT credit_transactions_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(id)
+  CONSTRAINT credit_transactions_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(id),
+  CONSTRAINT fk_credit_transactions_video FOREIGN KEY (video_id) REFERENCES public.videos(id)
 );
 CREATE TABLE public.faqs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -297,6 +297,7 @@ CREATE TABLE public.videos (
   aspect_ratio text DEFAULT '16:9'::text CHECK (aspect_ratio = ANY (ARRAY['16:9'::text, '4:3'::text, '1:1'::text, '3:4'::text, '9:16'::text])),
   provider text DEFAULT 'kie-runway'::text,
   quality text DEFAULT '720p'::text CHECK (quality = ANY (ARRAY['720p'::text, '1080p'::text])),
+  task_id uuid,
   CONSTRAINT videos_pkey PRIMARY KEY (id),
   CONSTRAINT videos_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
