@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createKieVeo3Client } from '@/lib/kie-veo3-client';
 import { createClient } from '@/lib/supabase/server';
+import { deductCredits } from '@/lib/credits-manager';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl } = await request.json();
+    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '' } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
         { error: 'Prompt is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate duration/quality combination
+    if (duration === 8 && quality === '1080p') {
+      return NextResponse.json(
+        { error: '8-second videos cannot be generated in 1080p resolution' },
         { status: 400 }
       );
     }
@@ -20,6 +29,7 @@ export async function POST(request: NextRequest) {
     console.log('Quality:', quality);
     console.log('Aspect ratio:', aspectRatio);
     console.log('Image URL:', imageUrl);
+    console.log('Water mark:', waterMark);
     
     // Create KIE Veo3 client
     const kieClient = createKieVeo3Client();
@@ -52,19 +62,25 @@ export async function POST(request: NextRequest) {
     
     enhancedPrompt += '. High quality, smooth camera movement, relaxing atmosphere, 4K resolution, soft lighting, calming ambiance.';
     
-    // Get base URL for callback
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // Get base URL for callback - use production URL in production
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? process.env.NEXT_PUBLIC_PRODUCTION_URL || 'https://www.aiasmr.vip'
+      : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    
+    const callbackUrl = `${baseUrl}/api/kie-callback`;
     
     console.log('Enhanced prompt:', enhancedPrompt);
+    console.log('Callback URL:', callbackUrl);
     
     // Generate video using KIE Runway API
     const result = await kieClient.generateVideo({
       prompt: enhancedPrompt,
       duration: duration as 5 | 8,
       quality: quality as '720p' | '1080p',
-      aspectRatio: aspectRatio as '16:9' | '9:16',
+      aspectRatio: aspectRatio as '16:9' | '4:3' | '1:1' | '3:4' | '9:16',
       imageUrl: imageUrl,
-      callBackUrl: `${baseUrl}/api/kie-callback`
+      waterMark: waterMark || '',
+      callBackUrl: callbackUrl
     });
 
     console.log('KIE API result:', result);
@@ -74,49 +90,36 @@ export async function POST(request: NextRequest) {
       throw new Error('KIE API返回无效响应，缺少taskId');
     }
 
-    // Store initial video record in database
-    try {
-      const supabase = createClient();
-      
-      // Get current user (optional - you might handle this differently)
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      const videoRecord = {
-        task_id: result.taskId,
-        user_id: user?.id || null,
-        prompt: prompt,
-        enhanced_prompt: enhancedPrompt,
-        triggers: triggers ? JSON.stringify(triggers) : null,
-        aspect_ratio: aspectRatio,
-        duration: duration,
-        quality: quality,
-        image_url: imageUrl || null,
-        status: 'pending',
-        provider: 'kie-runway',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-      
-      const { error: dbError } = await supabase
-        .from('videos')
-        .insert(videoRecord);
-      
-      if (dbError) {
-        console.error('Error storing video record:', dbError);
-        // Don't fail the entire request if database insert fails
-      } else {
-        console.log('Video record stored successfully:', result.taskId);
+    // Deduct credits immediately after successful KIE API call
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+      const creditResult = await deductCredits(
+        user.id, 
+        20, 
+        'Video generation',
+        result.taskId
+      );
+
+      if (!creditResult.success) {
+        console.error('Failed to deduct credits:', creditResult.error);
+        return NextResponse.json(
+          { error: creditResult.error || 'Failed to deduct credits' },
+          { status: 400 }
+        );
       }
-      
-    } catch (dbError) {
-      console.error('Database operation failed:', dbError);
-      // Continue execution even if database operation fails
+
+      console.log(`💳 Credits deducted successfully. Remaining: ${creditResult.remainingCredits}`);
     }
+
+    console.log('Video generation initiated and credits deducted...');
 
     return NextResponse.json({
       success: true,
       taskId: result.taskId,
       status: result.status || 'pending',
+      creditsDeducted: 20,
       metadata: {
         originalPrompt: prompt,
         enhancedPrompt: enhancedPrompt,

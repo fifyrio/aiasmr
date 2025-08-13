@@ -20,7 +20,7 @@ const triggers = [
 
 export default function CreatePage() {
   const { user } = useAuth();
-  const { credits: userCredits } = useCredits();
+  const { credits: userCredits, refreshCredits } = useCredits();
   const [prompt, setPrompt] = useState('');
   const [selectedTriggers, setSelectedTriggers] = useState(['soap']);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -29,11 +29,12 @@ export default function CreatePage() {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [taskId, setTaskId] = useState<string | null>(null);
   const [generationProgress, setGenerationProgress] = useState<string>('Starting generation...');
-  const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16'>('16:9');
+  const [aspectRatio, setAspectRatio] = useState<'16:9' | '4:3' | '1:1' | '3:4' | '9:16'>('16:9');
   const [duration, setDuration] = useState<5 | 8>(5);
   const [quality, setQuality] = useState<'720p' | '1080p'>('720p');
+  const [waterMark, setWaterMark] = useState<string>('');
 
-  const maxChars = 1000;
+  const maxChars = 1800;
 
   useEffect(() => {
     AOS.init({
@@ -44,13 +45,24 @@ export default function CreatePage() {
   }, []);
 
   const pollTaskStatus = async (taskId: string) => {
-    const maxAttempts = 60; // Poll for up to 5 minutes (60 * 5s = 300s)
+    const maxAttempts = 120; // Poll for up to 10 minutes (120 * 5s = 600s) - increased for video processing
     let attempts = 0;
 
     const poll = async () => {
       attempts++;
       try {
-        const response = await fetch(`/api/generate/status?taskId=${taskId}`);
+        // Build query parameters with video metadata
+        const params = new URLSearchParams({
+          taskId,
+          userId: user?.id || '',
+          prompt: prompt.trim(),
+          triggers: selectedTriggers.join(','),
+          duration: duration.toString(),
+          quality: quality,
+          aspectRatio: aspectRatio
+        });
+        
+        const response = await fetch(`/api/generate/status?${params}`);
         if (!response.ok) {
           throw new Error('Failed to check status');
         }
@@ -62,49 +74,39 @@ export default function CreatePage() {
             setGenerationProgress('Task queued, waiting to start...');
             break;
           case 'processing':
-            setGenerationProgress(`Generating video... ${data.progress || 0}%`);
+            if (data.progress >= 75) {
+              setGenerationProgress(data.message || `Processing and uploading video... ${data.progress || 75}%`);
+            } else {
+              setGenerationProgress(`Generating video... ${data.progress || 0}%`);
+            }
             break;
           case 'completed':
             if (data.result?.videoUrl) {
               setGeneratedVideo(data.result.videoUrl);
-              setGenerationProgress('Video generated successfully!');
+              setGenerationProgress('Video processed and ready!');
               setIsGenerating(false);
               
-              // Save video to database
-              try {
-                const saveResponse = await fetch('/api/videos', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    videoUrl: data.result.videoUrl,
-                    prompt: prompt.trim(),
-                    triggers: selectedTriggers,
-                    userId: user?.id,
-                    taskId: taskId,
-                  }),
-                });
-
-                if (saveResponse.ok) {
-                  const saveData = await saveResponse.json();
-                  setVideoId(saveData.video.id);
-                }
-              } catch (saveError) {
-                console.error('Failed to save video:', saveError);
+              // Set video ID if provided (from our database)
+              if (data.videoId) {
+                setVideoId(data.videoId);
               }
+              
               return;
             }
             break;
           case 'failed':
             setError(data.error || 'Video generation failed');
             setIsGenerating(false);
+            // Refresh credits in case of refund
+            setTimeout(() => {
+              refreshCredits();
+            }, 1000);
             return;
         }
 
         // Continue polling if not completed/failed and haven't exceeded max attempts
         if (attempts < maxAttempts && (data.status === 'pending' || data.status === 'processing')) {
-          setTimeout(poll, 5000); // Poll every 5 seconds
+          setTimeout(poll, 10000); // Poll every 10 seconds
         } else if (attempts >= maxAttempts) {
           setError('Video generation timed out. Please try again.');
           setIsGenerating(false);
@@ -112,7 +114,7 @@ export default function CreatePage() {
       } catch (error) {
         console.error('Error polling status:', error);
         if (attempts < maxAttempts) {
-          setTimeout(poll, 5000);
+          setTimeout(poll, 10000);
         } else {
           setError('Failed to check generation status');
           setIsGenerating(false);
@@ -166,6 +168,7 @@ export default function CreatePage() {
           aspectRatio,
           duration,
           quality,
+          waterMark: waterMark.trim(),
         }),
       });
 
@@ -176,6 +179,14 @@ export default function CreatePage() {
 
       const generateData = await generateResponse.json();
       setTaskId(generateData.taskId);
+
+      // Refresh credits after deduction
+      if (generateData.creditsDeducted) {
+        // Refresh credits display after a short delay to ensure database is updated
+        setTimeout(() => {
+          refreshCredits();
+        }, 1000);
+      }
 
       // Start polling for completion
       await pollTaskStatus(generateData.taskId);
@@ -303,7 +314,12 @@ export default function CreatePage() {
                     <div className="text-sm opacity-80">Quick Generation</div>
                   </button>
                   <button
-                    onClick={() => setDuration(8)}
+                    onClick={() => {
+                      setDuration(8);
+                      if (quality === '1080p') {
+                        setQuality('720p'); // Auto-switch to 720p if 1080p was selected
+                      }
+                    }}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
                       duration === 8
                         ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white border-transparent shadow-lg'
@@ -335,49 +351,78 @@ export default function CreatePage() {
                     <div className="text-sm opacity-80">Standard Quality</div>
                   </button>
                   <button
-                    onClick={() => setQuality('1080p')}
+                    onClick={() => {
+                      if (duration !== 8) {
+                        setQuality('1080p');
+                      }
+                    }}
+                    disabled={duration === 8}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
-                      quality === '1080p'
+                      duration === 8
+                        ? 'bg-gray-500/50 text-gray-300 border-gray-400/30 cursor-not-allowed'
+                        : quality === '1080p'
                         ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white border-transparent shadow-lg'
                         : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                     }`}
                   >
                     <div className="font-semibold">1080p Full HD</div>
-                    <div className="text-sm opacity-80">High Quality</div>
+                    <div className="text-sm opacity-80">
+                      {duration === 8 ? 'Not available for 8s' : 'High Quality'}
+                    </div>
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Aspect Ratio - moved to its own section */}
-            <div className="mb-8" data-aos="fade-up" data-aos-delay="600">
-              <label className="block text-lg font-medium text-white mb-4">
-                <i className="ri-aspect-ratio-line mr-2"></i>
-                Aspect Ratio
-              </label>
-              <div className="grid grid-cols-2 gap-3 max-w-md">
-                <button
-                  onClick={() => setAspectRatio('16:9')}
-                  className={`p-4 rounded-xl transition-all duration-300 border ${
-                    aspectRatio === '16:9'
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
-                      : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
-                  }`}
-                >
-                  <div className="font-semibold">16:9</div>
-                  <div className="text-sm opacity-80">Landscape</div>
-                </button>
-                <button
-                  onClick={() => setAspectRatio('9:16')}
-                  className={`p-4 rounded-xl transition-all duration-300 border ${
-                    aspectRatio === '9:16'
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-lg'
-                      : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
-                  }`}
-                >
-                  <div className="font-semibold">9:16</div>
-                  <div className="text-sm opacity-80">Portrait</div>
-                </button>
+            {/* Aspect Ratio and Watermark */}
+            <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="600">
+              {/* Aspect Ratio */}
+              <div>
+                <label className="block text-lg font-medium text-white mb-4">
+                  <i className="ri-aspect-ratio-line mr-2"></i>
+                  Aspect Ratio
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {['16:9', '4:3', '1:1', '3:4', '9:16'].map((ratio) => (
+                    <button
+                      key={ratio}
+                      onClick={() => setAspectRatio(ratio as any)}
+                      className={`p-3 rounded-xl transition-all duration-300 border text-sm ${
+                        aspectRatio === ratio
+                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
+                          : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <div className="font-semibold">{ratio}</div>
+                      <div className="text-xs opacity-80">
+                        {ratio === '16:9' ? 'Landscape' :
+                         ratio === '4:3' ? 'Classic' :
+                         ratio === '1:1' ? 'Square' :
+                         ratio === '3:4' ? 'Photo' : 'Portrait'}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Watermark */}
+              <div>
+                <label htmlFor="watermark" className="block text-lg font-medium text-white mb-4">
+                  <i className="ri-copyright-line mr-2"></i>
+                  Watermark (Optional)
+                </label>
+                <input
+                  id="watermark"
+                  type="text"
+                  value={waterMark}
+                  onChange={(e) => setWaterMark(e.target.value)}
+                  placeholder="Add custom watermark text..."
+                  className="w-full p-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-white/70 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  maxLength={50}
+                />
+                <div className="mt-2 text-sm text-white/70">
+                  Leave empty for no watermark. Max 50 characters.
+                </div>
               </div>
             </div>
 

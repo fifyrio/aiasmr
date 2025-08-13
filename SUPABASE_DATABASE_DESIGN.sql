@@ -321,6 +321,9 @@ CREATE TABLE public.videos (
   generation_completed_at timestamp with time zone,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
+  aspect_ratio text DEFAULT '16:9'::text CHECK (aspect_ratio = ANY (ARRAY['16:9'::text, '4:3'::text, '1:1'::text, '3:4'::text, '9:16'::text])),
+  provider text DEFAULT 'kie-runway'::text,
+  quality text DEFAULT '720p'::text CHECK (quality = ANY (ARRAY['720p'::text, '1080p'::text])),
   CONSTRAINT videos_pkey PRIMARY KEY (id),
   CONSTRAINT videos_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
 );

@@ -3,10 +3,11 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 export interface VideoGenerationOptions {
   prompt: string;
   imageUrl?: string;
-  duration?: 5 | 8;
-  quality?: '720p' | '1080p';
-  aspectRatio?: '16:9' | '9:16';
-  callBackUrl?: string;
+  duration: 5 | 8;
+  quality: '720p' | '1080p';
+  aspectRatio: '16:9' | '4:3' | '1:1' | '3:4' | '9:16';
+  waterMark?: string;
+  callBackUrl: string;
 }
 
 export interface VideoGenerationResult {
@@ -116,14 +117,15 @@ export class KieVeo3Client {
   async generateVideo(options: VideoGenerationOptions): Promise<VideoGenerationResult> {
     this.validateGenerationOptions(options);
     
-    // Format the request according to KIE Runway API documentation
+    // Format the request according to new KIE Runway API documentation
     const requestData = {
       prompt: options.prompt,
-      duration: options.duration || 5,
-      quality: options.quality || '720p',
-      aspectRatio: options.aspectRatio || '16:9',
-      ...(options.imageUrl && { imageUrl: options.imageUrl }),
-      ...(options.callBackUrl && { callBackUrl: options.callBackUrl })
+      duration: options.duration,
+      quality: options.quality,
+      aspectRatio: options.aspectRatio,
+      waterMark: options.waterMark || '',
+      callBackUrl: options.callBackUrl,
+      ...(options.imageUrl && { imageUrl: options.imageUrl })
     };
 
     console.log('KIE Runway API request data:', JSON.stringify(requestData, null, 2));
@@ -195,39 +197,63 @@ export class KieVeo3Client {
   }
 
   async getTaskStatus(taskId: string): Promise<TaskStatus> {
+    const url = `/runway/record-detail?taskId=${taskId}`;
+    
     return this.requestWithRetry(async () => {
-      const response = await this.client.get(`/runway/task/${taskId}`);
-      return response.data;
-    });
-  }
-
-  async waitForCompletion(
-    taskId: string, 
-    maxWaitTime: number = 300000, 
-    pollInterval: number = 5000
-  ): Promise<TaskStatus> {
-    const startTime = Date.now();
-    
-    while (Date.now() - startTime < maxWaitTime) {
-      try {
-        const status = await this.getTaskStatus(taskId);
+      const response = await this.client.get(url);
+      console.log('KIE Task Status API response:', {
+        status: response.status,
+        data: response.data
+      });
+      
+      const responseData = response.data;
+      
+      // Handle KIE API response format based on the actual API structure
+      if (responseData && responseData.code === 200) {
+        const data = responseData.data;
         
-        if (status.status === 'completed') {
-          return status;
-        } else if (status.status === 'failed') {
-          throw new Error(`任务失败: ${status.error || '未知错误'}`);
+        // Map KIE status to our internal status
+        let status: 'pending' | 'processing' | 'completed' | 'failed' = 'pending';
+        let progress = 0;
+        let result = null;
+        let error = null;
+        
+        // Determine status based on KIE API response format
+        if (data.state === 'success' && data.videoInfo?.videoUrl) {
+          status = 'completed';
+          progress = 100;
+          result = {
+            videoUrl: data.videoInfo.videoUrl,
+            thumbnailUrl: data.videoInfo.imageUrl,
+            duration: undefined // Duration not provided in the API response
+          };
+        } else if (data.state === 'fail' || data.state === 'failed') {
+          status = 'failed';
+          progress = 0;
+          error = data.failMsg || 'Generation failed';
+        } else if (data.state === 'processing' || data.state === 'running') {
+          status = 'processing';
+          progress = 50;
+        } else if (data.state === 'pending' || data.state === 'queue' || data.state === 'waiting') {
+          status = 'pending';
+          progress = 10;
+        } else {
+          // Default to pending for unknown states
+          status = 'pending';
+          progress = 10;
         }
         
-        await this.sleep(pollInterval);
-      } catch (error) {
-        if (Date.now() - startTime >= maxWaitTime) {
-          throw new Error('任务等待超时');
-        }
-        await this.sleep(pollInterval);
+        return {
+          taskId,
+          status,
+          result,
+          error,
+          progress
+        };
+      } else {
+        throw new Error(`KIE API错误: ${responseData?.msg || 'Unknown error'}`);
       }
-    }
-    
-    throw new Error('任务等待超时');
+    });
   }
 
   private validateGenerationOptions(options: VideoGenerationOptions): void {
@@ -235,20 +261,35 @@ export class KieVeo3Client {
     
     if (!options.prompt) {
       errors.push('prompt是必需的');
-    } else if (options.prompt.length > 1000) {
-      errors.push('prompt不能超过1000个字符');
+    } else if (options.prompt.length > 1800) {
+      errors.push('prompt不能超过1800个字符');
     }
     
-    if (options.duration && ![5, 8].includes(options.duration)) {
+    if (![5, 8].includes(options.duration)) {
       errors.push('duration必须是5或8');
     }
     
-    if (options.quality && !['720p', '1080p'].includes(options.quality)) {
+    if (!['720p', '1080p'].includes(options.quality)) {
       errors.push('quality必须是720p或1080p');
     }
     
-    if (options.aspectRatio && !['16:9', '9:16'].includes(options.aspectRatio)) {
-      errors.push('aspectRatio必须是16:9或9:16');
+    // Check for conflicting duration/quality combinations
+    if (options.duration === 8 && options.quality === '1080p') {
+      errors.push('8秒视频不能选择1080p分辨率');
+    }
+    
+    if (!['16:9', '4:3', '1:1', '3:4', '9:16'].includes(options.aspectRatio)) {
+      errors.push('aspectRatio必须是16:9, 4:3, 1:1, 3:4或9:16');
+    }
+    
+    if (!options.callBackUrl) {
+      errors.push('callBackUrl是必需的');
+    } else {
+      try {
+        new URL(options.callBackUrl);
+      } catch {
+        errors.push('callBackUrl不是有效的URL');
+      }
     }
     
     if (options.imageUrl) {

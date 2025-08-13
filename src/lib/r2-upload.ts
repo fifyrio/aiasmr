@@ -5,9 +5,20 @@ import fs from 'fs'
 import path from 'path'
 import { promisify } from 'util'
 
-// Set ffmpeg path
-if (ffmpegStatic) {
-  ffmpeg.setFfmpegPath(ffmpegStatic)
+// Set ffmpeg path with better error handling
+try {
+  if (ffmpegStatic) {
+    console.log('Setting FFmpeg path to:', ffmpegStatic);
+    ffmpeg.setFfmpegPath(ffmpegStatic);
+  } else {
+    console.warn('ffmpeg-static not found, trying system ffmpeg');
+    // Try to use system ffmpeg as fallback
+    ffmpeg.setFfmpegPath('ffmpeg');
+  }
+} catch (error) {
+  console.error('Error setting FFmpeg path:', error);
+  // Fallback to system ffmpeg
+  ffmpeg.setFfmpegPath('ffmpeg');
 }
 
 // Initialize S3 client for R2
