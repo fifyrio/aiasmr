@@ -5,7 +5,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const logger = require('./src/utils/logger');
-const errorHandler = require('./src/middleware/error-handler');
+const { errorHandler } = require('./src/middleware/error-handler');
 const { generalLimit } = require('./src/middleware/rate-limit');
 
 // Import routes
