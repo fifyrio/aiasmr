@@ -129,3 +129,346 @@ R2_SECRET_ACCESS_KEY=your_secret_key
 R2_BUCKET_NAME=your_bucket_name
 R2_ENDPOINT=https://your_endpoint.com
 ```
+
+## Mobile App Architecture Design
+
+*Note: The following section contains architectural design documentation for extending this platform to mobile applications.*
+
+### 📋 Overview
+This architecture design describes a complete mobile application implementation for ASMR video generation functionality, based on analysis of this project, providing a secure, scalable frontend-backend separation solution.
+
+### 🔐 Security Architecture Design
+
+#### Three-Layer Architecture Pattern
+```
+┌─────────────────────┐
+│   📱 React Native   │  ← Client (Mobile App)
+│      Frontend       │    - User Interface
+│                     │    - Local State Management
+└─────────────────────┘    - JWT Token Storage
+           │
+           │ HTTPS + JWT
+           ▼
+┌─────────────────────┐
+│   🔒 Backend API    │  ← Server (Node.js)
+│      Server         │    - Business Logic
+│                     │    - Authentication
+└─────────────────────┘    - API Key Management
+           │
+           │ Server-to-Server
+           ▼
+┌─────────────────────┐
+│  🌐 External APIs   │  ← Third-party Services
+│   KIE • R2 • DB    │    - KIE Video Generation
+│                     │    - Cloudflare R2 Storage
+└─────────────────────┘    - Supabase Database
+```
+
+#### Security Principles
+1. **Key Isolation**: All sensitive API keys stored only on backend server
+2. **Minimum Privilege**: Mobile client only gets necessary user data access
+3. **Request Validation**: All API requests require JWT authentication
+4. **Cost Control**: Server controls video generation rate and user quotas
+5. **Data Encryption**: HTTPS transmission, encrypted sensitive data storage
+
+### 🛠 Technology Stack
+
+#### Backend API Server
+- **Runtime**: Node.js 18+
+- **Framework**: Express.js
+- **Authentication**: JWT (jsonwebtoken)
+- **Validation**: Joi/Zod
+- **Rate Limiting**: express-rate-limit
+- **File Processing**: multer, sharp
+- **HTTP Client**: axios
+- **Environment**: dotenv
+
+#### Mobile App
+- **Framework**: Expo SDK 53 + React Native 0.79.5
+- **State Management**: React Context + useReducer
+- **HTTP Client**: fetch API + custom wrapper
+- **Secure Storage**: expo-secure-store
+- **File System**: expo-file-system
+- **Navigation**: @react-navigation/native
+
+### 🔄 Module Reuse Analysis
+
+#### ✅ Directly Reusable Core Modules
+
+From this project, the following modules can be reused:
+
+##### 1. KIE API Client (`kie-veo3-client.ts`)
+- **Functionality**: Video generation, status query, error handling
+- **Reuse Rate**: 95% - only needs environment variable adaptation
+- **File Path**: `src/lib/kie-veo3-client.ts`
+
+##### 2. Video Processor (`video-processor.ts`)
+- **Functionality**: Download, thumbnail generation, cloud storage upload
+- **Reuse Rate**: 90% - needs FFmpeg-related code removal
+- **File Path**: `src/lib/video-processor.ts`
+
+##### 3. Credits Management System (`credits-manager.ts`)
+- **Functionality**: Credit deduction, refunds, balance queries, transaction records
+- **Reuse Rate**: 100% - complete reuse
+- **File Path**: `src/lib/credits-manager.ts`
+
+##### 4. R2 Cloud Storage (`r2-upload.ts`)
+- **Functionality**: File upload, batch processing
+- **Reuse Rate**: 80% - needs FFmpeg dependency removal
+- **File Path**: `src/lib/r2-upload.ts`
+
+##### 5. Supabase Integration
+- **Functionality**: Database operations, authentication
+- **Reuse Rate**: 100% - configuration files completely reusable
+- **File Path**: `src/lib/supabase/`
+
+### 🖥 Backend API Design
+
+#### Project Structure
+```
+backend-api/
+├── src/
+│   ├── routes/
+│   │   ├── auth.js           # Authentication routes
+│   │   ├── videos.js         # Video management
+│   │   ├── generate.js       # Video generation
+│   │   └── credits.js        # Credits management
+│   ├── services/
+│   │   ├── kie-client.js     # KIE API client
+│   │   ├── video-processor.js # Video processing
+│   │   ├── credits-manager.js # Credits management
+│   │   ├── storage.js        # R2 storage
+│   │   └── auth-service.js   # Authentication service
+│   ├── middleware/
+│   │   ├── auth.js           # JWT verification
+│   │   ├── rate-limit.js     # Request rate limiting
+│   │   ├── validation.js     # Input validation
+│   │   └── error-handler.js  # Error handling
+│   ├── config/
+│   │   ├── database.js       # Database configuration
+│   │   ├── environment.js    # Environment variables
+│   │   └── constants.js      # Constants definition
+│   └── utils/
+│       ├── logger.js         # Logging utilities
+│       └── helpers.js        # Helper functions
+├── package.json
+├── .env.example
+└── server.js                 # Server entry point
+```
+
+#### API Endpoints
+```http
+# Authentication
+POST /api/auth/login
+POST /api/auth/register
+POST /api/auth/refresh
+POST /api/auth/logout
+
+# Video Generation
+POST /api/videos/generate      # Initiate video generation
+GET  /api/videos/status/:id    # Query generation status
+GET  /api/videos               # Get user video list
+GET  /api/videos/:id           # Get video details
+DELETE /api/videos/:id         # Delete video
+
+# Credits Management
+GET  /api/credits/balance      # Get credits balance
+GET  /api/credits/history      # Credits usage history
+POST /api/credits/purchase     # Purchase credits
+
+# User Management
+GET  /api/user/profile         # Get user information
+PUT  /api/user/profile         # Update user information
+GET  /api/user/statistics      # User statistics data
+```
+
+### 📱 Mobile Integration
+
+#### Project Structure
+```
+src/
+├── services/
+│   ├── api/
+│   │   ├── client.js          # HTTP client wrapper
+│   │   ├── auth-api.js        # Authentication API
+│   │   ├── video-api.js       # Video API
+│   │   └── credits-api.js     # Credits API
+│   ├── auth/
+│   │   ├── auth-service.js    # Authentication service
+│   │   └── token-manager.js   # Token management
+│   └── storage/
+│       └── secure-storage.js  # Secure storage
+├── contexts/
+│   ├── AuthContext.js         # Authentication context
+│   ├── VideoContext.js        # Video context
+│   └── CreditsContext.js      # Credits context
+├── hooks/
+│   ├── useAuth.js             # Authentication hook
+│   ├── useVideoGeneration.js  # Video generation hook
+│   └── useCredits.js          # Credits hook
+├── screens/
+│   ├── VideoGenerationScreen.js
+│   ├── VideoListScreen.js
+│   └── CreditsScreen.js
+└── components/
+    ├── VideoPlayer.js
+    ├── GenerationProgress.js
+    └── CreditBalance.js
+```
+
+### 🔐 Security Measures
+
+#### 1. Authentication & Authorization
+
+##### JWT Token Management
+```javascript
+// services/auth/token-manager.js
+import * as SecureStore from 'expo-secure-store';
+
+export const TokenManager = {
+  async saveToken(token) {
+    await SecureStore.setItemAsync('auth_token', token);
+  },
+
+  async getToken() {
+    return await SecureStore.getItemAsync('auth_token');
+  },
+
+  async clearToken() {
+    await SecureStore.deleteItemAsync('auth_token');
+  },
+
+  async isTokenValid(token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  },
+};
+```
+
+#### 2. Request Rate Limiting
+```javascript
+// backend/middleware/rate-limit.js
+const rateLimit = require('express-rate-limit');
+
+// Video generation rate limit - max 5 per user per hour
+const videoGenerationLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  keyGenerator: (req) => req.user.id,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many video generation requests. Please try again later.'
+    }
+  }
+});
+```
+
+#### 3. Input Validation
+```javascript
+// backend/middleware/validation.js
+const Joi = require('joi');
+
+const videoGenerationSchema = Joi.object({
+  prompt: Joi.string().min(10).max(500).required(),
+  triggers: Joi.array().items(Joi.string().valid(
+    'soap', 'sponge', 'ice', 'water', 'honey', 'cubes', 'petals', 'pages'
+  )).max(3),
+  duration: Joi.number().valid(5, 8).default(5),
+  quality: Joi.string().valid('720p', '1080p').default('720p'),
+  aspectRatio: Joi.string().valid('16:9', '4:3', '1:1', '3:4', '9:16').default('16:9'),
+  imageUrl: Joi.string().uri().optional(),
+});
+```
+
+### 🚀 Deployment Options
+
+#### Backend API Server Deployment
+
+##### Option 1: Vercel (Recommended)
+```json
+// vercel.json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
+```
+
+##### Option 2: Railway
+```toml
+# railway.toml
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+```
+
+### Environment Variables (Extended)
+
+#### Backend Environment Variables
+```bash
+# .env (Backend)
+NODE_ENV=production
+PORT=3000
+JWT_SECRET=your-super-secret-jwt-key
+
+# KIE API (same as current project)
+KIE_API_KEY=your-kie-api-key
+KIE_BASE_URL=https://api.kie.ai/api/v1
+
+# Cloudflare R2 (same as current project)
+R2_ACCOUNT_ID=your-r2-account-id
+R2_ACCESS_KEY_ID=your-r2-access-key
+R2_SECRET_ACCESS_KEY=your-r2-secret-key
+R2_BUCKET_NAME=asmr-videos
+R2_ENDPOINT=https://your-domain.r2.cloudflarestorage.com
+
+# Supabase (same as current project)
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+
+# Application Configuration
+BASE_URL=https://your-api-domain.com
+CALLBACK_URL=https://your-api-domain.com/api/kie-callback
+```
+
+#### Mobile App Configuration
+```javascript
+// config/environment.js
+const ENV = {
+  development: {
+    API_BASE_URL: 'http://localhost:3000',
+    SUPABASE_URL: 'https://your-project.supabase.co',
+    SUPABASE_ANON_KEY: 'your-anon-key',
+  },
+  production: {
+    API_BASE_URL: 'https://your-api-domain.com',
+    SUPABASE_URL: 'https://your-project.supabase.co',
+    SUPABASE_ANON_KEY: 'your-anon-key',
+  },
+};
+
+export default ENV[process.env.NODE_ENV || 'development'];
+```
