@@ -211,53 +211,6 @@ export class CreemPaymentClient {
     return this.createCheckout(request);
   }
 
-  // 验证回调签名
-  verifySignature(params: Record<string, string>, signature: string): boolean {
-    try {
-      // 实现Creem.io的签名验证逻辑
-      // 这里需要根据Creem.io的文档实现具体的签名验证
-      const sortedParams = Object.keys(params)
-        .sort()
-        .map(key => `${key}=${params[key]}`)
-        .join('&');
-      
-      // 使用你的webhook secret进行HMAC验证
-      const crypto = require('crypto');
-      const config = getPaymentConfig();
-      const webhookSecret = config.webhookSecret;
-      const expectedSignature = crypto
-        .createHmac('sha256', webhookSecret)
-        .update(sortedParams)
-        .digest('hex');
-      
-      return signature === expectedSignature;
-    } catch (error) {
-      console.error('Signature verification failed:', error);
-      return false;
-    }
-  }
-
-  // 验证webhook签名（用于POST请求）
-  verifyWebhookSignature(payload: string, signature: string): boolean {
-    try {
-      const crypto = require('crypto');
-      const config = getPaymentConfig();
-      const webhookSecret = config.webhookSecret;
-      
-      // 移除signature的前缀（如果有的话）
-      const cleanSignature = signature.replace(/^sha256=/, '');
-      
-      const expectedSignature = crypto
-        .createHmac('sha256', webhookSecret)
-        .update(payload, 'utf8')
-        .digest('hex');
-      
-      return cleanSignature === expectedSignature;
-    } catch (error) {
-      console.error('Webhook signature verification failed:', error);
-      return false;
-    }
-  }
 
   // 获取 checkout 状态（用于验证支付）
   async getCheckoutStatus(checkoutId: string, successUrl?: string): Promise<any> {

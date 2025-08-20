@@ -23,15 +23,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        
+        if (error) {
+          console.log('Auth error during getUser:', error.message)
+          
+          // If it's a refresh token error, sign out the user
+          if (error.message?.includes('refresh') || error.message?.includes('token')) {
+            console.log('Refresh token invalid, signing out user')
+            await supabase.auth.signOut()
+            setUser(null)
+          }
+        } else {
+          setUser(user)
+        }
+      } catch (error) {
+        console.error('Unexpected auth error:', error)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
     }
 
     getUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+          console.log('Auth state changed:', event)
+        }
+        
         setUser(session?.user ?? null)
         setLoading(false)
       }
