@@ -53,6 +53,11 @@ const Footer = () => {
                   Blog
                 </Link>
               </li>
+              <li>
+                <Link href="/ai-asmr-prompts" className="text-gray-400 hover:text-white transition-colors">
+                  AI Prompts
+                </Link>
+              </li>
             </ul>
           </div>
           

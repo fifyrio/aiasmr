@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import AOS from 'aos';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -21,6 +22,7 @@ const triggers = [
 export default function CreatePage() {
   const { user } = useAuth();
   const { credits: userCredits, refreshCredits } = useCredits();
+  const searchParams = useSearchParams();
   const [prompt, setPrompt] = useState('');
   const [selectedTriggers, setSelectedTriggers] = useState(['soap']);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -43,6 +45,14 @@ export default function CreatePage() {
       offset: 100,
     });
   }, []);
+
+  // Auto-fill prompt from URL parameters
+  useEffect(() => {
+    const urlPrompt = searchParams.get('prompt');
+    if (urlPrompt && !prompt) {
+      setPrompt(decodeURIComponent(urlPrompt));
+    }
+  }, [searchParams, prompt]);
 
   const pollTaskStatus = async (taskId: string) => {
     const maxAttempts = 120; // Poll for up to 10 minutes (120 * 5s = 600s) - increased for video processing

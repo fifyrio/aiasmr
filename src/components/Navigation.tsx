@@ -37,6 +37,12 @@ const Navigation = () => {
               >
                 Create
               </Link>
+              <Link 
+                href="/ai-asmr-prompts" 
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                AI Prompts
+              </Link>
               {user && (
                 <Link 
                   href="/my-videos" 
@@ -62,7 +68,7 @@ const Navigation = () => {
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Blog
-              </Link>
+              </Link>              
             </div>
           </div>
 
@@ -158,6 +164,9 @@ const Navigation = () => {
             </Link>
             <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
               Blog
+            </Link>
+            <Link href="/ai-asmr-prompts" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
+              AI Prompts
             </Link>
             <div className="border-t pt-3">
               {loading ? (
