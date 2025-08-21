@@ -4,15 +4,32 @@ import React, { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { useAuth } from '@/contexts/AuthContext'
-import { PLANS, formatPrice } from '@/lib/payment/products'
+import { getPlans, formatPrice } from '@/lib/payment/products'
+import { Product } from '@/lib/payment/types'
 
 const PricingPage = () => {
   const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
   const [pageReady, setPageReady] = useState(false);
+  const [plans, setPlans] = useState<Product[]>([]);
   // Remove plan type toggle since we have simplified plans
 
   useEffect(() => {
+    // Load plans from API
+    const loadPlans = async () => {
+      try {
+        const response = await fetch('/api/plans');
+        if (response.ok) {
+          const plansData = await response.json();
+          setPlans(plansData);
+        }
+      } catch (error) {
+        console.error('Failed to load plans:', error);
+      }
+    };
+
+    loadPlans();
+
     // Initialize AOS asynchronously to improve page load speed
     const initAOS = async () => {
       const AOS = await import('aos')
@@ -65,10 +82,10 @@ const PricingPage = () => {
     }
   };
 
-  const displayPlans = PLANS;
+  const displayPlans = plans;
 
-  // Show loading state while auth or page is loading
-  if (authLoading || !pageReady) {
+  // Show loading state while auth, page, or plans are loading
+  if (authLoading || !pageReady || plans.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
