@@ -113,9 +113,9 @@ const AIASMRPromptsPage = () => {
             AI-Powered ASMR Video Generator with Ready-to-Use Prompts
           </p>
           <p className="text-lg text-gray-300 mb-12 max-w-5xl mx-auto">
-            Create all kinds of ASMR videos effortlessly with AIASMR Video&apos;s AI-powered video editor. Whether you&apos;re producing peeling 
-            ASMR, cutting ASMR, eating sounds, or object manipulation ASMR, AIASMR Video helps you generate high-quality visuals and 
-            clean, crisp audio with just a few clicks.
+            Generate stunning ASMR content instantly using our advanced AI technology. From soap cutting and ice crushing to water droplets 
+            and page turning, transform simple text prompts into mesmerizing videos with crystal-clear audio and professional-grade visuals 
+            in minutes, not hours.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
