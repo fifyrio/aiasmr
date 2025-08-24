@@ -9,6 +9,7 @@ export interface VideoGenerationOptions {
   waterMark?: string;
   callBackUrl: string;
   provider?: 'runway' | 'veo3';
+  model?: string; // VEO3 model: 'veo3_fast' or 'veo3'
 }
 
 export interface VideoGenerationResult {
@@ -120,7 +121,15 @@ export class KieVeo3Client {
     
     const provider = options.provider || 'veo3';
     const endpoint = provider === 'runway' ? '/runway/generate' : '/veo/generate';
-    const model = provider === 'runway' ? 'runway-duration-5-generate' : 'veo3_fast';
+    
+    // Model selection based on provider and options
+    let model: string;
+    if (provider === 'runway') {
+      model = 'runway-duration-5-generate';
+    } else {
+      // VEO3: use provided model or default to veo3_fast
+      model = options.model || 'veo3_fast';
+    }
     
     // Format the request according to new KIE API documentation
     const requestData = {
@@ -131,7 +140,7 @@ export class KieVeo3Client {
       aspectRatio: options.aspectRatio,
       waterMark: options.waterMark || '',
       callBackUrl: options.callBackUrl,
-      enableFallback: true,
+      enableFallback: false,
       ...(options.imageUrl && { imageUrl: options.imageUrl })
     };
 

@@ -186,7 +186,7 @@ async function saveVeo3Video(taskId: string, result: {
       triggers: [],
       category: 'Object',
       status: 'ready',
-      credit_cost: 20,
+      credit_cost: 60, // Default VEO3 Fast cost, will be updated with actual
       duration: '5s',
       resolution: result.resolution || '1080p',
       preview_url: result.videoUrl,

@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
+import { calculateCredits, getAvailableDurations, getAvailableAspectRatios } from '@/lib/credit-calculator';
 
 const triggers = [
   { id: 'soap', name: 'Soap', icon: '🧼', color: 'from-blue-400 to-cyan-400' },
@@ -36,8 +37,21 @@ export default function CreatePage() {
   const [quality, setQuality] = useState<'720p' | '1080p'>('720p');
   const [waterMark, setWaterMark] = useState<string>('');
   const [provider, setProvider] = useState<'runway' | 'veo3'>('veo3');
+  const [veo3Model, setVeo3Model] = useState<'veo3_fast' | 'veo3'>('veo3_fast');
 
   const maxChars = 1800;
+
+  // Calculate dynamic credits based on selections
+  const currentCredits = calculateCredits({
+    provider,
+    model: provider === 'veo3' ? veo3Model : undefined,
+    duration: provider === 'runway' ? duration : undefined,
+    quality
+  });
+
+  // Get available options based on provider
+  const availableDurations = getAvailableDurations(provider);
+  const availableAspectRatios = getAvailableAspectRatios(provider);
 
   useEffect(() => {
     AOS.init({
@@ -54,6 +68,21 @@ export default function CreatePage() {
       setPrompt(decodeURIComponent(urlPrompt));
     }
   }, [searchParams, prompt]);
+
+  // Reset settings when provider changes
+  useEffect(() => {
+    if (provider === 'veo3') {
+      // VEO3 restrictions: only 16:9 and 9:16 aspect ratios
+      if (!['16:9', '9:16'].includes(aspectRatio)) {
+        setAspectRatio('16:9');
+      }
+    } else if (provider === 'runway') {
+      // Reset to default Runway settings if needed
+      if (!availableDurations.includes(duration)) {
+        setDuration(5);
+      }
+    }
+  }, [provider, aspectRatio, duration, availableDurations]);
 
   const pollTaskStatus = async (taskId: string) => {
     const maxAttempts = 120; // Poll for up to 10 minutes (120 * 5s = 600s) - increased for video processing
@@ -167,7 +196,7 @@ export default function CreatePage() {
   };
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || userCredits.credits <= 0) return;
+    if (!prompt.trim() || userCredits.credits < currentCredits) return;
     if (!user) {
       setError('Please login to generate videos.');
       return;
@@ -189,10 +218,12 @@ export default function CreatePage() {
           prompt: prompt.trim(),
           triggers: selectedTriggers,
           aspectRatio,
-          duration,
+          duration: provider === 'runway' ? duration : undefined,
           quality,
           waterMark: waterMark.trim(),
           provider,
+          model: provider === 'veo3' ? veo3Model : undefined,
+          credits: currentCredits,
         }),
       });
 
@@ -221,7 +252,7 @@ export default function CreatePage() {
     }
   };
 
-  const isGenerateDisabled = !prompt.trim() || userCredits.credits <= 0 || isGenerating;
+  const isGenerateDisabled = !prompt.trim() || userCredits.credits < currentCredits || isGenerating;
 
   return (
     <div className="min-h-screen hero-bg">
@@ -255,6 +286,12 @@ export default function CreatePage() {
                 <span className="text-white font-semibold">
                   <i className="ri-coin-line mr-2"></i>
                   {userCredits.credits} credits remaining
+                </span>
+              </div>
+              <div className={`bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 ${userCredits.credits < currentCredits ? 'border-2 border-red-400' : ''}`}>
+                <span className={`font-semibold ${userCredits.credits < currentCredits ? 'text-red-300' : 'text-yellow-300'}`}>
+                  <i className="ri-flash-line mr-2"></i>
+                  Cost: {currentCredits} credits
                 </span>
               </div>
             </div>
@@ -334,8 +371,8 @@ export default function CreatePage() {
                         : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                     }`}
                   >
-                    <div className="font-semibold">Veo3</div>
-                    <div className="text-sm opacity-80">High Fast</div>
+                    <div className="font-semibold">VEO3</div>
+                    <div className="text-sm opacity-80">High Quality</div>
                   </button>
                   <button
                     onClick={() => setProvider('runway')}
@@ -349,43 +386,78 @@ export default function CreatePage() {
                     <div className="text-sm opacity-80">Fast Generation</div>
                   </button>
                 </div>
+                
+                {/* VEO3 Model Selection */}
+                {provider === 'veo3' && (
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-white/80 mb-2">
+                      VEO3 Model
+                    </label>
+                    <div className="grid grid-cols-1 gap-2">
+                      <button
+                        onClick={() => setVeo3Model('veo3_fast')}
+                        className={`p-3 rounded-lg transition-all duration-300 border text-sm ${
+                          veo3Model === 'veo3_fast'
+                            ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white border-transparent shadow-lg'
+                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                        }`}
+                      >
+                        <div className="font-semibold">VEO3 Fast</div>
+                        <div className="text-xs opacity-80">60 credits</div>
+                      </button>
+                      <button
+                        onClick={() => setVeo3Model('veo3')}
+                        className={`p-3 rounded-lg transition-all duration-300 border text-sm ${
+                          veo3Model === 'veo3'
+                            ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white border-transparent shadow-lg'
+                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                        }`}
+                      >
+                        <div className="font-semibold">VEO3 Standard</div>
+                        <div className="text-xs opacity-80">300 credits</div>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-              {/* Duration Selection */}
-              <div>
-                <label className="block text-lg font-medium text-white mb-4">
-                  <i className="ri-time-line mr-2"></i>
-                  Video Duration
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => setDuration(5)}
-                    className={`p-4 rounded-xl transition-all duration-300 border ${
-                      duration === 5
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-lg'
-                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
-                    }`}
-                  >
-                    <div className="font-semibold">5 Seconds</div>
-                    <div className="text-sm opacity-80">Quick Generation</div>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setDuration(8);
-                      if (quality === '1080p') {
-                        setQuality('720p'); // Auto-switch to 720p if 1080p was selected
-                      }
-                    }}
-                    className={`p-4 rounded-xl transition-all duration-300 border ${
-                      duration === 8
-                        ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white border-transparent shadow-lg'
-                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
-                    }`}
-                  >
-                    <div className="font-semibold">8 Seconds</div>
-                    <div className="text-sm opacity-80">Extended Experience</div>
-                  </button>
+              {/* Duration Selection - Only for Runway */}
+              {provider === 'runway' && (
+                <div>
+                  <label className="block text-lg font-medium text-white mb-4">
+                    <i className="ri-time-line mr-2"></i>
+                    Video Duration
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setDuration(5)}
+                      className={`p-4 rounded-xl transition-all duration-300 border ${
+                        duration === 5
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-lg'
+                          : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <div className="font-semibold">5 Seconds</div>
+                      <div className="text-sm opacity-80">12 credits</div>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDuration(8);
+                        if (quality === '1080p') {
+                          setQuality('720p'); // Auto-switch to 720p if 1080p was selected
+                        }
+                      }}
+                      className={`p-4 rounded-xl transition-all duration-300 border ${
+                        duration === 8
+                          ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white border-transparent shadow-lg'
+                          : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <div className="font-semibold">8 Seconds</div>
+                      <div className="text-sm opacity-80">30 credits</div>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Quality Selection */}
               <div>
@@ -438,7 +510,7 @@ export default function CreatePage() {
                   Aspect Ratio
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {['16:9', '4:3', '1:1', '3:4', '9:16'].map((ratio) => (
+                  {availableAspectRatios.map((ratio) => (
                     <button
                       key={ratio}
                       onClick={() => setAspectRatio(ratio as any)}

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createKieVeo3Client } from '@/lib/kie-veo3-client';
 import { createClient } from '@/lib/supabase/server';
 import { deductCredits } from '@/lib/credits-manager';
+import { calculateCredits } from '@/lib/credit-calculator';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '', provider = 'veo3' } = await request.json();
+    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '', provider = 'veo3', model, credits } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -22,6 +23,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Calculate required credits based on provider and settings
+    const requiredCredits = calculateCredits({
+      provider,
+      model: provider === 'veo3' ? model : undefined,
+      duration: provider === 'runway' ? duration : undefined,
+      quality
+    });
+
+    // Validate frontend credits match backend calculation
+    if (credits && credits !== requiredCredits) {
+      console.warn(`Credit mismatch: frontend sent ${credits}, backend calculated ${requiredCredits}`);
+    }
+
     console.log(`Generating video with KIE ${provider.toUpperCase()} API`);
     console.log('Original prompt:', prompt);
     console.log('Selected triggers:', triggers);
@@ -31,6 +45,8 @@ export async function POST(request: NextRequest) {
     console.log('Image URL:', imageUrl);
     console.log('Water mark:', waterMark);
     console.log('Provider:', provider);
+    console.log('Model:', model);
+    console.log('Required credits:', requiredCredits);
     
     // Create KIE Veo3 client
     const kieClient = createKieVeo3Client();
@@ -79,13 +95,14 @@ export async function POST(request: NextRequest) {
     // Generate video using KIE API (Runway or VEO3)
     const result = await kieClient.generateVideo({
       prompt: enhancedPrompt,
-      duration: duration as 5 | 8,
+      duration: provider === 'runway' ? (duration as 5 | 8) : 5, // VEO3 doesn't use duration
       quality: quality as '720p' | '1080p',
       aspectRatio: aspectRatio as '16:9' | '4:3' | '1:1' | '3:4' | '9:16',
       imageUrl: imageUrl,
       waterMark: waterMark || '',
       callBackUrl: callbackUrl,
-      provider: provider as 'runway' | 'veo3'
+      provider: provider as 'runway' | 'veo3',
+      model: provider === 'veo3' ? model : undefined
     });
 
     console.log('KIE API result:', result);
@@ -102,8 +119,8 @@ export async function POST(request: NextRequest) {
     if (user) {
       const creditResult = await deductCredits(
         user.id, 
-        20, 
-        'Video generation',
+        requiredCredits, 
+        `Video generation (${provider.toUpperCase()}${provider === 'veo3' && model ? ` ${model}` : ''})`,
         result.taskId
       );
 
@@ -115,7 +132,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log(`💳 Credits deducted successfully. Remaining: ${creditResult.remainingCredits}`);
+      console.log(`💳 ${requiredCredits} credits deducted successfully. Remaining: ${creditResult.remainingCredits}`);
     }
 
     console.log('Video generation initiated and credits deducted...');
@@ -124,7 +141,7 @@ export async function POST(request: NextRequest) {
       success: true,
       taskId: result.taskId,
       status: result.status || 'pending',
-      creditsDeducted: 20,
+      creditsDeducted: requiredCredits,
       metadata: {
         originalPrompt: prompt,
         enhancedPrompt: enhancedPrompt,

@@ -15,7 +15,8 @@
       "Bash(npm run lint)",
       "WebFetch(domain:replicate.com)",
       "Bash(rm:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

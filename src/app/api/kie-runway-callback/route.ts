@@ -161,7 +161,7 @@ async function saveRunwayVideo(taskId: string, result: {
       triggers: [],
       category: 'Object',
       status: 'ready',
-      credit_cost: 20,
+      credit_cost: 12, // Default Runway 5s cost, will be updated with actual
       duration: '5s',
       resolution: '720p',
       preview_url: result.videoUrl,
