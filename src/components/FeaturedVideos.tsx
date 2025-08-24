@@ -3,28 +3,16 @@
 import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import FsLightbox from 'fslightbox-react'
 import AOS from 'aos'
+import ASMRModal, { ASMRTemplate } from './ASMRModal'
 
-// 视频类型定义（本地副本）
-interface FeaturedVideo {
-  id: string
-  title: string
-  description: string
-  thumbnail_url: string
-  preview_url: string
-  category: string
-  duration: string
-  views_count: number
-  likes_count: number
-  is_featured: boolean
-  is_public: boolean
-  created_at: string
-  author?: {
-    full_name: string
-    avatar_url?: string
-  }
-}
+// Import template data  
+import templatesData from '@/data/asmr_templates.json'
+
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 // 本地格式化数字函数
 function formatNumber(num: number): string {
@@ -37,14 +25,15 @@ function formatNumber(num: number): string {
 }
 
 interface FeaturedVideosProps {
-  videos: FeaturedVideo[]
+  // No props needed - using template data directly
 }
 
-const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
-  const [lightboxController, setLightboxController] = useState({
-    toggler: false,
-    slide: 1
-  })
+const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<ASMRTemplate | null>(null)
+  
+  // Use first 10 templates from the data
+  const featuredTemplates = templatesData.slice(0, 10) as ASMRTemplate[]
 
   useEffect(() => {
     AOS.init({
@@ -54,28 +43,31 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
     })
   }, [])
 
-  // 转换数据格式以兼容现有UI
-  const displayVideos = videos.map((video, index) => ({
-    id: video.id,
-    title: video.title,
-    description: video.description,
-    thumbnail: video.thumbnail_url,
-    video: video.preview_url,
-    category: video.category,
-    duration: video.duration,
-    views: formatNumber(video.views_count),
-    likes: formatNumber(video.likes_count),
-    author: video.author
+  // 转换模板数据格式以兼容现有UI
+  const displayVideos = featuredTemplates.map((template, index) => ({
+    id: template.id,
+    title: template.title,
+    description: template.prompt.substring(0, 100) + '...', // Use prompt as description, truncated
+    thumbnail: template.poster || '/placeholder-video-thumb.jpg',
+    video: template.video || '',
+    category: template.category[0] || 'ASMR',
+    duration: template.duration,
+    views: template.downloads, // Use downloads as views
+    likes: Math.floor(parseInt(template.downloads.replace(/[K,M]/g, '')) / 10) + 'K', // Generate likes based on downloads
+    author: 'AI Generated'
   }))
 
-  const openLightbox = (index: number) => {
-    setLightboxController({
-      toggler: !lightboxController.toggler,
-      slide: index + 1
-    })
+  const openModal = (index: number) => {
+    const template = featuredTemplates[index]
+    setSelectedTemplate(template)
+    setIsModalOpen(true)
   }
 
-  const videoSources = displayVideos.map(video => video.video)
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedTemplate(null)
+  }
+
 
   return (
     <section className="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
@@ -115,7 +107,7 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
           >
             {displayVideos.map((video, index) => (
               <SwiperSlide key={video.id}>
-                <div className="video-card group cursor-pointer" onClick={() => openLightbox(index)}>
+                <div className="video-card group cursor-pointer" onClick={() => openModal(index)}>
                   <div className="relative overflow-hidden">
                     <div className="w-full h-64 relative bg-gray-800">
                       <img 
@@ -198,11 +190,10 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = ({ videos }) => {
         </div>
       </div>
 
-      <FsLightbox
-        toggler={lightboxController.toggler}
-        sources={videoSources}
-        slide={lightboxController.slide}
-        type="video"
+      <ASMRModal
+        isOpen={isModalOpen}
+        template={selectedTemplate}
+        onClose={closeModal}
       />
     </section>
   )

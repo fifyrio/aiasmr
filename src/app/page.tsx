@@ -3,7 +3,7 @@ import Navigation from '@/components/Navigation'
 import Hero from '@/components/Hero'
 import FeaturedVideos from '@/components/FeaturedVideos'
 import Footer from '@/components/Footer'
-import { getFeaturedVideos, getSiteStats } from '@/lib/data'
+import { getSiteStats } from '@/lib/data'
 
 // ISR配置：每小时重新生成页面
 export const revalidate = 3600
@@ -39,17 +39,14 @@ export const metadata = {
 }
 
 export default async function Home() {
-  // 服务端并行获取数据
-  const [featuredVideos, siteStats] = await Promise.all([
-    getFeaturedVideos(),
-    getSiteStats()
-  ])
+  // 服务端获取数据
+  const siteStats = await getSiteStats()
 
   return (
     <main className="min-h-screen">
       <Navigation />
       <Hero siteStats={siteStats} />
-      <FeaturedVideos videos={featuredVideos} />
+      <FeaturedVideos />
       <Footer />
     </main>
   )
