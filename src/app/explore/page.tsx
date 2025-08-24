@@ -4,92 +4,44 @@ import { useState, useEffect } from 'react';
 import AOS from 'aos';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import ASMRModal, { ASMRTemplate } from '@/components/ASMRModal';
+import asmrTemplatesData from '@/data/asmr_templates.json';
 
-// Mock data for videos
-const mockVideos = [
-  {
-    id: 1,
-    title: "Crystal Apple Slicing",
-    description: "Satisfying crystal apple cutting with crisp sounds",
-    category: "Cutting",
-    status: "HOT",
-    thumbnailUrl: "/api/placeholder/400/300",
-    videoUrl: "/api/placeholder/video/1",
-    likes: 2847,
-    shares: 156,
-    creator: "AI Generator"
-  },
-  {
-    id: 2,
-    title: "Memory Foam Cutting",
-    description: "Smooth knife slicing through memory foam",
-    category: "Cutting",
-    status: "NEW",
-    thumbnailUrl: "/api/placeholder/400/300",
-    videoUrl: "/api/placeholder/video/2",
-    likes: 1923,
-    shares: 89,
-    creator: "AI Generator"
-  },
-  {
-    id: 3,
-    title: "Honey Dripping",
-    description: "Golden honey slowly dripping with ambient sounds",
-    category: "Water",
-    status: "TRENDING",
-    thumbnailUrl: "/api/placeholder/400/300",
-    videoUrl: "/api/placeholder/video/3",
-    likes: 3456,
-    shares: 234,
-    creator: "AI Generator"
-  },
-  {
-    id: 4,
-    title: "Ice Cube Melting",
-    description: "Crystal clear ice cubes melting in warm light",
-    category: "Water",
-    status: "HOT",
-    thumbnailUrl: "/api/placeholder/400/300",
-    videoUrl: "/api/placeholder/video/4",
-    likes: 1567,
-    shares: 78,
-    creator: "AI Generator"
-  },
-  {
-    id: 5,
-    title: "Soap Cutting",
-    description: "Colorful soap bars being cut with precision",
-    category: "Cutting",
-    status: "NEW",
-    thumbnailUrl: "/api/placeholder/400/300",
-    videoUrl: "/api/placeholder/video/5",
-    likes: 2134,
-    shares: 112,
-    creator: "AI Generator"
-  },
-  {
-    id: 6,
-    title: "Whisper Sounds",
-    description: "Gentle whisper sounds with calming visuals",
-    category: "Whisper",
-    status: "TRENDING",
-    thumbnailUrl: "/api/placeholder/400/300",
-    videoUrl: "/api/placeholder/video/6",
-    likes: 987,
-    shares: 45,
-    creator: "AI Generator"
-  }
-];
+const asmrTemplates: ASMRTemplate[] = asmrTemplatesData as ASMRTemplate[];
 
-const categories = ["All", "Cutting", "Water", "Whisper", "Object"];
+// Get unique categories from template data
+const getUniqueCategories = (): string[] => {
+  const categories = new Set<string>();
+  categories.add('All');
+  
+  asmrTemplates.forEach(template => {
+    template.category.forEach(cat => {
+      categories.add(cat);
+    });
+  });
+  
+  return Array.from(categories);
+};
+
+// Get status based on downloads (simplified logic)
+const getStatusFromTemplate = (template: ASMRTemplate): string => {
+  const downloads = parseFloat(template.downloads.replace('K', ''));
+  if (downloads > 20) return 'HOT';
+  if (downloads > 10) return 'TRENDING';
+  return 'NEW';
+};
+
+const categories = getUniqueCategories();
 const statusFilters = ["All", "HOT", "NEW", "TRENDING"];
 
 export default function ExplorePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
-  const [filteredVideos, setFilteredVideos] = useState(mockVideos);
+  const [filteredTemplates, setFilteredTemplates] = useState<ASMRTemplate[]>(asmrTemplates);
   const [likedVideos, setLikedVideos] = useState<number[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<ASMRTemplate | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     AOS.init({
@@ -100,24 +52,25 @@ export default function ExplorePage() {
   }, []);
 
   useEffect(() => {
-    let filtered = mockVideos;
+    let filtered = asmrTemplates;
 
     if (searchTerm) {
-      filtered = filtered.filter(video =>
-        video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        video.description.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(template =>
+        template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.prompt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
     if (selectedCategory !== 'All') {
-      filtered = filtered.filter(video => video.category === selectedCategory);
+      filtered = filtered.filter(template => template.category.includes(selectedCategory));
     }
 
     if (selectedStatus !== 'All') {
-      filtered = filtered.filter(video => video.status === selectedStatus);
+      filtered = filtered.filter(template => getStatusFromTemplate(template) === selectedStatus);
     }
 
-    setFilteredVideos(filtered);
+    setFilteredTemplates(filtered);
   }, [searchTerm, selectedCategory, selectedStatus]);
 
   const handleLike = (videoId: number) => {
@@ -126,6 +79,16 @@ export default function ExplorePage() {
         ? prev.filter(id => id !== videoId)
         : [...prev, videoId]
     );
+  };
+
+  const handleTemplateClick = (template: ASMRTemplate) => {
+    setSelectedTemplate(template);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTemplate(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -206,74 +169,94 @@ export default function ExplorePage() {
 
           {/* Video Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {filteredVideos.map((video, index) => (
-              <div
-                key={video.id}
-                className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
-                data-aos="fade-up"
-                data-aos-delay={100 + index * 100}
-              >
-                {/* Video Thumbnail */}
-                <div className="relative group">
-                  <div className="aspect-video bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                    <i className="ri-play-circle-line text-white text-6xl opacity-50 group-hover:opacity-100 transition-opacity"></i>
-                  </div>
-                  
-                  {/* Status Badge */}
-                  <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold text-white ${getStatusColor(video.status)}`}>
-                    {video.status}
-                  </div>
-
-                  {/* Play Overlay */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <button className="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-colors">
-                      <i className="ri-play-fill text-white text-xl"></i>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Video Info */}
-                <div className="p-6">
-                  <h3 className="text-white font-semibold text-lg mb-2">{video.title}</h3>
-                  <p className="text-white/70 text-sm mb-4">{video.description}</p>
-                  
-                  {/* Creator */}
-                  <div className="flex items-center mb-4">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                      <i className="ri-robot-line text-white text-sm"></i>
-                    </div>
-                    <span className="text-white/80 text-sm">{video.creator}</span>
-                  </div>
-
-                  {/* Engagement Buttons */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={() => handleLike(video.id)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
-                          likedVideos.includes(video.id)
-                            ? 'bg-red-500 text-white'
-                            : 'bg-white/20 text-white hover:bg-white/30'
-                        }`}
-                      >
-                        <i className={`ri-heart-${likedVideos.includes(video.id) ? 'fill' : 'line'} text-sm`}></i>
-                        <span className="text-sm font-medium">{video.likes}</span>
-                      </button>
-                      
-                      <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300">
-                        <i className="ri-share-line text-sm"></i>
-                        <span className="text-sm font-medium">{video.shares}</span>
-                      </button>
+            {filteredTemplates.map((template, index) => {
+              const status = getStatusFromTemplate(template);
+              
+              return (
+                <div
+                  key={template.id}
+                  className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                  data-aos="fade-up"
+                  data-aos-delay={100 + index * 100}
+                  onClick={() => handleTemplateClick(template)}
+                >
+                  {/* Video Thumbnail */}
+                  <div className="relative group">
+                    <div className="aspect-video bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center overflow-hidden">
+                      {template.poster ? (
+                        <img 
+                          src={template.poster} 
+                          alt={template.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <i className="ri-play-circle-line text-white text-6xl opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                      )}
                     </div>
                     
-                    <button className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-full font-medium hover:from-yellow-500 hover:to-orange-600 transition-all duration-300">
-                      <i className="ri-eye-line mr-2"></i>
-                      Preview
-                    </button>
+                    {/* Status Badge */}
+                    <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold text-white ${getStatusColor(status)}`}>
+                      {status}
+                    </div>
+
+                    {/* Play Overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button className="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-colors">
+                        <i className="ri-play-fill text-white text-xl"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Video Info */}
+                  <div className="p-6">
+                    <h3 className="text-white font-semibold text-lg mb-2">{template.title}</h3>
+                    <p className="text-white/70 text-sm mb-4 line-clamp-2">{template.prompt.slice(0, 120)}...</p>
+                    
+                    {/* Creator */}
+                    <div className="flex items-center mb-4">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <i className="ri-robot-line text-white text-sm"></i>
+                      </div>
+                      <span className="text-white/80 text-sm">AI Template</span>
+                    </div>
+
+                    {/* Engagement Buttons */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="text-white/70 text-sm">
+                          <i className="ri-download-line mr-1"></i>
+                          {template.downloads}
+                        </div>
+                        <div className="text-white/70 text-sm">
+                          <i className="ri-time-line mr-1"></i>
+                          {template.duration}
+                        </div>
+                      </div>
+                      
+                      <button 
+                        className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-full font-medium hover:from-yellow-500 hover:to-orange-600 transition-all duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleTemplateClick(template);
+                        }}
+                      >
+                        <i className="ri-eye-line mr-2"></i>
+                        View
+                      </button>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1 mt-3">
+                      {template.tags.slice(0, 3).map((tag, idx) => (
+                        <span key={idx} className="bg-white/20 text-white text-xs px-2 py-1 rounded-full">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Load More Button */}
@@ -416,6 +399,13 @@ export default function ExplorePage() {
       </div>
       
       <Footer />
+      
+      {/* ASMR Template Modal */}
+      <ASMRModal 
+        isOpen={isModalOpen}
+        template={selectedTemplate}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }
