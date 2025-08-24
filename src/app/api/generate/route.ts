@@ -6,7 +6,7 @@ import { calculateCredits } from '@/lib/credit-calculator';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '', provider = 'veo3', model, credits } = await request.json();
+    const { prompt, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '', provider = 'veo3', model, credits } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
 
     console.log(`Generating video with KIE ${provider.toUpperCase()} API`);
     console.log('Original prompt:', prompt);
-    console.log('Selected triggers:', triggers);
     console.log('Duration:', duration);
     console.log('Quality:', quality);
     console.log('Aspect ratio:', aspectRatio);
@@ -51,33 +50,8 @@ export async function POST(request: NextRequest) {
     // Create KIE Veo3 client
     const kieClient = createKieVeo3Client();
     
-    // Enhance prompt with ASMR context and triggers
-    let enhancedPrompt = `ASMR video: ${prompt}`;
-    
-    // Add trigger-specific enhancements
-    if (triggers && triggers.length > 0) {
-      const triggerDescriptions = {
-        soap: 'soap cutting and squishing sounds',
-        sponge: 'sponge squeezing and soft textures',
-        ice: 'ice cracking and melting sounds',
-        water: 'gentle water flowing and dripping',
-        honey: 'viscous honey pouring and dripping',
-        cubes: 'satisfying cube cutting and arrangements',
-        petals: 'soft flower petals and gentle touches',
-        pages: 'paper rustling and page turning sounds'
-      };
-      
-      const triggerEnhancements = triggers
-        .map((trigger: string) => triggerDescriptions[trigger as keyof typeof triggerDescriptions])
-        .filter(Boolean)
-        .join(', ');
-      
-      if (triggerEnhancements) {
-        enhancedPrompt += `, featuring ${triggerEnhancements}`;
-      }
-    }
-    
-    enhancedPrompt += '. High quality, smooth camera movement, relaxing atmosphere, 4K resolution, soft lighting, calming ambiance.';
+    // Enhance prompt with ASMR context
+    let enhancedPrompt = `ASMR video: ${prompt}. High quality, smooth camera movement, relaxing atmosphere, 4K resolution, soft lighting, calming ambiance.`;
     
     // Get base URL for callback - use production URL in production
     const baseUrl = process.env.NODE_ENV === 'production' 
@@ -145,7 +119,6 @@ export async function POST(request: NextRequest) {
       metadata: {
         originalPrompt: prompt,
         enhancedPrompt: enhancedPrompt,
-        triggers,
         aspectRatio,
         duration,
         quality,

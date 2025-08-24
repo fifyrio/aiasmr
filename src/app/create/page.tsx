@@ -9,23 +9,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
 import { calculateCredits, getAvailableDurations, getAvailableAspectRatios } from '@/lib/credit-calculator';
 
-const triggers = [
-  { id: 'soap', name: 'Soap', icon: '🧼', color: 'from-blue-400 to-cyan-400' },
-  { id: 'sponge', name: 'Sponge', icon: '🧽', color: 'from-yellow-400 to-orange-400' },
-  { id: 'ice', name: 'Ice', icon: '🧊', color: 'from-cyan-400 to-blue-500' },
-  { id: 'water', name: 'Water', icon: '💧', color: 'from-blue-500 to-teal-400' },
-  { id: 'honey', name: 'Honey', icon: '🍯', color: 'from-amber-400 to-orange-500' },
-  { id: 'cubes', name: 'Cubes', icon: '⬜', color: 'from-gray-400 to-slate-500' },
-  { id: 'petals', name: 'Petals', icon: '🌸', color: 'from-pink-400 to-rose-500' },
-  { id: 'pages', name: 'Pages', icon: '📄', color: 'from-green-400 to-emerald-500' },
-];
 
 export default function CreatePage() {
   const { user } = useAuth();
   const { credits: userCredits, refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const [prompt, setPrompt] = useState('');
-  const [selectedTriggers, setSelectedTriggers] = useState(['soap']);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +85,6 @@ export default function CreatePage() {
           taskId,
           userId: user?.id || '',
           prompt: prompt.trim(),
-          triggers: selectedTriggers.join(','),
           duration: duration.toString(),
           quality: quality,
           aspectRatio: aspectRatio,
@@ -177,23 +165,6 @@ export default function CreatePage() {
     poll();
   };
 
-  const handleTriggerToggle = (triggerId: string) => {
-    setSelectedTriggers(prev => {
-      const isCurrentlySelected = prev.includes(triggerId);
-      
-      if (isCurrentlySelected) {
-        // If trying to deselect and it's the only selected trigger, keep it selected
-        if (prev.length === 1) {
-          return prev;
-        }
-        // Otherwise, remove it from selection
-        return prev.filter(id => id !== triggerId);
-      } else {
-        // Add to selection
-        return [...prev, triggerId];
-      }
-    });
-  };
 
   const handleGenerate = async () => {
     if (!prompt.trim() || userCredits.credits < currentCredits) return;
@@ -216,7 +187,6 @@ export default function CreatePage() {
         },
         body: JSON.stringify({
           prompt: prompt.trim(),
-          triggers: selectedTriggers,
           aspectRatio,
           duration: provider === 'runway' ? duration : undefined,
           quality,
@@ -319,40 +289,6 @@ export default function CreatePage() {
               </div>
             </div>
 
-            {/* Trigger Selection */}
-            <div className="mb-8" data-aos="fade-up" data-aos-delay="400">
-              <h3 className="text-lg font-medium text-white mb-6">
-                <i className="ri-sound-module-line mr-2"></i>
-                Select ASMR Triggers
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {triggers.map((trigger, index) => (
-                  <button
-                    key={trigger.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleTriggerToggle(trigger.id);
-                    }}
-                    data-aos="fade-up"
-                    data-aos-delay={500 + index * 100}
-                    className={`relative p-6 rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                      selectedTriggers.includes(trigger.id)
-                        ? `bg-gradient-to-r ${trigger.color} text-white shadow-lg scale-105`
-                        : 'bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30'
-                    }`}
-                  >
-                    <div className="text-3xl mb-2">{trigger.icon}</div>
-                    <div className="text-sm font-semibold">{trigger.name}</div>
-                    {selectedTriggers.includes(trigger.id) && (
-                      <div className="absolute top-2 right-2 bg-white/20 rounded-full p-1">
-                        <i className="ri-check-line text-sm"></i>
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
 
             {/* Generation Settings */}
             <div className="mb-8 grid md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="500">
