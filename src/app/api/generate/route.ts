@@ -5,7 +5,7 @@ import { deductCredits } from '@/lib/credits-manager';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '' } = await request.json();
+    const { prompt, triggers, aspectRatio = '16:9', duration = 5, quality = '720p', imageUrl, waterMark = '', provider = 'veo3' } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('Generating video with KIE Runway API');
+    console.log(`Generating video with KIE ${provider.toUpperCase()} API`);
     console.log('Original prompt:', prompt);
     console.log('Selected triggers:', triggers);
     console.log('Duration:', duration);
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
     console.log('Aspect ratio:', aspectRatio);
     console.log('Image URL:', imageUrl);
     console.log('Water mark:', waterMark);
+    console.log('Provider:', provider);
     
     // Create KIE Veo3 client
     const kieClient = createKieVeo3Client();
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
     console.log('Enhanced prompt:', enhancedPrompt);
     console.log('Callback URL:', callbackUrl);
     
-    // Generate video using KIE Runway API
+    // Generate video using KIE API (Runway or VEO3)
     const result = await kieClient.generateVideo({
       prompt: enhancedPrompt,
       duration: duration as 5 | 8,
@@ -80,7 +81,8 @@ export async function POST(request: NextRequest) {
       aspectRatio: aspectRatio as '16:9' | '4:3' | '1:1' | '3:4' | '9:16',
       imageUrl: imageUrl,
       waterMark: waterMark || '',
-      callBackUrl: callbackUrl
+      callBackUrl: callbackUrl,
+      provider: provider as 'runway' | 'veo3'
     });
 
     console.log('KIE API result:', result);
@@ -129,7 +131,7 @@ export async function POST(request: NextRequest) {
         quality,
         imageUrl,
         generatedAt: new Date().toISOString(),
-        provider: 'kie-runway',
+        provider: `kie-${provider}`,
       }
     });
 

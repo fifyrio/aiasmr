@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const duration = searchParams.get('duration');
     const quality = searchParams.get('quality');
     const aspectRatio = searchParams.get('aspectRatio');
+    const provider = searchParams.get('provider') as 'runway' | 'veo3';
 
     if (!taskId) {
       return NextResponse.json(
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
     const kieClient = createKieVeo3Client();
     
     try {
-      const taskStatus = await kieClient.getTaskStatus(taskId);
+      const taskStatus = await kieClient.getTaskStatus(taskId, provider || 'veo3');
       
       console.log(`📊 Task ${taskId} status: ${taskStatus.status} (${taskStatus.progress}%)`);
 

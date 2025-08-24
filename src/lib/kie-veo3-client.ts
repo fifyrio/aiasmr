@@ -8,6 +8,7 @@ export interface VideoGenerationOptions {
   aspectRatio: '16:9' | '4:3' | '1:1' | '3:4' | '9:16';
   waterMark?: string;
   callBackUrl: string;
+  provider?: 'runway' | 'veo3';
 }
 
 export interface VideoGenerationResult {
@@ -117,9 +118,14 @@ export class KieVeo3Client {
   async generateVideo(options: VideoGenerationOptions): Promise<VideoGenerationResult> {
     this.validateGenerationOptions(options);
     
-    // Format the request according to new KIE Runway API documentation
+    const provider = options.provider || 'veo3';
+    const endpoint = provider === 'runway' ? '/runway/generate' : '/veo/generate';
+    const model = provider === 'runway' ? 'runway-duration-5-generate' : 'veo3_fast';
+    
+    // Format the request according to new KIE API documentation
     const requestData = {
       prompt: options.prompt,
+      model: model,
       duration: options.duration,
       quality: options.quality,
       aspectRatio: options.aspectRatio,
@@ -128,11 +134,11 @@ export class KieVeo3Client {
       ...(options.imageUrl && { imageUrl: options.imageUrl })
     };
 
-    console.log('KIE Runway API request data:', JSON.stringify(requestData, null, 2));
+    console.log(`KIE ${provider.toUpperCase()} API request data:`, JSON.stringify(requestData, null, 2));
     
     return this.requestWithRetry(async () => {
-      const response = await this.client.post('/runway/generate', requestData);
-      console.log('KIE Runway API raw response:', {
+      const response = await this.client.post(endpoint, requestData);
+      console.log(`KIE ${provider.toUpperCase()} API raw response:`, {
         status: response.status,
         headers: response.headers,
         data: response.data
@@ -196,12 +202,22 @@ export class KieVeo3Client {
     });
   }
 
-  async getTaskStatus(taskId: string): Promise<TaskStatus> {
-    const url = `/runway/record-detail?taskId=${taskId}`;
+  async getTaskStatus(taskId: string, provider: 'runway' | 'veo3' = 'veo3'): Promise<TaskStatus> {
+    let endpoint: string;
+    let url: string;
+    
+    if (provider === 'runway') {
+      endpoint = '/runway/record-detail';
+      url = `${endpoint}?taskId=${taskId}`;
+    } else {
+      // VEO3 uses different endpoint - need to check if it needs taskId parameter
+      endpoint = '/veo/record-info';
+      url = `${endpoint}?taskId=${taskId}`;
+    }
     
     return this.requestWithRetry(async () => {
       const response = await this.client.get(url);
-      console.log('KIE Task Status API response:', {
+      console.log(`KIE ${provider.toUpperCase()} Task Status API response:`, {
         status: response.status,
         data: response.data
       });
@@ -218,29 +234,61 @@ export class KieVeo3Client {
         let result: { videoUrl?: string; thumbnailUrl?: string; duration?: number; } | undefined = undefined;
         let error: string | undefined = undefined;
         
-        // Determine status based on KIE API response format
-        if (data.state === 'success' && data.videoInfo?.videoUrl) {
-          status = 'completed';
-          progress = 100;
-          result = {
-            videoUrl: data.videoInfo.videoUrl,
-            thumbnailUrl: data.videoInfo.imageUrl,
-            duration: undefined // Duration not provided in the API response
-          };
-        } else if (data.state === 'fail' || data.state === 'failed') {
-          status = 'failed';
-          progress = 0;
-          error = data.failMsg || 'Generation failed';
-        } else if (data.state === 'processing' || data.state === 'running') {
-          status = 'processing';
-          progress = 50;
-        } else if (data.state === 'pending' || data.state === 'queue' || data.state === 'waiting') {
-          status = 'pending';
-          progress = 10;
+        if (provider === 'veo3') {
+          // Handle VEO3 response format
+          // VEO3 returns task info directly in data object
+          if (data.taskId === taskId) {
+            // Task found, check completion status
+            if (data.successFlag === 1 && data.response?.resultUrls?.length > 0) {
+              status = 'completed';
+              progress = 100;
+              result = {
+                videoUrl: data.response.resultUrls[0],
+                thumbnailUrl: undefined, // VEO3 may not provide thumbnail
+                duration: undefined
+              };
+            } else if (data.successFlag === 0) {
+              status = 'failed';
+              progress = 0;
+              error = data.errorMessage || 'VEO3 generation failed';
+            } else if (!data.completeTime || data.completeTime === null || data.completeTime === '') {
+              // Task is still processing if no complete time
+              status = 'processing';
+              progress = 50;
+            } else {
+              // Has complete time but no success flag yet
+              status = 'processing';
+              progress = 80;
+            }
+          } else {
+            // If response doesn't contain our taskId, assume still processing
+            status = 'processing';
+            progress = 30;
+          }
         } else {
-          // Default to pending for unknown states
-          status = 'pending';
-          progress = 10;
+          // Handle Runway response format (existing logic)
+          if (data.state === 'success' && data.videoInfo?.videoUrl) {
+            status = 'completed';
+            progress = 100;
+            result = {
+              videoUrl: data.videoInfo.videoUrl,
+              thumbnailUrl: data.videoInfo.imageUrl,
+              duration: undefined
+            };
+          } else if (data.state === 'fail' || data.state === 'failed') {
+            status = 'failed';
+            progress = 0;
+            error = data.failMsg || 'Generation failed';
+          } else if (data.state === 'processing' || data.state === 'running') {
+            status = 'processing';
+            progress = 50;
+          } else if (data.state === 'pending' || data.state === 'queue' || data.state === 'waiting') {
+            status = 'pending';
+            progress = 10;
+          } else {
+            status = 'pending';
+            progress = 10;
+          }
         }
         
         return {

@@ -35,6 +35,7 @@ export default function CreatePage() {
   const [duration, setDuration] = useState<5 | 8>(5);
   const [quality, setQuality] = useState<'720p' | '1080p'>('720p');
   const [waterMark, setWaterMark] = useState<string>('');
+  const [provider, setProvider] = useState<'runway' | 'veo3'>('veo3');
 
   const maxChars = 1800;
 
@@ -69,7 +70,8 @@ export default function CreatePage() {
           triggers: selectedTriggers.join(','),
           duration: duration.toString(),
           quality: quality,
-          aspectRatio: aspectRatio
+          aspectRatio: aspectRatio,
+          provider: provider
         });
         
         const response = await fetch(`/api/generate/status?${params}`);
@@ -190,6 +192,7 @@ export default function CreatePage() {
           duration,
           quality,
           waterMark: waterMark.trim(),
+          provider,
         }),
       });
 
@@ -315,7 +318,38 @@ export default function CreatePage() {
             </div>
 
             {/* Generation Settings */}
-            <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="500">
+            <div className="mb-8 grid md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="500">
+              {/* Provider Selection */}
+              <div>
+                <label className="block text-lg font-medium text-white mb-4">
+                  <i className="ri-cpu-line mr-2"></i>
+                  AI Provider
+                </label>
+                <div className="grid grid-cols-1 gap-3">
+                  <button
+                    onClick={() => setProvider('veo3')}
+                    className={`p-4 rounded-xl transition-all duration-300 border ${
+                      provider === 'veo3'
+                        ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-transparent shadow-lg'
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    <div className="font-semibold">Veo3</div>
+                    <div className="text-sm opacity-80">High Fast</div>
+                  </button>
+                  <button
+                    onClick={() => setProvider('runway')}
+                    className={`p-4 rounded-xl transition-all duration-300 border ${
+                      provider === 'runway'
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-transparent shadow-lg'
+                        : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    <div className="font-semibold">Runway</div>
+                    <div className="text-sm opacity-80">Fast Generation</div>
+                  </button>
+                </div>
+              </div>
               {/* Duration Selection */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
@@ -575,6 +609,11 @@ export default function CreatePage() {
                       <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                         <span className="text-white text-xs font-medium">
                           {duration}s • {quality} • {aspectRatio}
+                        </span>
+                      </div>
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                        <span className="text-white text-xs font-medium">
+                          {provider.toUpperCase()}
                         </span>
                       </div>
                       <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
