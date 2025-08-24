@@ -42,6 +42,7 @@ export default function ExplorePage() {
   const [likedVideos, setLikedVideos] = useState<number[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<ASMRTemplate | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
     AOS.init({
@@ -89,6 +90,14 @@ export default function ExplorePage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedTemplate(null);
+  };
+
+  const handleMouseEnter = (index: number) => {
+    setHoveredIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -179,11 +188,28 @@ export default function ExplorePage() {
                   data-aos="fade-up"
                   data-aos-delay={100 + index * 100}
                   onClick={() => handleTemplateClick(template)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
                 >
                   {/* Video Thumbnail */}
                   <div className="relative group">
                     <div className="aspect-video bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center overflow-hidden">
-                      {template.poster ? (
+                      {hoveredIndex === index && template.video ? (
+                        <video 
+                          src={template.video}
+                          className="w-full h-full object-cover transition-opacity duration-300"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          onError={(e) => {
+                            const target = e.target as HTMLVideoElement;
+                            target.style.display = 'none';
+                            setHoveredIndex(null);
+                          }}
+                        />
+                      ) : template.poster ? (
                         <img 
                           src={template.poster} 
                           alt={template.title}
@@ -199,12 +225,14 @@ export default function ExplorePage() {
                       {status}
                     </div>
 
-                    {/* Play Overlay */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <button className="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-colors">
-                        <i className="ri-play-fill text-white text-xl"></i>
-                      </button>
-                    </div>
+                    {/* Only show play overlay when not playing video */}
+                    {hoveredIndex !== index && (
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button className="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-colors">
+                          <i className="ri-play-fill text-white text-xl"></i>
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Video Info */}

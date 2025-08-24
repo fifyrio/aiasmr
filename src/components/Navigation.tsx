@@ -62,12 +62,6 @@ const Navigation = () => {
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Pricing
-              </Link>
-              <Link 
-                href="/blog" 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                Blog
               </Link>              
             </div>
           </div>
@@ -161,9 +155,6 @@ const Navigation = () => {
             </Link>
             <Link href="/pricing" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
               Pricing
-            </Link>
-            <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
-              Blog
             </Link>
             <Link href="/ai-asmr-prompts" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
               AI Prompts

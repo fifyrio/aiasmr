@@ -31,6 +31,7 @@ interface FeaturedVideosProps {
 const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<ASMRTemplate | null>(null)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   
   // Use first 10 templates from the data
   const featuredTemplates = templatesData.slice(0, 10) as ASMRTemplate[]
@@ -66,6 +67,14 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
   const closeModal = () => {
     setIsModalOpen(false)
     setSelectedTemplate(null)
+  }
+
+  const handleMouseEnter = (index: number) => {
+    setHoveredIndex(index)
+  }
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null)
   }
 
 
@@ -107,29 +116,55 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
           >
             {displayVideos.map((video, index) => (
               <SwiperSlide key={video.id}>
-                <div className="video-card group cursor-pointer" onClick={() => openModal(index)}>
-                  <div className="relative overflow-hidden">
-                    <div className="w-full h-64 relative bg-gray-800">
-                      <img 
-                        src={encodeURI(video.thumbnail)} 
-                        alt={video.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // Fallback to gradient background if image fails to load
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent) {
-                            parent.classList.add('bg-gradient-to-br', 'from-purple-600', 'to-purple-800', 'flex', 'items-center', 'justify-center');
-                            parent.innerHTML += `
-                              <div class="text-white text-center">
-                                <i class="ri-play-circle-line text-6xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
-                                <p class="text-sm opacity-80">Click to Preview</p>
-                              </div>
-                            `;
-                          }
-                        }}
-                      />
+                <div 
+                  className="video-card group cursor-pointer" 
+                  onClick={() => openModal(index)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="relative overflow-hidden rounded-lg">
+                    <div className="w-full h-64 relative bg-gray-800 transition-all duration-300">
+                      {hoveredIndex === index && video.video ? (
+                        <video 
+                          src={video.video}
+                          className="w-full h-full object-cover transition-opacity duration-300"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          onLoadedData={() => {
+                            // Smooth transition when video is loaded
+                          }}
+                          onError={(e) => {
+                            // Fallback to image if video fails to load
+                            const target = e.target as HTMLVideoElement;
+                            target.style.display = 'none';
+                            setHoveredIndex(null);
+                          }}
+                        />
+                      ) : (
+                        <img 
+                          src={encodeURI(video.thumbnail)} 
+                          alt={video.title}
+                          className="w-full h-full object-cover transition-opacity duration-300"
+                          onError={(e) => {
+                            // Fallback to gradient background if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.classList.add('bg-gradient-to-br', 'from-purple-600', 'to-purple-800', 'flex', 'items-center', 'justify-center');
+                              parent.innerHTML += `
+                                <div class="text-white text-center">
+                                  <i class="ri-play-circle-line text-6xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
+                                  <p class="text-sm opacity-80">Click to Preview</p>
+                                </div>
+                              `;
+                            }
+                          }}
+                        />
+                      )}
                     </div>
                     <div className="absolute top-4 left-4">
                       <span className="bg-black/70 text-white px-2 py-1 rounded text-sm">
@@ -141,11 +176,14 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
                         {video.duration}
                       </span>
                     </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i className="ri-play-circle-line text-6xl text-white"></i>
+                    {/* Only show play overlay when not playing video */}
+                    {hoveredIndex !== index && (
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <i className="ri-play-circle-line text-6xl text-white"></i>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   
                   <div className="p-6">

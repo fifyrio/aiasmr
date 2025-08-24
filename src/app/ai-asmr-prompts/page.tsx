@@ -30,6 +30,7 @@ const AIASMRPromptsPage = () => {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -87,6 +88,14 @@ const AIASMRPromptsPage = () => {
         block: 'start'
       })
     }
+  }
+
+  const handleMouseEnter = (index: number) => {
+    setHoveredIndex(index)
+  }
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null)
   }
 
   return (
@@ -185,22 +194,43 @@ const AIASMRPromptsPage = () => {
 
           {!loading && !error && templates.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {templates.map((template) => (
+              {templates.map((template, index) => (
                 <div 
                   key={template.id} 
                   className="bg-gray-700 rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:shadow-purple-500/20 transition-all border border-gray-600 cursor-pointer"
                   onClick={() => openModal(template)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <div className="relative">
-                    <img 
-                      src={template.poster} 
-                      alt={template.title}
-                      className="w-full h-48 object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "/api/placeholder/300/400";
-                      }}
-                    />
+                    <div className="w-full h-48 relative overflow-hidden">
+                      {hoveredIndex === index && template.video ? (
+                        <video 
+                          src={template.video}
+                          className="w-full h-full object-cover transition-opacity duration-300"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          onError={(e) => {
+                            const target = e.target as HTMLVideoElement;
+                            target.style.display = 'none';
+                            setHoveredIndex(null);
+                          }}
+                        />
+                      ) : (
+                        <img 
+                          src={template.poster} 
+                          alt={template.title}
+                          className="w-full h-full object-cover transition-opacity duration-300"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "/api/placeholder/300/400";
+                          }}
+                        />
+                      )}
+                    </div>
                     <div className="absolute top-3 right-3 bg-purple-600/80 text-white text-xs px-2 py-1 rounded">
                       {template.ratio.replace('ratio-', '').replace('-', ':')}
                     </div>
@@ -208,6 +238,18 @@ const AIASMRPromptsPage = () => {
                       <div className="absolute bottom-3 left-3 bg-purple-600/80 text-white text-xs px-2 py-1 rounded flex items-center">
                         <span className="mr-1">🔊</span>
                         <span>Audio</span>
+                      </div>
+                    )}
+                    {/* Play overlay - only show when not playing video */}
+                    {hoveredIndex !== index && (
+                      <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                        <div className="opacity-0 hover:opacity-100 transition-opacity">
+                          <div className="w-12 h-12 bg-purple-600/80 rounded-full flex items-center justify-center">
+                            <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
