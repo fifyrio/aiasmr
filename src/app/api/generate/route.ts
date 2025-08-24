@@ -68,7 +68,10 @@ export async function POST(request: NextRequest) {
       ? process.env.NEXT_PUBLIC_PRODUCTION_URL || 'https://www.aiasmr.vip'
       : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     
-    const callbackUrl = `${baseUrl}/api/kie-callback`;
+    // Use provider-specific callback URLs
+    const callbackUrl = provider === 'veo3' 
+      ? `${baseUrl}/api/kie-veo-callback`
+      : `${baseUrl}/api/kie-runway-callback`;
     
     console.log('Enhanced prompt:', enhancedPrompt);
     console.log('Callback URL:', callbackUrl);

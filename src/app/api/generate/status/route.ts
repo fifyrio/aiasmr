@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createKieVeo3Client } from '@/lib/kie-veo3-client';
-import { completeVideoProcessing } from '@/lib/video-processor';
 import { createClient } from '@/lib/supabase/server';
-import { refundCredits, recordVideoCompletion } from '@/lib/credits-manager';
-
-// Cache to track which tasks are already being processed
-const processingTasks = new Set<string>();
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,36 +20,27 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log('🔍 Polling KIE API for task status:', taskId);
+    console.log('🔍 Checking video generation status for task:', taskId);
 
-    // No need to check database - rely on KIE API status and processing cache
     const supabase = createClient();
 
-    // Use KIE API to check task status directly
-    const kieClient = createKieVeo3Client();
-    
-    try {
-      const taskStatus = await kieClient.getTaskStatus(taskId, provider || 'veo3');
+    if (provider === 'veo3') {
+      // VEO3 uses callback-only mechanism - check database for completion
+      console.log(`📊 VEO3 Task ${taskId}: Checking database status (callback-only mechanism)`);
       
-      console.log(`📊 Task ${taskId} status: ${taskStatus.status} (${taskStatus.progress}%)`);
+      // Check if video already exists in database (completed via callback)
+      const { data: existingVideo } = await supabase
+        .from('videos')
+        .select('id, preview_url, thumbnail_url, status')
+        .eq('task_id', taskId)
+        .single();
 
-      // If task is completed and has video URL, trigger processing
-      if (taskStatus.status === 'completed' && taskStatus.result?.videoUrl) {
-        console.log(`🎬 Task ${taskId} completed, checking if already processed...`);
-        
-        // First check if video already exists in database (processing completed)
-        const { data: existingVideo } = await supabase
-          .from('videos')
-          .select('id, preview_url, thumbnail_url')
-          .eq('task_id', taskId)
-          .eq('status', 'ready')
-          .single();
-
-        if (existingVideo) {
-          console.log(`✅ Video processing already completed for task ${taskId}, returning result`);
+      if (existingVideo) {
+        if (existingVideo.status === 'ready') {
+          console.log(`✅ VEO3 video processing completed for task ${taskId}`);
           return NextResponse.json({
             success: true,
-            taskId: taskStatus.taskId,
+            taskId: taskId,
             status: 'completed',
             result: {
               videoUrl: existingVideo.preview_url,
@@ -66,123 +51,79 @@ export async function GET(request: NextRequest) {
             message: 'Video processed and ready!',
             videoId: existingVideo.id
           });
-        }
-        
-        // Check if already processing to avoid duplicates
-        if (processingTasks.has(taskId)) {
-          console.log(`⏳ Task ${taskId} is already being processed`);
+        } else if (existingVideo.status === 'failed') {
+          console.log(`❌ VEO3 video generation failed for task ${taskId}`);
           return NextResponse.json({
             success: true,
-            taskId: taskStatus.taskId,
-            status: 'processing',
+            taskId: taskId,
+            status: 'failed',
             result: null,
-            error: null,
-            progress: 75,
-            message: 'Processing video and uploading to storage...'
-          });
-        }
-        
-        // Mark as processing
-        processingTasks.add(taskId);
-        
-        try {
-          // Process video asynchronously (don't wait for it to complete)
-          const processingPromise = completeVideoProcessing(
-            taskStatus.result.videoUrl,
-            taskStatus.result.thumbnailUrl || '', // Use KIE-provided thumbnail URL or empty string
-            {
-              taskId,
-              userId: userId || undefined,
-              originalPrompt: originalPrompt || undefined,
-              triggers: triggers ? triggers.split(',') : undefined,
-              duration: duration || undefined,
-              quality: quality || undefined,
-              aspectRatio: aspectRatio || undefined
-            }
-          );
-
-          // Start processing in background and handle completion
-          processingPromise
-            .then(result => {
-              console.log(`✅ Video processing completed for task ${taskId}:`, result);
-              processingTasks.delete(taskId);
-            })
-            .catch(error => {
-              console.error(`❌ Video processing failed for task ${taskId}:`, error);
-              processingTasks.delete(taskId);
-            });
-
-          // Return immediately with processing status
-          return NextResponse.json({
-            success: true,
-            taskId: taskStatus.taskId,
-            status: 'processing',
-            result: null,
-            error: null,
-            progress: 75,
-            message: 'Video generation completed, now processing and uploading...'
-          });
-          
-        } catch (processingError) {
-          processingTasks.delete(taskId);
-          console.error(`❌ Failed to start video processing for ${taskId}:`, processingError);
-          
-          // Return the original KIE result even if processing fails
-          return NextResponse.json({
-            success: true,
-            taskId: taskStatus.taskId,
-            status: taskStatus.status,
-            result: taskStatus.result,
-            error: null,
-            progress: taskStatus.progress
+            error: 'Video generation failed',
+            progress: 0
           });
         }
       }
-
-      // Handle failed tasks - refund credits
-      if (taskStatus.status === 'failed' && userId) {
-        console.log(`💸 Task ${taskId} failed, processing refund...`);
-        
-        try {
-          // Process refund for failed generation
-          const refundResult = await refundCredits(
-            userId,
-            20, // Refund the same amount that was deducted
-            `Video generation failed: ${taskStatus.error || 'Unknown error'}`,
-            taskId
-          );
-
-          if (refundResult.success) {
-            console.log(`💰 Refund processed for failed task ${taskId}. New balance: ${refundResult.newCredits}`);
-          } else {
-            console.error('Failed to process refund:', refundResult.error);
-          }
-        } catch (refundError) {
-          console.error('Error processing refund for failed task:', refundError);
-        }
-      }
-
-      // Return normal status for non-completed tasks
+      
+      // If not found in database, still processing (waiting for callback)
       return NextResponse.json({
         success: true,
-        taskId: taskStatus.taskId,
-        status: taskStatus.status,
-        result: taskStatus.result,
-        error: taskStatus.error,
-        progress: taskStatus.progress
-      });
-
-    } catch (kieError) {
-      console.error('❌ KIE API error while checking task status:', kieError);
-      
-      // If KIE API call fails, return appropriate error response
-      return NextResponse.json({
-        success: false,
         taskId: taskId,
-        status: 'error',
+        status: 'processing',
         result: null,
-        error: kieError instanceof Error ? kieError.message : 'Failed to check task status',
-        progress: 0
+        error: null,
+        progress: 50,
+        message: 'Video generation in progress, waiting for callback...'
+      });
+      
+    } else {
+      // Runway also uses callback-only mechanism - check database for completion
+      console.log(`📊 Runway Task ${taskId}: Checking database status (callback-only mechanism)`);
+      
+      // Check if video already exists in database (completed via callback)
+      const { data: existingVideo } = await supabase
+        .from('videos')
+        .select('id, preview_url, thumbnail_url, status')
+        .eq('task_id', taskId)
+        .single();
+
+      if (existingVideo) {
+        if (existingVideo.status === 'ready') {
+          console.log(`✅ Runway video processing completed for task ${taskId}`);
+          return NextResponse.json({
+            success: true,
+            taskId: taskId,
+            status: 'completed',
+            result: {
+              videoUrl: existingVideo.preview_url,
+              thumbnailUrl: existingVideo.thumbnail_url
+            },
+            error: null,
+            progress: 100,
+            message: 'Video processed and ready!',
+            videoId: existingVideo.id
+          });
+        } else if (existingVideo.status === 'failed') {
+          console.log(`❌ Runway video generation failed for task ${taskId}`);
+          return NextResponse.json({
+            success: true,
+            taskId: taskId,
+            status: 'failed',
+            result: null,
+            error: 'Video generation failed',
+            progress: 0
+          });
+        }
+      }
+      
+      // If not found in database, still processing (waiting for callback)
+      return NextResponse.json({
+        success: true,
+        taskId: taskId,
+        status: 'processing',
+        result: null,
+        error: null,
+        progress: 50,
+        message: 'Video generation in progress, waiting for callback...'
       });
     }
 

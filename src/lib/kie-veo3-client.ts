@@ -131,6 +131,7 @@ export class KieVeo3Client {
       aspectRatio: options.aspectRatio,
       waterMark: options.waterMark || '',
       callBackUrl: options.callBackUrl,
+      enableFallback: true,
       ...(options.imageUrl && { imageUrl: options.imageUrl })
     };
 
@@ -203,17 +204,22 @@ export class KieVeo3Client {
   }
 
   async getTaskStatus(taskId: string, provider: 'runway' | 'veo3' = 'veo3'): Promise<TaskStatus> {
-    let endpoint: string;
-    let url: string;
-    
-    if (provider === 'runway') {
-      endpoint = '/runway/record-detail';
-      url = `${endpoint}?taskId=${taskId}`;
-    } else {
-      // VEO3 uses different endpoint - need to check if it needs taskId parameter
-      endpoint = '/veo/record-info';
-      url = `${endpoint}?taskId=${taskId}`;
+    if (provider === 'veo3') {
+      // VEO3 uses callback-only mechanism, no polling needed
+      // Return processing status until callback is received
+      console.log(`VEO3 task ${taskId}: Using callback-only mechanism, no polling required`);
+      return {
+        taskId,
+        status: 'processing',
+        result: undefined,
+        error: undefined,
+        progress: 50
+      };
     }
+    
+    // Handle Runway polling (existing logic)
+    const endpoint = '/runway/record-detail';
+    const url = `${endpoint}?taskId=${taskId}`;
     
     return this.requestWithRetry(async () => {
       const response = await this.client.get(url);
@@ -224,7 +230,7 @@ export class KieVeo3Client {
       
       const responseData = response.data;
       
-      // Handle KIE API response format based on the actual API structure
+      // Handle KIE API response format for Runway
       if (responseData && responseData.code === 200) {
         const data = responseData.data;
         
@@ -234,61 +240,28 @@ export class KieVeo3Client {
         let result: { videoUrl?: string; thumbnailUrl?: string; duration?: number; } | undefined = undefined;
         let error: string | undefined = undefined;
         
-        if (provider === 'veo3') {
-          // Handle VEO3 response format
-          // VEO3 returns task info directly in data object
-          if (data.taskId === taskId) {
-            // Task found, check completion status
-            if (data.successFlag === 1 && data.response?.resultUrls?.length > 0) {
-              status = 'completed';
-              progress = 100;
-              result = {
-                videoUrl: data.response.resultUrls[0],
-                thumbnailUrl: undefined, // VEO3 may not provide thumbnail
-                duration: undefined
-              };
-            } else if (data.successFlag === 0) {
-              status = 'failed';
-              progress = 0;
-              error = data.errorMessage || 'VEO3 generation failed';
-            } else if (!data.completeTime || data.completeTime === null || data.completeTime === '') {
-              // Task is still processing if no complete time
-              status = 'processing';
-              progress = 50;
-            } else {
-              // Has complete time but no success flag yet
-              status = 'processing';
-              progress = 80;
-            }
-          } else {
-            // If response doesn't contain our taskId, assume still processing
-            status = 'processing';
-            progress = 30;
-          }
+        // Handle Runway response format
+        if (data.state === 'success' && data.videoInfo?.videoUrl) {
+          status = 'completed';
+          progress = 100;
+          result = {
+            videoUrl: data.videoInfo.videoUrl,
+            thumbnailUrl: data.videoInfo.imageUrl,
+            duration: undefined
+          };
+        } else if (data.state === 'fail' || data.state === 'failed') {
+          status = 'failed';
+          progress = 0;
+          error = data.failMsg || 'Generation failed';
+        } else if (data.state === 'processing' || data.state === 'running') {
+          status = 'processing';
+          progress = 50;
+        } else if (data.state === 'pending' || data.state === 'queue' || data.state === 'waiting') {
+          status = 'pending';
+          progress = 10;
         } else {
-          // Handle Runway response format (existing logic)
-          if (data.state === 'success' && data.videoInfo?.videoUrl) {
-            status = 'completed';
-            progress = 100;
-            result = {
-              videoUrl: data.videoInfo.videoUrl,
-              thumbnailUrl: data.videoInfo.imageUrl,
-              duration: undefined
-            };
-          } else if (data.state === 'fail' || data.state === 'failed') {
-            status = 'failed';
-            progress = 0;
-            error = data.failMsg || 'Generation failed';
-          } else if (data.state === 'processing' || data.state === 'running') {
-            status = 'processing';
-            progress = 50;
-          } else if (data.state === 'pending' || data.state === 'queue' || data.state === 'waiting') {
-            status = 'pending';
-            progress = 10;
-          } else {
-            status = 'pending';
-            progress = 10;
-          }
+          status = 'pending';
+          progress = 10;
         }
         
         return {
