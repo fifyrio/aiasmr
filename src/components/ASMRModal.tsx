@@ -40,8 +40,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
   };
 
   const handleGenerateVideo = () => {
-    const encodedPrompt = encodeURIComponent(template.prompt);
-    router.push(`/create?prompt=${encodedPrompt}`);
+    router.push(`/create?template=${template.id}`);
     onClose();
   };
 

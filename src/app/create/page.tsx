@@ -57,14 +57,29 @@ export default function CreatePage() {
       offset: 100,
     });
     
-    // Set random demo video on client side only to avoid hydration mismatch
-    const randomIndex = Math.floor(Math.random() * asmrTemplates.length);
-    setDemoVideo(asmrTemplates[randomIndex]);
-  }, []);
+    // Set random demo video on client side only if no template is specified
+    const templateId = searchParams.get('template');
+    if (!templateId) {
+      const randomIndex = Math.floor(Math.random() * asmrTemplates.length);
+      setDemoVideo(asmrTemplates[randomIndex]);
+    }
+  }, [searchParams]);
 
-  // Auto-fill prompt from URL parameters
+  // Auto-fill prompt from URL parameters or template
   useEffect(() => {
     const urlPrompt = searchParams.get('prompt');
+    const templateId = searchParams.get('template');
+    
+    if (templateId && !prompt) {
+      // Find template by ID
+      const template = asmrTemplates.find(t => t.id.toString() === templateId);
+      if (template) {
+        setPrompt(template.prompt);
+        setDemoVideo(template);
+        return;
+      }
+    }
+    
     if (urlPrompt && !prompt) {
       setPrompt(decodeURIComponent(urlPrompt));
     }
@@ -751,7 +766,9 @@ export default function CreatePage() {
                         Your browser does not support the video tag.
                       </video>
                       <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1">
-                        <span className="text-white text-xs font-medium">Demo</span>
+                        <span className="text-white text-xs font-medium">
+                          {searchParams.get('template') ? 'Template Preview' : 'Demo'}
+                        </span>
                       </div>
                     </div>
                     <div className="mt-4">

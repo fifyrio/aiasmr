@@ -711,7 +711,7 @@ const AIASMRPromptsPage = () => {
                   {/* Action Button */}
                   <div className="pt-4">
                     <Link 
-                      href={`/create?prompt=${encodeURIComponent(selectedTemplate.prompt)}`}
+                      href={`/create?template=${selectedTemplate.id}`}
                       className="block w-full"
                     >
                       <button className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center">                        
