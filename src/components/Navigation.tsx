@@ -43,14 +43,7 @@ const Navigation = () => {
               >
                 AI Prompts
               </Link>
-              {user && (
-                <Link 
-                  href="/my-videos" 
-                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  My Videos
-                </Link>
-              )}
+              
               <Link 
                 href="/explore" 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -62,7 +55,15 @@ const Navigation = () => {
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Pricing
-              </Link>              
+              </Link>
+              {user && (
+                <Link 
+                  href="/my-videos" 
+                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  My Videos
+                </Link>
+              )}              
             </div>
           </div>
 
