@@ -1,0 +1,147 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "success": "成功！",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭"
+  },
+  "nav": {
+    "home": "首页",
+    "create": "创建",
+    "explore": "探索",
+    "pricing": "定价",
+    "myVideos": "我的视频",
+    "login": "登录",
+    "signup": "注册",
+    "logout": "退出",
+    "account": "账户",
+    "aiPrompts": "AI提示词",
+    "veo3": "VEO3",
+    "blog": "博客",
+    "faq": "常见问题",
+    "credits": "积分"
+  },
+  "auth": {
+    "login": {
+      "title": "登录您的账户",
+      "email": "邮箱地址",
+      "password": "密码",
+      "rememberMe": "记住我",
+      "forgotPassword": "忘记密码？",
+      "noAccount": "还没有账户？",
+      "createAccount": "立即注册",
+      "loginButton": "登录"
+    },
+    "signup": {
+      "title": "创建您的账户",
+      "email": "邮箱地址",
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "agreeTerms": "我同意服务条款和隐私政策",
+      "hasAccount": "已有账户？",
+      "signInHere": "立即登录",
+      "signupButton": "创建账户"
+    }
+  },
+  "hero": {
+    "title": "秒级生成AI ASMR视频",
+    "subtitle": "通过文本提示、图像或参考视频创建高质量的AI驱动ASMR视频。使用先进的AI技术生成沉浸式4K循环ASMR内容。",
+    "ctaCreate": "免费开始",
+    "ctaExplore": "探索模板",
+    "whyChooseTitle": "为什么选择AI ASMR视频生成？",
+    "features": {
+      "aiPowered": {
+        "title": "AI驱动生成",
+        "description": "先进的AI技术根据您的文本描述创建逼真的ASMR视频"
+      },
+      "highQuality": {
+        "title": "4K画质",
+        "description": "生成高分辨率4K循环视频，提供极致体验"
+      },
+      "fastGeneration": {
+        "title": "快速生成",
+        "description": "通过我们优化的流水线，1-2分钟内获得您的ASMR视频"
+      }
+    },
+    "communityTitle": "加入我们不断壮大的社区",
+    "stats": {
+      "videosGenerated": "已生成视频",
+      "activeCreators": "活跃创作者",
+      "totalViews": "总观看量"
+    }
+  },
+  "create": {
+    "title": "创建您的ASMR视频",
+    "prompt": {
+      "label": "视频提示",
+      "placeholder": "描述您想要创建的ASMR视频..."
+    },
+    "triggers": {
+      "label": "选择ASMR触发器",
+      "options": {
+        "soap": "肥皂",
+        "sponge": "海绵",
+        "ice": "冰块",
+        "water": "流水",
+        "honey": "蜂蜜",
+        "cubes": "方块",
+        "petals": "花瓣",
+        "pages": "翻页"
+      }
+    },
+    "settings": {
+      "duration": "时长",
+      "quality": "画质",
+      "aspectRatio": "宽高比"
+    },
+    "generate": "生成视频",
+    "credits": "需要积分：{credits}"
+  },
+  "pricing": {
+    "title": "选择您的套餐",
+    "subtitle": "灵活的定价方案，满足每个创作者",
+    "plans": {
+      "free": {
+        "name": "免费套餐",
+        "price": "￥0",
+        "credits": "20积分",
+        "features": [
+          "20免费积分",
+          "720p视频质量",
+          "基础ASMR触发器",
+          "社区支持"
+        ]
+      },
+      "basic": {
+        "name": "AI ASMR基础版",
+        "price": "￥68",
+        "credits": "100积分",
+        "features": [
+          "100月度积分",
+          "1080p视频质量",
+          "全部ASMR触发器",
+          "优先支持",
+          "商业使用"
+        ]
+      },
+      "pro": {
+        "name": "AI ASMR专业版",
+        "price": "￥198",
+        "credits": "500积分",
+        "features": [
+          "500月度积分",
+          "4K视频质量",
+          "自定义触发器",
+          "API访问",
+          "优先处理",
+          "商业使用"
+        ]
+      }
+    }
+  }
+}

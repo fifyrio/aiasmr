@@ -2,14 +2,20 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import { useParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCredits } from '@/hooks/useCredits'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, loading, signOut } = useAuth()
   // Only fetch credits when user is logged in to reduce unnecessary API calls
   const { credits, loading: creditsLoading } = useCredits()
+  const t = useTranslations('nav')
+  const params = useParams()
+  const locale = params.locale as string
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -24,7 +30,7 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-white">
+            <Link href={`/${locale}`} className="text-2xl font-bold text-white">
               AIASMR <span className="text-purple-400">Video</span>
             </Link>
           </div>
@@ -32,67 +38,58 @@ const Navigation = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               <Link 
-                href="/create" 
+                href={`/${locale}/create`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                Create
+                {t('create')}
               </Link>
               <Link 
-                href="/ai-asmr-prompts" 
+                href={`/${locale}/ai-asmr-prompts`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                AI Prompts
+                {t('aiPrompts')}
               </Link>
               <Link 
-                href="/veo3" 
+                href={`/${locale}/veo3`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                VEO3
+                {t('veo3')}
               </Link>
               <Link 
-                href="/explore" 
+                href={`/${locale}/explore`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                Explore
+                {t('explore')}
               </Link>
               <Link 
-                href="/pricing" 
+                href={`/${locale}/pricing`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                Pricing
+                {t('pricing')}
               </Link>
               {user && (
                 <Link 
-                  href="/my-videos" 
+                  href={`/${locale}/my-videos`} 
                   className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  My Videos
+                  {t('myVideos')}
                 </Link>
               )}              
             </div>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <select className="text-sm text-gray-600 bg-transparent border-none focus:outline-none">
-              <option value="en">🇺🇸 EN</option>
-              <option value="de">🇩🇪 DE</option>
-              <option value="es">🇪🇸 ES</option>
-              <option value="fr">🇫🇷 FR</option>
-              <option value="it">🇮🇹 IT</option>
-              <option value="jp">🇯🇵 JP</option>
-              <option value="kr">🇰🇷 KR</option>
-              <option value="cn">🇨🇳 CN</option>
-            </select>
+            <LanguageSwitcher currentLocale={locale} />
             
             {loading ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
             ) : user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-2 bg-purple-50 rounded-full px-3 py-1">
-                    <span className="text-purple-600 font-medium">💎</span>
-                    <span className="text-purple-700 text-sm font-medium">
-                      {creditsLoading ? '...' : credits.credits ?? 0}
+                  <div className="flex items-center space-x-2 bg-orange-500/20 rounded-full px-3 py-1">
+                    <span className="text-orange-400 font-medium">💎</span>
+                    <span className="text-orange-400 text-sm font-medium">
+                      {creditsLoading ? '...' : credits?.credits ?? 0}
                     </span>
                   </div>
                   <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -101,8 +98,8 @@ const Navigation = () => {
                     </span>
                   </div>
                   <Link 
-                    href="/user" 
-                    className="text-gray-700 text-sm hover:text-purple-600 transition-colors cursor-pointer"
+                    href={`/${locale}/user`} 
+                    className="text-gray-300 text-sm hover:text-purple-400 transition-colors cursor-pointer"
                   >
                     {user.email}
                   </Link>
@@ -111,22 +108,22 @@ const Navigation = () => {
                   onClick={handleSignOut}
                   className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Sign Out
+                  {t('logout')}
                 </button>
               </div>
             ) : (
               <>
                 <Link 
-                  href="/auth/login"
+                  href={`/${locale}/auth/login`}
                   className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Sign In
+                  {t('login')}
                 </Link>
                 <Link 
-                  href="/auth/signup"
-                  className="btn-primary text-sm px-6 py-2"
+                  href={`/${locale}/auth/signup`}
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  Get Started
+                  {t('signup')}
                 </Link>
               </>
             )}
@@ -147,36 +144,39 @@ const Navigation = () => {
 
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-            <Link href="/create" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
-              Create
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-800 border-t border-gray-700">
+            <Link href={`/${locale}/create`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+              {t('create')}
             </Link>
             {user && (
-              <Link href="/my-videos" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
-                My Videos
+              <Link href={`/${locale}/my-videos`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+                {t('myVideos')}
               </Link>
             )}
-            <Link href="/explore" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
-              Explore
+            <Link href={`/${locale}/explore`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+              {t('explore')}
             </Link>
-            <Link href="/pricing" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
-              Pricing
+            <Link href={`/${locale}/pricing`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+              {t('pricing')}
             </Link>
-            <Link href="/ai-asmr-prompts" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50">
-              AI Prompts
+            <Link href={`/${locale}/ai-asmr-prompts`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+              {t('aiPrompts')}
             </Link>
-            <div className="border-t pt-3">
+            <div className="border-t border-gray-700 pt-3">
+              <div className="px-3 py-2">
+                <LanguageSwitcher currentLocale={locale} />
+              </div>
               {loading ? (
                 <div className="flex justify-center py-4">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400"></div>
                 </div>
               ) : user ? (
                 <div className="space-y-2">
                   <div className="flex items-center px-3 py-2 space-x-2">
-                    <div className="flex items-center space-x-2 bg-purple-50 rounded-full px-3 py-1">
-                      <span className="text-purple-600 font-medium">💎</span>
-                      <span className="text-purple-700 text-sm font-medium">
-                        {creditsLoading ? '...' : credits.credits ?? 0}
+                    <div className="flex items-center space-x-2 bg-orange-500/20 rounded-full px-3 py-1">
+                      <span className="text-orange-400 font-medium">💎</span>
+                      <span className="text-orange-400 text-sm font-medium">
+                        {creditsLoading ? '...' : credits?.credits ?? 0}
                       </span>
                     </div>
                     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -185,8 +185,8 @@ const Navigation = () => {
                       </span>
                     </div>
                     <Link 
-                      href="/user" 
-                      className="text-gray-700 text-sm hover:text-purple-600 transition-colors cursor-pointer"
+                      href={`/${locale}/user`} 
+                      className="text-gray-300 text-sm hover:text-purple-400 transition-colors cursor-pointer"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {user.email}
@@ -194,24 +194,24 @@ const Navigation = () => {
                   </div>
                   <button 
                     onClick={handleSignOut}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50"
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700"
                   >
-                    Sign Out
+                    {t('logout')}
                   </button>
                 </div>
               ) : (
                 <>
                   <Link 
-                    href="/auth/login"
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50"
+                    href={`/${locale}/auth/login`}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700"
                   >
-                    Sign In
+                    {t('login')}
                   </Link>
                   <Link 
-                    href="/auth/signup"
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium btn-primary mt-2"
+                    href={`/${locale}/auth/signup`}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-purple-600 hover:bg-purple-700 text-white mt-2"
                   >
-                    Get Started
+                    {t('signup')}
                   </Link>
                 </>
               )}

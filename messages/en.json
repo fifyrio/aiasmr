@@ -1,0 +1,147 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  },
+  "nav": {
+    "home": "Home",
+    "create": "Create",
+    "explore": "Explore",
+    "pricing": "Pricing",
+    "myVideos": "My Videos",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "account": "Account",
+    "aiPrompts": "AI Prompts",
+    "veo3": "VEO3",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "credits": "Credits"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In to Your Account",
+      "email": "Email Address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create one here",
+      "loginButton": "Sign In"
+    },
+    "signup": {
+      "title": "Create Your Account",
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "agreeTerms": "I agree to the Terms of Service and Privacy Policy",
+      "hasAccount": "Already have an account?",
+      "signInHere": "Sign in here",
+      "signupButton": "Create Account"
+    }
+  },
+  "hero": {
+    "title": "Generate ASMR Videos with AI in Seconds",
+    "subtitle": "Create high-quality, AI-powered ASMR videos from text prompts, images, or reference videos. Generate immersive 4K looped ASMR content with advanced AI technology.",
+    "ctaCreate": "Get Started Free",
+    "ctaExplore": "Explore Templates",
+    "whyChooseTitle": "Why Choose AI ASMR Video Generation?",
+    "features": {
+      "aiPowered": {
+        "title": "AI-Powered Generation",
+        "description": "Advanced AI creates realistic ASMR videos from your text descriptions"
+      },
+      "highQuality": {
+        "title": "4K Quality",
+        "description": "Generate high-resolution 4K looped videos for premium experience"
+      },
+      "fastGeneration": {
+        "title": "Fast Generation",
+        "description": "Get your ASMR videos in 1-2 minutes with our optimized pipeline"
+      }
+    },
+    "communityTitle": "Join Our Growing Community",
+    "stats": {
+      "videosGenerated": "Videos Generated",
+      "activeCreators": "Active Creators", 
+      "totalViews": "Total Views"
+    }
+  },
+  "create": {
+    "title": "Create Your ASMR Video",
+    "prompt": {
+      "label": "Video Prompt",
+      "placeholder": "Describe the ASMR video you want to create..."
+    },
+    "triggers": {
+      "label": "Select ASMR Triggers",
+      "options": {
+        "soap": "Soap",
+        "sponge": "Sponge",
+        "ice": "Ice",
+        "water": "Water",
+        "honey": "Honey",
+        "cubes": "Cubes",
+        "petals": "Petals",
+        "pages": "Pages"
+      }
+    },
+    "settings": {
+      "duration": "Duration",
+      "quality": "Quality",
+      "aspectRatio": "Aspect Ratio"
+    },
+    "generate": "Generate Video",
+    "credits": "Credits Required: {credits}"
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Flexible pricing for every creator",
+    "plans": {
+      "free": {
+        "name": "Free Plan",
+        "price": "$0",
+        "credits": "20 credits",
+        "features": [
+          "20 free credits",
+          "720p video quality",
+          "Basic ASMR triggers",
+          "Community support"
+        ]
+      },
+      "basic": {
+        "name": "AI ASMR Basic",
+        "price": "$9.99",
+        "credits": "100 credits",
+        "features": [
+          "100 monthly credits",
+          "1080p video quality",
+          "All ASMR triggers",
+          "Priority support",
+          "Commercial usage"
+        ]
+      },
+      "pro": {
+        "name": "AI ASMR Pro",
+        "price": "$29.99",
+        "credits": "500 credits",
+        "features": [
+          "500 monthly credits",
+          "4K video quality",
+          "Custom triggers",
+          "API access",
+          "Priority processing",
+          "Commercial usage"
+        ]
+      }
+    }
+  }
+}
