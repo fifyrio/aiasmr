@@ -628,6 +628,37 @@ export default function CreatePage() {
               </button>
             </div>
 
+            {/* Credit Insufficient Warning */}
+            {userCredits.credits < currentCredits && !isGenerating && (
+              <div className="mb-8" data-aos="fade-up" data-aos-delay="850">
+                <div className="bg-gradient-to-r from-yellow-400/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/50 rounded-2xl p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                        <i className="ri-coin-line text-white text-xl"></i>
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-yellow-300 font-semibold text-lg mb-2">
+                        <i className="ri-information-line mr-2"></i>
+                        You need {currentCredits} credits to generate a video
+                      </h3>
+                      <p className="text-yellow-200/90 mb-4">
+                        Current balance: <span className="font-medium">{userCredits.credits} credits</span>
+                      </p>
+                      <button
+                        onClick={() => window.location.href = '/pricing'}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                      >
+                        <i className="ri-shopping-cart-line mr-2"></i>
+                        Get Credits
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Progress */}
             {isGenerating && (
               <div className="mb-8" data-aos="fade-up">
