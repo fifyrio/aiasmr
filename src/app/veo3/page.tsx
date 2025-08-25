@@ -385,7 +385,7 @@ export default function VEO3Page() {
           {/* Header */}
           <div className="text-center mb-12" data-aos="fade-up">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Create with <span className="text-purple-300">VEO3</span>
+            <span className="text-purple-300">VEO3</span> AI Video Generator
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Experience the highest quality ASMR video generation with Google&apos;s VEO3 model
@@ -668,10 +668,10 @@ export default function VEO3Page() {
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-purple-300 font-semibold text-lg mb-2">
+                      <p className="text-purple-300 font-semibold text-lg mb-2">
                         <i className="ri-information-line mr-2"></i>
                         You need {currentCredits} credits to generate a video
-                      </h3>
+                      </p>
                       <p className="text-purple-200/90 mb-4">
                         Current balance: <span className="font-medium">{userCredits.credits} credits</span>
                       </p>
@@ -692,9 +692,9 @@ export default function VEO3Page() {
             {/* Right Panel - Video Preview */}
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 order-first lg:order-last lg:sticky lg:top-8 h-fit">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <p className="text-2xl font-bold text-white mb-2">
                   {generatedVideo ? 'VEO3 Result' : 'Preview'}
-                </h2>
+                </p>
                 <p className="text-white/70">
                   {generatedVideo 
                     ? 'Your professional VEO3 AI-generated video' 
@@ -724,7 +724,7 @@ export default function VEO3Page() {
                       </div>
                     </div>
                     <div className="mt-4">
-                      <h3 className="text-white font-semibold mb-2">{demoVideo.title}</h3>
+                      <p className="text-white font-semibold mb-2">{demoVideo.title}</p>
                       <p className="text-white/70 text-sm mb-3">{demoVideo.prompt}</p>
                       <div className="flex flex-wrap gap-2">
                         {demoVideo.tags.slice(0, 3).map((tag) => (
@@ -749,7 +749,7 @@ export default function VEO3Page() {
                         <i className="ri-magic-line text-white text-xl"></i>
                       </div>
                     </div>
-                    <h3 className="text-white text-xl font-semibold mt-4 mb-2">Creating your VEO3 video...</h3>
+                    <p className="text-white text-xl font-semibold mt-4 mb-2">Creating your VEO3 video...</p>
                     <p className="text-white/70">{generationProgress}</p>
                     <div className="mt-4 bg-white/20 rounded-full h-2 w-64 overflow-hidden">
                       <div className="bg-gradient-to-r from-purple-400 to-indigo-500 h-full animate-pulse"></div>
@@ -772,10 +772,10 @@ export default function VEO3Page() {
             {/* Result */}
             {generatedVideo && (
               <div className="mb-8" data-aos="fade-up">
-                <h3 className="text-white text-xl font-semibold mb-6 text-center">
+                <div className="text-white text-xl font-semibold mb-6 text-center">
                   <i className="ri-video-line mr-2"></i>
                   Your VEO3 Generated Video
-                </h3>
+                </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6 border border-white/30">
                   <video
                     src={generatedVideo}
@@ -830,30 +830,30 @@ export default function VEO3Page() {
           {/* VEO3 Features Section */}
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
             <div className="text-center mb-8" data-aos="fade-up">
-              <h3 className="text-white text-xl font-semibold mb-4">
+              <h2 className="text-white text-xl font-semibold mb-4">
                 <i className="ri-star-line mr-2"></i>
                 Why Choose VEO3?
-              </h3>
+              </h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <h3 className="font-semibold text-white mb-3 flex items-center">
                     <i className="ri-eye-line mr-2 text-purple-300"></i>
                     Superior Quality
-                  </h4>
+                  </h3>
                   <p className="text-white/80 text-sm">VEO3 delivers the highest quality video generation with incredible detail and realism.</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <h3 className="font-semibold text-white mb-3 flex items-center">
                     <i className="ri-palette-line mr-2 text-blue-300"></i>
                     Advanced AI
-                  </h4>
+                  </h3>
                   <p className="text-white/80 text-sm">Powered by Google&apos;s latest video generation technology for natural, flowing ASMR content.</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <h3 className="font-semibold text-white mb-3 flex items-center">
                     <i className="ri-settings-line mr-2 text-green-300"></i>
                     Optimized Settings
-                  </h4>
+                  </h3>
                   <p className="text-white/80 text-sm">Specially tuned for ASMR content with support for 16:9 and 9:16 aspect ratios.</p>
                 </div>
               </div>
@@ -863,9 +863,9 @@ export default function VEO3Page() {
           {/* VEO3 Video Showcase Section */}
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
             <div className="text-center mb-8" data-aos="fade-up">
-              <h3 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-3xl font-bold text-white mb-4">
                 <span className="text-purple-300">VEO3</span> Video Showcase
-              </h3>
+              </h2>
               <p className="text-white/80 text-lg max-w-3xl mx-auto">
                 Professional AI-generated videos created with VEO3 technology
               </p>
@@ -892,7 +892,7 @@ export default function VEO3Page() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">{asmrTemplates[0].title}</h4>
+                  <h3 className="text-white font-semibold mb-2">{asmrTemplates[0].title}</h3>
                   <p className="text-white/70 text-sm mb-3">
                     {asmrTemplates[0].prompt}
                   </p>
@@ -926,7 +926,7 @@ export default function VEO3Page() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">{asmrTemplates[1].title}</h4>
+                  <h3 className="text-white font-semibold mb-2">{asmrTemplates[1].title}</h3>
                   <p className="text-white/70 text-sm mb-3">
                     {asmrTemplates[1].prompt}
                   </p>
@@ -960,7 +960,7 @@ export default function VEO3Page() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">{asmrTemplates[2].title}</h4>
+                  <h3 className="text-white font-semibold mb-2">{asmrTemplates[2].title}</h3>
                   <p className="text-white/70 text-sm mb-3">
                     {asmrTemplates[2].prompt}
                   </p>
@@ -993,10 +993,10 @@ export default function VEO3Page() {
           {/* VEO3 FAQ Section */}
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
             <div className="text-center mb-8" data-aos="fade-up">
-              <h3 className="text-white text-xl font-semibold mb-4">
+              <h2 className="text-white text-xl font-semibold mb-4">
                 <i className="ri-question-line mr-2"></i>
                 VEO3 Frequently Asked Questions
-              </h3>
+              </h2>
               <p className="text-white/70">
                 Everything you need to know about generating ASMR videos with Google VEO3
               </p>
@@ -1005,10 +1005,10 @@ export default function VEO3Page() {
             <div className="grid md:grid-cols-2 gap-6">
               {/* FAQ Item 1 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-star-line mr-2 text-purple-300"></i>
                   What makes VEO3 different from other AI models?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   VEO3 is Google&apos;s most advanced video generation model, offering superior quality, realistic motion, and better understanding of complex prompts compared to earlier models.
                 </p>
@@ -1016,10 +1016,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 2 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-time-line mr-2 text-blue-300"></i>
                   How long does VEO3 video generation take?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   VEO3 Fast typically takes 2-4 minutes, while VEO3 Standard takes 5-8 minutes for higher quality results. Processing time may vary during peak hours.
                 </p>
@@ -1027,10 +1027,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 3 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-aspect-ratio-line mr-2 text-cyan-300"></i>
                   What aspect ratios does VEO3 support?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   VEO3 currently supports 16:9 (landscape) and 9:16 (portrait) aspect ratios, making it perfect for YouTube, Instagram Stories, and TikTok content.
                 </p>
@@ -1038,10 +1038,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 4 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-coins-line mr-2 text-yellow-300"></i>
                   Why does VEO3 cost more credits than other models?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   VEO3 uses significantly more computational resources due to its advanced neural architecture, delivering premium quality that justifies the higher credit cost.
                 </p>
@@ -1049,10 +1049,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 5 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-image-line mr-2 text-green-300"></i>
                   Can I use reference images with VEO3?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   Yes! VEO3 supports reference images, allowing you to guide the visual style and composition of your ASMR videos for more precise results.
                 </p>
@@ -1060,10 +1060,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 6 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-shield-check-line mr-2 text-orange-300"></i>
                   Is VEO3 content safe for commercial use?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   Yes, all VEO3 generated content can be used commercially. You retain full rights to your created videos and can monetize them on any platform.
                 </p>
@@ -1071,10 +1071,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 7 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-magic-line mr-2 text-pink-300"></i>
                   How do I write better prompts for VEO3?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   Be specific about textures, lighting, and movement. VEO3 excels at understanding detailed descriptions like &quot;soft soap cutting with natural lighting&quot; or &quot;gentle water droplets on glass surface.&quot;
                 </p>
@@ -1082,10 +1082,10 @@ export default function VEO3Page() {
 
               {/* FAQ Item 8 */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <h4 className="font-semibold text-white mb-3 flex items-center">
+                <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-refresh-line mr-2 text-indigo-300"></i>
                   What if my VEO3 generation fails?
-                </h4>
+                </h3>
                 <p className="text-white/80 text-sm">
                   Failed generations are automatically refunded. You can immediately retry with a modified prompt or different settings without losing credits.
                 </p>

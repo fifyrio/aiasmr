@@ -716,10 +716,10 @@ export default function CreatePage() {
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-yellow-300 font-semibold text-lg mb-2">
+                      <p className="text-yellow-300 font-semibold text-lg mb-2">
                         <i className="ri-information-line mr-2"></i>
                         You need {currentCredits} credits to generate a video
-                      </h3>
+                      </p>
                       <p className="text-yellow-200/90 mb-4">
                         Current balance: <span className="font-medium">{userCredits.credits} credits</span>
                       </p>
