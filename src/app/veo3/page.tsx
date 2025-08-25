@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Head from 'next/head';
 import AOS from 'aos';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -319,9 +320,58 @@ export default function VEO3Page() {
 
   const isGenerateDisabled = !prompt.trim() || userCredits.credits < currentCredits || isGenerating;
 
+  // JSON-LD Structured Data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "VEO3 ASMR Video Generator",
+    "description": "Create premium ASMR videos with Google VEO3 AI model. Experience the highest quality video generation for realistic, immersive ASMR content.",
+    "url": "https://www.aiasmr.vip/veo3",
+    "applicationCategory": "AI Video Generator",
+    "operatingSystem": "Web Browser",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "VEO3 Fast Model",
+        "description": "Fast VEO3 video generation",
+        "price": "60",
+        "priceCurrency": "CREDITS"
+      },
+      {
+        "@type": "Offer", 
+        "name": "VEO3 Standard Model",
+        "description": "High-quality VEO3 video generation",
+        "price": "300",
+        "priceCurrency": "CREDITS"
+      }
+    ],
+    "featureList": [
+      "VEO3 Fast and Standard models",
+      "16:9 and 9:16 aspect ratios",
+      "720p and 1080p quality options",
+      "Template-based generation",
+      "Image-to-video conversion",
+      "Custom watermarks"
+    ],
+    "creator": {
+      "@type": "Organization",
+      "name": "AIASMR Video",
+      "url": "https://www.aiasmr.vip"
+    }
+  };
+
   return (
-    <div className="min-h-screen hero-bg">
-      <Navigation />
+    <>
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData)
+          }}
+        />
+      </Head>
+      <div className="min-h-screen hero-bg">
+        <Navigation />
       
       <div className="pt-20 pb-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -806,6 +856,7 @@ export default function VEO3Page() {
       </div>
       
       <Footer />
-    </div>
+      </div>
+    </>
   );
 }
