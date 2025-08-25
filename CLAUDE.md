@@ -472,3 +472,6 @@ const ENV = {
 
 export default ENV[process.env.NODE_ENV || 'development'];
 ```
+
+### Template data
+src/data/asmr_templates.json

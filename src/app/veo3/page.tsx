@@ -6,6 +6,7 @@ import Head from 'next/head';
 import AOS from 'aos';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import Toast from '@/components/Toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
 import { calculateCredits } from '@/lib/credit-calculator';
@@ -33,10 +34,32 @@ export default function VEO3Page() {
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Toast state
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
+  
   // Get a random demo video from templates - avoid hydration mismatch
   const [demoVideo, setDemoVideo] = useState(asmrTemplates[0]); // Default to first template
 
   const maxChars = 1800;
+
+  // Copy to clipboard function with toast
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setToastMessage('Prompt copied to clipboard!');
+      setToastType('success');
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      setToastMessage('Failed to copy prompt');
+      setToastType('error');
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    }
+  };
 
   // Calculate dynamic credits based on selections - VEO3 only
   const currentCredits = calculateCredits({
@@ -848,187 +871,103 @@ export default function VEO3Page() {
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="200">
-              {/* Showcase Video 1 */}
+            <div className="grid md:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="200">
+              {/* Showcase Video 1 - Tapping ASMR */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
                 <div className="relative group">
                   <video
                     className="w-full h-48 object-cover"
-                    poster="/images/showcase/veo3-soap-cutting.jpg"
+                    poster={asmrTemplates[0].poster}
                     controls
                     preload="metadata"
                   >
-                    <source src="/videos/showcase/veo3-soap-cutting.mp4" type="video/mp4" />
+                    <source src={asmrTemplates[0].video} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
                     VEO3
                   </div>
                   <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                    16:9 • 1080p
+                    16:9 • {asmrTemplates[0].duration}
                   </div>
                 </div>
                 <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">Premium Soap Cutting</h4>
+                  <h4 className="text-white font-semibold mb-2">{asmrTemplates[0].title}</h4>
                   <p className="text-white/70 text-sm mb-3">
-                    Cinematic close-up of luxury soap being cut with a sharp knife, creating satisfying curls and textures with perfect lighting and shadows.
+                    {asmrTemplates[0].prompt}
                   </p>
-                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                  <button 
+                    onClick={() => copyToClipboard(asmrTemplates[0].prompt)}
+                    className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors"
+                  >
                     <i className="ri-file-copy-line mr-1"></i>
                     Copy Prompt
                   </button>
                 </div>
               </div>
 
-              {/* Showcase Video 2 */}
+              {/* Showcase Video 2 - Whispering ASMR */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
                 <div className="relative group">
                   <video
                     className="w-full h-48 object-cover"
-                    poster="/images/showcase/veo3-water-drops.jpg"
+                    poster={asmrTemplates[1].poster}
                     controls
                     preload="metadata"
                   >
-                    <source src="/videos/showcase/veo3-water-drops.mp4" type="video/mp4" />
+                    <source src={asmrTemplates[1].video} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
                     VEO3
                   </div>
                   <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                    9:16 • 720p
+                    16:9 • {asmrTemplates[1].duration}
                   </div>
                 </div>
                 <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">Crystal Water Droplets</h4>
+                  <h4 className="text-white font-semibold mb-2">{asmrTemplates[1].title}</h4>
                   <p className="text-white/70 text-sm mb-3">
-                    Slow-motion water droplets falling onto a glass surface, creating ripples and reflections with crystal-clear detail and natural lighting.
+                    {asmrTemplates[1].prompt}
                   </p>
-                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                  <button 
+                    onClick={() => copyToClipboard(asmrTemplates[1].prompt)}
+                    className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors"
+                  >
                     <i className="ri-file-copy-line mr-1"></i>
                     Copy Prompt
                   </button>
                 </div>
               </div>
 
-              {/* Showcase Video 3 */}
+              {/* Showcase Video 3 - Scratching ASMR */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
                 <div className="relative group">
                   <video
                     className="w-full h-48 object-cover"
-                    poster="/images/showcase/veo3-honey-pour.jpg"
+                    poster={asmrTemplates[2].poster}
                     controls
                     preload="metadata"
                   >
-                    <source src="/videos/showcase/veo3-honey-pour.mp4" type="video/mp4" />
+                    <source src={asmrTemplates[2].video} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
                     VEO3
                   </div>
                   <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                    16:9 • 1080p
+                    16:9 • {asmrTemplates[2].duration}
                   </div>
                 </div>
                 <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">Golden Honey Flow</h4>
+                  <h4 className="text-white font-semibold mb-2">{asmrTemplates[2].title}</h4>
                   <p className="text-white/70 text-sm mb-3">
-                    Viscous golden honey flowing in smooth streams, creating mesmerizing patterns with warm ambient lighting and macro detail.
+                    {asmrTemplates[2].prompt}
                   </p>
-                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
-                    <i className="ri-file-copy-line mr-1"></i>
-                    Copy Prompt
-                  </button>
-                </div>
-              </div>
-
-              {/* Showcase Video 4 */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
-                <div className="relative group">
-                  <video
-                    className="w-full h-48 object-cover"
-                    poster="/images/showcase/veo3-ice-crush.jpg"
-                    controls
-                    preload="metadata"
+                  <button 
+                    onClick={() => copyToClipboard(asmrTemplates[2].prompt)}
+                    className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors"
                   >
-                    <source src="/videos/showcase/veo3-ice-crush.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
-                    VEO3
-                  </div>
-                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                    9:16 • 1080p
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">Ice Crushing Symphony</h4>
-                  <p className="text-white/70 text-sm mb-3">
-                    Crystal-clear ice cubes being crushed with satisfying cracking sounds, ice fragments flying in slow motion with pristine clarity.
-                  </p>
-                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
-                    <i className="ri-file-copy-line mr-1"></i>
-                    Copy Prompt
-                  </button>
-                </div>
-              </div>
-
-              {/* Showcase Video 5 */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
-                <div className="relative group">
-                  <video
-                    className="w-full h-48 object-cover"
-                    poster="/images/showcase/veo3-sand-kinetic.jpg"
-                    controls
-                    preload="metadata"
-                  >
-                    <source src="/videos/showcase/veo3-sand-kinetic.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
-                    VEO3
-                  </div>
-                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                    16:9 • 720p
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">Kinetic Sand Therapy</h4>
-                  <p className="text-white/70 text-sm mb-3">
-                    Smooth kinetic sand being molded and shaped by gentle hands, creating therapeutic patterns with soft natural lighting and textures.
-                  </p>
-                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
-                    <i className="ri-file-copy-line mr-1"></i>
-                    Copy Prompt
-                  </button>
-                </div>
-              </div>
-
-              {/* Showcase Video 6 */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
-                <div className="relative group">
-                  <video
-                    className="w-full h-48 object-cover"
-                    poster="/images/showcase/veo3-paper-folding.jpg"
-                    controls
-                    preload="metadata"
-                  >
-                    <source src="/videos/showcase/veo3-paper-folding.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
-                    VEO3
-                  </div>
-                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                    9:16 • 1080p
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h4 className="text-white font-semibold mb-2">Paper Origami Meditation</h4>
-                  <p className="text-white/70 text-sm mb-3">
-                    Precise paper folding creating intricate origami patterns, with crisp edges and gentle paper sounds in a minimalist setting.
-                  </p>
-                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
                     <i className="ri-file-copy-line mr-1"></i>
                     Copy Prompt
                   </button>
@@ -1157,6 +1096,14 @@ export default function VEO3Page() {
       </div>
       
       <Footer />
+      
+      {/* Toast Notification */}
+      <Toast
+        show={showToast}
+        message={toastMessage}
+        type={toastType}
+        onClose={() => setShowToast(false)}
+      />
       </div>
     </>
   );
