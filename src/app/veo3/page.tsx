@@ -837,6 +837,220 @@ export default function VEO3Page() {
             </div>
           </div>
 
+          {/* VEO3 Video Showcase Section */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
+            <div className="text-center mb-8" data-aos="fade-up">
+              <h3 className="text-3xl font-bold text-white mb-4">
+                <span className="text-purple-300">VEO3</span> Video Showcase
+              </h3>
+              <p className="text-white/80 text-lg max-w-3xl mx-auto">
+                Professional AI-generated videos created with VEO3 technology
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="200">
+              {/* Showcase Video 1 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="relative group">
+                  <video
+                    className="w-full h-48 object-cover"
+                    poster="/images/showcase/veo3-soap-cutting.jpg"
+                    controls
+                    preload="metadata"
+                  >
+                    <source src="/videos/showcase/veo3-soap-cutting.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
+                    VEO3
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    16:9 • 1080p
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="text-white font-semibold mb-2">Premium Soap Cutting</h4>
+                  <p className="text-white/70 text-sm mb-3">
+                    Cinematic close-up of luxury soap being cut with a sharp knife, creating satisfying curls and textures with perfect lighting and shadows.
+                  </p>
+                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                    <i className="ri-file-copy-line mr-1"></i>
+                    Copy Prompt
+                  </button>
+                </div>
+              </div>
+
+              {/* Showcase Video 2 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="relative group">
+                  <video
+                    className="w-full h-48 object-cover"
+                    poster="/images/showcase/veo3-water-drops.jpg"
+                    controls
+                    preload="metadata"
+                  >
+                    <source src="/videos/showcase/veo3-water-drops.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
+                    VEO3
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    9:16 • 720p
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="text-white font-semibold mb-2">Crystal Water Droplets</h4>
+                  <p className="text-white/70 text-sm mb-3">
+                    Slow-motion water droplets falling onto a glass surface, creating ripples and reflections with crystal-clear detail and natural lighting.
+                  </p>
+                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                    <i className="ri-file-copy-line mr-1"></i>
+                    Copy Prompt
+                  </button>
+                </div>
+              </div>
+
+              {/* Showcase Video 3 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="relative group">
+                  <video
+                    className="w-full h-48 object-cover"
+                    poster="/images/showcase/veo3-honey-pour.jpg"
+                    controls
+                    preload="metadata"
+                  >
+                    <source src="/videos/showcase/veo3-honey-pour.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
+                    VEO3
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    16:9 • 1080p
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="text-white font-semibold mb-2">Golden Honey Flow</h4>
+                  <p className="text-white/70 text-sm mb-3">
+                    Viscous golden honey flowing in smooth streams, creating mesmerizing patterns with warm ambient lighting and macro detail.
+                  </p>
+                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                    <i className="ri-file-copy-line mr-1"></i>
+                    Copy Prompt
+                  </button>
+                </div>
+              </div>
+
+              {/* Showcase Video 4 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="relative group">
+                  <video
+                    className="w-full h-48 object-cover"
+                    poster="/images/showcase/veo3-ice-crush.jpg"
+                    controls
+                    preload="metadata"
+                  >
+                    <source src="/videos/showcase/veo3-ice-crush.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
+                    VEO3
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    9:16 • 1080p
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="text-white font-semibold mb-2">Ice Crushing Symphony</h4>
+                  <p className="text-white/70 text-sm mb-3">
+                    Crystal-clear ice cubes being crushed with satisfying cracking sounds, ice fragments flying in slow motion with pristine clarity.
+                  </p>
+                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                    <i className="ri-file-copy-line mr-1"></i>
+                    Copy Prompt
+                  </button>
+                </div>
+              </div>
+
+              {/* Showcase Video 5 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="relative group">
+                  <video
+                    className="w-full h-48 object-cover"
+                    poster="/images/showcase/veo3-sand-kinetic.jpg"
+                    controls
+                    preload="metadata"
+                  >
+                    <source src="/videos/showcase/veo3-sand-kinetic.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
+                    VEO3
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    16:9 • 720p
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="text-white font-semibold mb-2">Kinetic Sand Therapy</h4>
+                  <p className="text-white/70 text-sm mb-3">
+                    Smooth kinetic sand being molded and shaped by gentle hands, creating therapeutic patterns with soft natural lighting and textures.
+                  </p>
+                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                    <i className="ri-file-copy-line mr-1"></i>
+                    Copy Prompt
+                  </button>
+                </div>
+              </div>
+
+              {/* Showcase Video 6 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-400/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="relative group">
+                  <video
+                    className="w-full h-48 object-cover"
+                    poster="/images/showcase/veo3-paper-folding.jpg"
+                    controls
+                    preload="metadata"
+                  >
+                    <source src="/videos/showcase/veo3-paper-folding.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 right-3 bg-purple-600/90 text-white text-xs px-3 py-1 rounded-full font-medium">
+                    VEO3
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                    9:16 • 1080p
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h4 className="text-white font-semibold mb-2">Paper Origami Meditation</h4>
+                  <p className="text-white/70 text-sm mb-3">
+                    Precise paper folding creating intricate origami patterns, with crisp edges and gentle paper sounds in a minimalist setting.
+                  </p>
+                  <button className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                    <i className="ri-file-copy-line mr-1"></i>
+                    Copy Prompt
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center mt-8" data-aos="fade-up" data-aos-delay="400">
+              <p className="text-white/80 mb-4">
+                Ready to create your own premium VEO3 videos?
+              </p>
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <i className="ri-magic-line mr-2"></i>
+                Start Creating with VEO3
+              </button>
+            </div>
+          </div>
+
           {/* VEO3 FAQ Section */}
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
             <div className="text-center mb-8" data-aos="fade-up">
