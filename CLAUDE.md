@@ -115,6 +115,29 @@ npm run lint         # Run ESLint
 - **Polling**: Direct KIE API polling, no database task tracking
 - **Credits**: 20 credits per video generation (Runway cost)
 
+## SSR (Server-Side Rendering) Rules
+
+**IMPORTANT**: Prioritize implementing SSR for SEO optimization on public-facing pages.
+
+### Pages that MUST use SSR:
+- All public pages (homepage, pricing, faq, terms, privacy, etc.)
+- Product pages (/veo3, /create, /explore, etc.)
+- Blog and content pages (/blog/*, /ai-asmr-prompts)
+- Landing pages and SEO-critical routes
+
+### Pages that should remain Client-Side Rendered:
+- `/api/*` routes (API endpoints)
+- `/auth/*` pages (authentication flows)
+- `/my-videos/` (user dashboard, requires authentication)
+- `/admin/*` pages (admin interface)
+
+### Implementation Guidelines:
+1. **Extract client-side logic** into separate components with `'use client'`
+2. **Use Suspense boundaries** for loading states
+3. **Include comprehensive SEO metadata** (title, description, Open Graph, etc.)
+4. **Implement structured data (JSON-LD)** for better search engine understanding
+5. **Maintain all interactive functionality** while enabling server-side rendering
+
 ## Environment Variables Required
 
 ```env
