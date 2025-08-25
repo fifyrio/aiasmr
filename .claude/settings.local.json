@@ -16,7 +16,8 @@
       "WebFetch(domain:replicate.com)",
       "Bash(rm:*)",
       "Bash(grep:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
