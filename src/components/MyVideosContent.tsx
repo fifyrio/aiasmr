@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import FsLightbox from 'fslightbox-react'
 import AOS from 'aos'
 import { useAuth } from '@/contexts/AuthContext'
@@ -31,6 +32,7 @@ interface UserStats {
 }
 
 const MyVideosContent = () => {
+  const router = useRouter()
   const { user } = useAuth()
   const [videos, setVideos] = useState<Video[]>([])
   const [selectedVideos, setSelectedVideos] = useState<string[]>([])
@@ -342,7 +344,10 @@ const MyVideosContent = () => {
             <div className="text-sm text-gray-600">Remaining Credits</div>
           </div>
           <div className="text-center md:text-left">
-            <button className="btn-primary w-full md:w-auto">
+            <button
+              onClick={() => router.push('/pricing')}
+              className="btn-primary w-full md:w-auto"
+            >
               <i className="ri-vip-crown-line mr-2"></i>
               {userStats.plan_type === 'free' ? 'Upgrade Plan' : 'Buy More Credits'}
             </button>
