@@ -153,8 +153,23 @@ async function saveRunwayVideo(taskId: string, result: {
     
     // Use service client to bypass RLS for callback operations
     const supabase = createServiceClient();
+    
+    // Find the user_id from credit_transactions table using taskId
+    const { data: transaction } = await supabase
+      .from('credit_transactions')
+      .select('user_id')
+      .eq('video_id', taskId)
+      .eq('transaction_type', 'usage')
+      .single();
+    
+    if (!transaction || !transaction.user_id) {
+      console.error('❌ Cannot find user_id for taskId:', taskId);
+      return;
+    }
+    
     const videoData = {
       task_id: taskId,
+      user_id: transaction.user_id, // Add missing user_id field
       title: `Runway ASMR Video ${new Date().toISOString().slice(0, 10)}`,
       description: 'AI-generated ASMR video via Runway',
       prompt: 'Generated via KIE Runway API',
@@ -195,8 +210,23 @@ async function saveFailedVideo(taskId: string, failureReason: string, provider: 
     
     // Use service client to bypass RLS for callback operations
     const supabase = createServiceClient();
+    
+    // Find the user_id from credit_transactions table using taskId
+    const { data: transaction } = await supabase
+      .from('credit_transactions')
+      .select('user_id')
+      .eq('video_id', taskId)
+      .eq('transaction_type', 'usage')
+      .single();
+    
+    if (!transaction || !transaction.user_id) {
+      console.error('❌ Cannot find user_id for failed video taskId:', taskId);
+      return;
+    }
+    
     const videoData = {
       task_id: taskId,
+      user_id: transaction.user_id, // Add missing user_id field
       title: `Failed ${provider.toUpperCase()} Video ${new Date().toISOString().slice(0, 10)}`,
       description: `Failed: ${failureReason} (${provider.toUpperCase()})`,
       prompt: `Failed ${provider.toUpperCase()} generation`,
