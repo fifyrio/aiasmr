@@ -203,6 +203,56 @@ const MyVideosContent = () => {
     setShowRegenerateModal(true)
   }
 
+  const handleDownload = async (videoId: string, title: string) => {
+    try {
+      const response = await fetch(`/api/videos/${videoId}/download`)
+      const data = await response.json()
+
+      if (data.success && data.downloadUrl) {
+        // Create filename
+        const filename = data.filename || `${title.replace(/[^a-zA-Z0-9-_]/g, '-')}.mp4`
+        
+        // Check if it's a real video URL or test URL
+        if (data.downloadUrl.includes('file.com/k/') || data.downloadUrl.includes('xxxxxxx')) {
+          // Test environment - show info to user
+          alert(`This is a test video. In production, the file "${filename}" would be downloaded from: ${data.downloadUrl}`)
+        } else {
+          // Real URL - attempt download
+          try {
+            // Try proxied download first for better CORS handling
+            const link = document.createElement('a')
+            link.href = `/api/videos/${videoId}/download?proxy=true`
+            link.download = filename
+            link.style.display = 'none'
+            
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+          } catch (proxyError) {
+            console.warn('Proxied download failed, trying direct:', proxyError)
+            
+            // Fallback to direct URL
+            const link = document.createElement('a')
+            link.href = data.downloadUrl
+            link.download = filename
+            link.target = '_blank'
+            link.rel = 'noopener noreferrer'
+            
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+          }
+        }
+      } else {
+        console.error('Download failed:', data.error)
+        alert('Download failed. Please try again later.')
+      }
+    } catch (error) {
+      console.error('Download error:', error)
+      alert('Download failed. Please check your connection and try again.')
+    }
+  }
+
   const confirmDelete = async () => {
     if (!actionVideoId || !user?.id) return
     
@@ -628,7 +678,10 @@ const MyVideosContent = () => {
                         </button>
                         
                         {video.status === 'ready' && (
-                          <button className="px-3 py-1.5 bg-green-100 text-green-600 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors">
+                          <button 
+                            onClick={() => handleDownload(video.id, video.title)}
+                            className="px-3 py-1.5 bg-green-100 text-green-600 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+                          >
                             <i className="ri-download-line mr-1"></i>
                             Download
                           </button>

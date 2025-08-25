@@ -7,6 +7,8 @@ export async function GET(
 ) {
   try {
     const videoId = params.id;
+    const { searchParams } = new URL(request.url);
+    const proxy = searchParams.get('proxy') === 'true';
     
     if (!videoId) {
       return NextResponse.json(
@@ -46,6 +48,38 @@ export async function GET(
       ? `${video.title.replace(/[^a-zA-Z0-9-_]/g, '-')}.mp4`
       : `asmr-video-${videoId}.mp4`;
 
+    // If proxy is requested, stream the video file
+    if (proxy) {
+      try {
+        const videoResponse = await fetch(downloadUrl);
+        
+        if (!videoResponse.ok) {
+          throw new Error(`Failed to fetch video: ${videoResponse.status}`);
+        }
+
+        const headers = new Headers();
+        headers.set('Content-Type', videoResponse.headers.get('Content-Type') || 'video/mp4');
+        headers.set('Content-Disposition', `attachment; filename="${filename}"`);
+        
+        // Copy content length if available
+        if (videoResponse.headers.has('Content-Length')) {
+          headers.set('Content-Length', videoResponse.headers.get('Content-Length')!);
+        }
+
+        return new NextResponse(videoResponse.body, {
+          status: 200,
+          headers,
+        });
+      } catch (proxyError) {
+        console.error('Proxy download failed:', proxyError);
+        return NextResponse.json(
+          { error: 'Failed to proxy video download' },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Otherwise, return download info
     return NextResponse.json({
       success: true,
       downloadUrl: downloadUrl,
