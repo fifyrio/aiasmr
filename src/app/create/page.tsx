@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
 import { calculateCredits, getAvailableDurations, getAvailableAspectRatios } from '@/lib/credit-calculator';
+import asmrTemplates from '@/data/asmr_templates.json';
 
 
 export default function CreatePage() {
@@ -31,6 +32,9 @@ export default function CreatePage() {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Get a random demo video from templates - avoid hydration mismatch
+  const [demoVideo, setDemoVideo] = useState(asmrTemplates[0]); // Default to first template
 
   const maxChars = 1800;
 
@@ -52,6 +56,10 @@ export default function CreatePage() {
       once: true,
       offset: 100,
     });
+    
+    // Set random demo video on client side only to avoid hydration mismatch
+    const randomIndex = Math.floor(Math.random() * asmrTemplates.length);
+    setDemoVideo(asmrTemplates[randomIndex]);
   }, []);
 
   // Auto-fill prompt from URL parameters
@@ -112,6 +120,56 @@ export default function CreatePage() {
   const handleRemoveImage = () => {
     setUploadedImage(null);
     setImageUploadError(null);
+  };
+
+  const handleDownloadVideo = async () => {
+    console.log('Download button clicked, videoId:', videoId);
+    if (videoId) {
+      try {
+        console.log('Fetching download URL for video:', videoId);
+        const response = await fetch(`/api/videos/${videoId}/download`);
+        console.log('Download API response status:', response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Download data received:', data);
+          
+          // 创建下载链接
+          const link = document.createElement('a');
+          link.href = data.downloadUrl;
+          link.download = data.filename;
+          link.target = '_blank'; // 在新窗口打开以防下载失败
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } else {
+          const errorData = await response.json();
+          console.error('Download API error:', errorData);
+          setError(`Download failed: ${errorData.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error('Download failed:', error);
+        setError('Failed to download video. Please try again.');
+      }
+    } else if (generatedVideo) {
+      // Fallback: download directly from the video URL if videoId is not available
+      console.log('Using direct video URL for download:', generatedVideo);
+      try {
+        const link = document.createElement('a');
+        link.href = generatedVideo;
+        link.download = `asmr-video-${Date.now()}.mp4`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Direct download failed:', error);
+        setError('Failed to download video. Please try again.');
+      }
+    } else {
+      console.error('No video ID or URL available for download');
+      setError('Video not available for download. Please try regenerating the video.');
+    }
   };
 
   const pollTaskStatus = async (taskId: string) => {
@@ -290,8 +348,10 @@ export default function CreatePage() {
             )}
           </div>
 
-          {/* Main Content */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+          {/* Main Content - Split Layout */}
+          <div className="grid lg:grid-cols-2 gap-8 items-start">
+            {/* Left Panel - Form */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
             {/* Credits Display */}
             <div className="flex justify-between items-center mb-8" data-aos="fade-up">
               <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
@@ -414,14 +474,14 @@ export default function CreatePage() {
             </div>
 
             {/* Generation Settings */}
-            <div className="mb-8 grid md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="600">
-              {/* Provider Selection */}
+            <div className="mb-8 space-y-6" data-aos="fade-up" data-aos-delay="600">
+              {/* Provider Selection Row */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
                   <i className="ri-cpu-line mr-2"></i>
                   AI Provider
                 </label>
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   <button
                     onClick={() => setProvider('veo3')}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
@@ -445,48 +505,50 @@ export default function CreatePage() {
                     <div className="text-sm opacity-80">Fast Generation</div>
                   </button>
                 </div>
-                
-                {/* VEO3 Model Selection */}
-                {provider === 'veo3' && (
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-white/80 mb-2">
-                      VEO3 Model
-                    </label>
-                    <div className="grid grid-cols-1 gap-2">
-                      <button
-                        onClick={() => setVeo3Model('veo3_fast')}
-                        className={`p-3 rounded-lg transition-all duration-300 border text-sm ${
-                          veo3Model === 'veo3_fast'
-                            ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white border-transparent shadow-lg'
-                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
-                        }`}
-                      >
-                        <div className="font-semibold">VEO3 Fast</div>
-                        <div className="text-xs opacity-80">60 credits</div>
-                      </button>
-                      <button
-                        onClick={() => setVeo3Model('veo3')}
-                        className={`p-3 rounded-lg transition-all duration-300 border text-sm ${
-                          veo3Model === 'veo3'
-                            ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white border-transparent shadow-lg'
-                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
-                        }`}
-                      >
-                        <div className="font-semibold">VEO3 Standard</div>
-                        <div className="text-xs opacity-80">300 credits</div>
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
-              {/* Duration Selection - Only for Runway */}
+
+              {/* VEO3 Model Selection Row */}
+              {provider === 'veo3' && (
+                <div>
+                  <label className="block text-lg font-medium text-white mb-4">
+                    <i className="ri-cpu-line mr-2"></i>
+                    VEO3 Model
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={() => setVeo3Model('veo3_fast')}
+                      className={`p-4 rounded-xl transition-all duration-300 border ${
+                        veo3Model === 'veo3_fast'
+                          ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white border-transparent shadow-lg'
+                          : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <div className="font-semibold">VEO3 Fast</div>
+                      <div className="text-sm opacity-80">60 credits</div>
+                    </button>
+                    <button
+                      onClick={() => setVeo3Model('veo3')}
+                      className={`p-4 rounded-xl transition-all duration-300 border ${
+                        veo3Model === 'veo3'
+                          ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white border-transparent shadow-lg'
+                          : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
+                      }`}
+                    >
+                      <div className="font-semibold">VEO3 Standard</div>
+                      <div className="text-sm opacity-80">300 credits</div>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Duration Selection Row - Only for Runway */}
               {provider === 'runway' && (
                 <div>
                   <label className="block text-lg font-medium text-white mb-4">
                     <i className="ri-time-line mr-2"></i>
                     Video Duration
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={() => setDuration(5)}
                       className={`p-4 rounded-xl transition-all duration-300 border ${
@@ -518,13 +580,13 @@ export default function CreatePage() {
                 </div>
               )}
 
-              {/* Quality Selection */}
+              {/* Quality Selection Row */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
                   <i className="ri-hd-line mr-2"></i>
                   Video Quality
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   <button
                     onClick={() => setQuality('720p')}
                     className={`p-4 rounded-xl transition-all duration-300 border ${
@@ -561,26 +623,26 @@ export default function CreatePage() {
             </div>
 
             {/* Aspect Ratio and Watermark */}
-            <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="700">
-              {/* Aspect Ratio */}
+            <div className="mb-8 space-y-6" data-aos="fade-up" data-aos-delay="700">
+              {/* Aspect Ratio Row */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
                   <i className="ri-aspect-ratio-line mr-2"></i>
                   Aspect Ratio
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-4">
                   {availableAspectRatios.map((ratio) => (
                     <button
                       key={ratio}
                       onClick={() => setAspectRatio(ratio as any)}
-                      className={`p-3 rounded-xl transition-all duration-300 border text-sm ${
+                      className={`p-4 rounded-xl transition-all duration-300 border ${
                         aspectRatio === ratio
                           ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
                           : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                       }`}
                     >
                       <div className="font-semibold">{ratio}</div>
-                      <div className="text-xs opacity-80">
+                      <div className="text-sm opacity-80">
                         {ratio === '16:9' ? 'Landscape' :
                          ratio === '4:3' ? 'Classic' :
                          ratio === '1:1' ? 'Square' :
@@ -591,7 +653,7 @@ export default function CreatePage() {
                 </div>
               </div>
 
-              {/* Watermark */}
+              {/* Watermark Row */}
               <div>
                 <label htmlFor="watermark" className="block text-lg font-medium text-white mb-4">
                   <i className="ri-copyright-line mr-2"></i>
@@ -658,9 +720,57 @@ export default function CreatePage() {
                 </div>
               </div>
             )}
+            </div>
 
-            {/* Progress */}
-            {isGenerating && (
+            {/* Right Panel - Video Preview */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 order-first lg:order-last lg:sticky lg:top-8 h-fit">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  {generatedVideo ? `${provider.toUpperCase()} Result` : 'Preview'}
+                </h2>
+                <p className="text-white/70">
+                  {generatedVideo 
+                    ? 'Your professional AI-generated video will appear here' 
+                    : 'Your professional AI-generated video will appear here'}
+                </p>
+              </div>
+
+              {/* Demo Video or Generated Result */}
+              {!generatedVideo && !isGenerating && (
+                <div className="mb-6" data-aos="fade-up">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="relative">
+                      <video
+                        src={demoVideo.video}
+                        poster={demoVideo.poster}
+                        controls
+                        loop
+                        className="w-full rounded-lg shadow-lg"
+                        style={{ aspectRatio: demoVideo.ratio === 'ratio-16-9' ? '16/9' : demoVideo.ratio === 'ratio-9-16' ? '9/16' : '1/1' }}
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                      <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1">
+                        <span className="text-white text-xs font-medium">Demo</span>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <h3 className="text-white font-semibold mb-2">{demoVideo.title}</h3>
+                      <p className="text-white/70 text-sm mb-3">{demoVideo.prompt}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {demoVideo.tags.slice(0, 3).map((tag) => (
+                          <span key={tag} className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Progress */}
+              {isGenerating && (
               <div className="mb-8" data-aos="fade-up">
                 <div className="bg-white/20 backdrop-blur-sm rounded-xl p-8 text-center">
                   <div className="flex flex-col items-center">
@@ -706,68 +816,24 @@ export default function CreatePage() {
                   >
                     Your browser does not support the video tag.
                   </video>
-                  <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                  
+                  {/* Download Button - Purple style matching reference */}
+                  <div className="mt-6">
                     <button 
-                      onClick={async () => {
-                        console.log('Download button clicked, videoId:', videoId);
-                        if (videoId) {
-                          try {
-                            console.log('Fetching download URL for video:', videoId);
-                            const response = await fetch(`/api/videos/${videoId}/download`);
-                            console.log('Download API response status:', response.status);
-                            
-                            if (response.ok) {
-                              const data = await response.json();
-                              console.log('Download data received:', data);
-                              
-                              // 创建下载链接
-                              const link = document.createElement('a');
-                              link.href = data.downloadUrl;
-                              link.download = data.filename;
-                              link.target = '_blank'; // 在新窗口打开以防下载失败
-                              document.body.appendChild(link);
-                              link.click();
-                              document.body.removeChild(link);
-                            } else {
-                              const errorData = await response.json();
-                              console.error('Download API error:', errorData);
-                              setError(`Download failed: ${errorData.error || 'Unknown error'}`);
-                            }
-                          } catch (error) {
-                            console.error('Download failed:', error);
-                            setError('Failed to download video. Please try again.');
-                          }
-                        } else if (generatedVideo) {
-                          // Fallback: download directly from the video URL if videoId is not available
-                          console.log('Using direct video URL for download:', generatedVideo);
-                          try {
-                            const link = document.createElement('a');
-                            link.href = generatedVideo;
-                            link.download = `asmr-video-${Date.now()}.mp4`;
-                            link.target = '_blank';
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                          } catch (error) {
-                            console.error('Direct download failed:', error);
-                            setError('Failed to download video. Please try again.');
-                          }
-                        } else {
-                          console.error('No video ID or URL available for download');
-                          setError('Video not available for download. Please try regenerating the video.');
-                        }
-                      }}
+                      onClick={handleDownloadVideo}
                       disabled={!videoId && !generatedVideo}
-                      className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 transform shadow-lg ${
+                      className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform shadow-lg ${
                         !videoId && !generatedVideo 
                           ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
-                          : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 hover:scale-105'
+                          : 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:from-purple-600 hover:to-indigo-700 hover:scale-105'
                       }`}
                     >
-                      <i className="ri-download-line mr-2"></i>
-                      Download HD
+                      <i className="ri-download-2-line mr-2"></i>
+                      Download {provider.toUpperCase()} Video • HD Quality
                     </button>
-                    <div className="flex flex-wrap gap-2">
+                  </div>
+                  
+                  <div className="mt-4 flex flex-wrap gap-2 justify-center">
                       <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                         <span className="text-white text-xs font-medium">
                           {duration}s • {quality} • {aspectRatio}
@@ -785,13 +851,15 @@ export default function CreatePage() {
                           </span>
                         </div>
                       )}
-                    </div>
                   </div>
                 </div>
               </div>
             )}
+            </div>
+          </div>
 
-            {/* FAQ Section */}
+          {/* FAQ Section */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
             <div className="border-t border-white/20 pt-8" data-aos="fade-up" data-aos-delay="900">
               <h3 className="text-white text-xl font-semibold mb-6 text-center">
                 <i className="ri-question-line mr-2"></i>
