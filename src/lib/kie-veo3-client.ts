@@ -132,7 +132,7 @@ export class KieVeo3Client {
     }
     
     // Format the request according to new KIE API documentation
-    const requestData = {
+    const requestData: any = {
       prompt: options.prompt,
       model: model,
       duration: options.duration,
@@ -140,9 +140,19 @@ export class KieVeo3Client {
       aspectRatio: options.aspectRatio,
       waterMark: options.waterMark || '',
       callBackUrl: options.callBackUrl,
-      enableFallback: false,
-      ...(options.imageUrl && { imageUrl: options.imageUrl })
+      enableFallback: false
     };
+
+    // Handle image parameters based on provider
+    if (options.imageUrl) {
+      if (provider === 'runway') {
+        // Runway uses imageUrl
+        requestData.imageUrl = options.imageUrl;
+      } else {
+        // VEO3 uses imageUrls array
+        requestData.imageUrls = [options.imageUrl];
+      }
+    }
 
     console.log(`KIE ${provider.toUpperCase()} API request data:`, JSON.stringify(requestData, null, 2));
     

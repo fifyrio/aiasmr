@@ -125,6 +125,32 @@ export async function processAndUploadVideo(
   }
 }
 
+// Upload image from buffer
+export async function uploadImageToR2(
+  buffer: Buffer,
+  filename: string,
+  contentType: string
+): Promise<string> {
+  try {
+    const imageFilename = generateUniqueFilename(filename, 'image')
+    
+    const command = new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME!,
+      Key: `images/${imageFilename}`,
+      Body: buffer,
+      ContentType: contentType,
+    })
+
+    await r2Client.send(command)
+    
+    // Return the public URL
+    return `${process.env.R2_ENDPOINT}/images/${imageFilename}`
+  } catch (error) {
+    console.error('Error uploading image to R2:', error)
+    throw error
+  }
+}
+
 // Upload all videos from sample_videos directory
 export async function uploadSampleVideos(): Promise<Array<{
   id: string

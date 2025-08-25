@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AOS from 'aos';
 import Navigation from '@/components/Navigation';
@@ -27,6 +27,10 @@ export default function CreatePage() {
   const [waterMark, setWaterMark] = useState<string>('');
   const [provider, setProvider] = useState<'runway' | 'veo3'>('veo3');
   const [veo3Model, setVeo3Model] = useState<'veo3_fast' | 'veo3'>('veo3_fast');
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const maxChars = 1800;
 
@@ -72,6 +76,43 @@ export default function CreatePage() {
       }
     }
   }, [provider, aspectRatio, duration, availableDurations]);
+
+  const handleImageUpload = async (file: File) => {
+    if (!user) {
+      setImageUploadError('Please login to upload images.');
+      return;
+    }
+
+    setIsUploadingImage(true);
+    setImageUploadError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Upload failed');
+      }
+
+      setUploadedImage(data.imageUrl);
+    } catch (error) {
+      setImageUploadError(error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setUploadedImage(null);
+    setImageUploadError(null);
+  };
 
   const pollTaskStatus = async (taskId: string) => {
     const maxAttempts = 120; // Poll for up to 10 minutes (120 * 5s = 600s) - increased for video processing
@@ -194,6 +235,7 @@ export default function CreatePage() {
           provider,
           model: provider === 'veo3' ? veo3Model : undefined,
           credits: currentCredits,
+          imageUrl: uploadedImage,
         }),
       });
 
@@ -289,9 +331,90 @@ export default function CreatePage() {
               </div>
             </div>
 
+            {/* Image Upload */}
+            <div className="mb-8" data-aos="fade-up" data-aos-delay="300">
+              <label className="block text-lg font-medium text-white mb-4">
+                <i className="ri-image-add-line mr-2"></i>
+                Image (Optional)
+              </label>
+              
+              {!uploadedImage ? (
+                <div className="relative">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleImageUpload(file);
+                      }
+                    }}
+                    disabled={isUploadingImage}
+                    className="hidden"
+                  />
+                  <div 
+                    onClick={() => !isUploadingImage && fileInputRef.current?.click()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const file = e.dataTransfer.files?.[0];
+                      if (file && !isUploadingImage) {
+                        handleImageUpload(file);
+                      }
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDragEnter={(e) => e.preventDefault()}
+                    className={`w-full h-48 bg-white/10 backdrop-blur-sm border-2 border-dashed border-white/30 rounded-xl flex flex-col items-center justify-center transition-all duration-300 ${
+                      isUploadingImage ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/15 hover:border-white/50 cursor-pointer'
+                    }`}>
+                    {isUploadingImage ? (
+                      <div className="flex flex-col items-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/30 border-t-white mb-3"></div>
+                        <p className="text-white font-medium">Uploading image...</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="ri-image-add-line text-4xl text-white/60 mb-3"></i>
+                        <p className="text-white font-medium mb-1">Drag & drop or click</p>
+                        <p className="text-white/70 text-sm">PNG, JPG, JPEG or WEBP (max 10MB)</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="relative bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="flex items-start gap-4">
+                    <div className="relative flex-shrink-0">
+                      <img
+                        src={uploadedImage}
+                        alt="Uploaded image"
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium mb-2">Image uploaded successfully</p>
+                      <p className="text-white/70 text-sm mb-3">This image will be used as a reference for your video generation</p>
+                      <button
+                        onClick={handleRemoveImage}
+                        className="inline-flex items-center px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/50 rounded-lg text-red-300 text-sm font-medium transition-all duration-200"
+                      >
+                        <i className="ri-delete-bin-line mr-1"></i>
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {imageUploadError && (
+                <div className="mt-3 bg-red-500/20 backdrop-blur-sm border border-red-400/50 rounded-lg p-3">
+                  <p className="text-red-300 text-sm font-medium">{imageUploadError}</p>
+                </div>
+              )}
+            </div>
 
             {/* Generation Settings */}
-            <div className="mb-8 grid md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="500">
+            <div className="mb-8 grid md:grid-cols-3 gap-6" data-aos="fade-up" data-aos-delay="600">
               {/* Provider Selection */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
@@ -438,7 +561,7 @@ export default function CreatePage() {
             </div>
 
             {/* Aspect Ratio and Watermark */}
-            <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="600">
+            <div className="mb-8 grid md:grid-cols-2 gap-6" data-aos="fade-up" data-aos-delay="700">
               {/* Aspect Ratio */}
               <div>
                 <label className="block text-lg font-medium text-white mb-4">
@@ -490,7 +613,7 @@ export default function CreatePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="700">
+            <div className="flex justify-center mb-8" data-aos="fade-up" data-aos-delay="800">
               <button
                 onClick={handleGenerate}
                 disabled={isGenerateDisabled}
@@ -624,11 +747,13 @@ export default function CreatePage() {
                           {provider.toUpperCase()}
                         </span>
                       </div>
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                        <span className="text-white text-xs font-medium">
-                          Triggers: {selectedTriggers.join(', ')}
-                        </span>
-                      </div>
+                      {uploadedImage && (
+                        <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                          <span className="text-white text-xs font-medium">
+                            With Reference Image
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -636,7 +761,7 @@ export default function CreatePage() {
             )}
 
             {/* FAQ Section */}
-            <div className="border-t border-white/20 pt-8" data-aos="fade-up" data-aos-delay="800">
+            <div className="border-t border-white/20 pt-8" data-aos="fade-up" data-aos-delay="900">
               <h3 className="text-white text-xl font-semibold mb-6 text-center">
                 <i className="ri-question-line mr-2"></i>
                 Frequently Asked Questions
