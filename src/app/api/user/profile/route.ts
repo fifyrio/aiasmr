@@ -29,9 +29,27 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get actual successful videos count from videos table
+    const { count: successfulVideosCount, error: videosCountError } = await supabase
+      .from('videos')
+      .select('id', { count: 'exact' })
+      .eq('user_id', user.id)
+      .eq('status', 'ready');
+
+    if (videosCountError) {
+      console.warn('Failed to fetch successful videos count:', videosCountError);
+    }
+
+    // Enhance profile with actual successful videos count
+    const enhancedProfile = {
+      ...profile,
+      total_videos_created: successfulVideosCount || 0, // Override with actual count
+      total_videos_created_legacy: profile.total_videos_created // Keep legacy field for reference
+    };
+
     return NextResponse.json({
       success: true,
-      profile: profile,
+      profile: enhancedProfile,
       user: {
         id: user.id,
         email: user.email,

@@ -29,6 +29,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get actual successful videos count from videos table
+    const { count: successfulVideosCount, error: videosCountError } = await supabase
+      .from('videos')
+      .select('id', { count: 'exact' })
+      .eq('user_id', user.id)
+      .eq('status', 'ready');
+
+    if (videosCountError) {
+      console.warn('Failed to fetch successful videos count:', videosCountError);
+    }
+
     // Get active subscription
     const { data: subscription, error: subError } = await supabase
       .from('subscriptions')
@@ -62,7 +73,7 @@ export async function POST(request: NextRequest) {
         credits: profile.credits || 0,
         planType: profile.plan_type || 'free',
         totalCreditsSpent: profile.total_credits_spent || 0,
-        totalVideosCreated: profile.total_videos_created || 0
+        totalVideosCreated: successfulVideosCount || 0 // Use actual count from videos table
       },
       subscription: subscription || null,
       recentOrder: recentOrder || null

@@ -93,7 +93,7 @@ export const useSubscription = () => {
         });
       } else {
         // No active subscription, use plan_type from user_profiles and get recent order info
-        const { data: recentOrder, error: orderError } = await supabase
+        const { data: recentOrders, error: orderError } = await supabase
           .from('orders')
           .select('product_name, status, created_at')
           .eq('user_id', user.id)
@@ -104,6 +104,8 @@ export const useSubscription = () => {
         if (orderError) {
           console.error('Error fetching recent orders:', orderError);
         }
+
+        const recentOrder = recentOrders?.[0];
 
         // Use planType from user_profiles (already fetched above)
         let productName = 'Free Plan';
@@ -128,9 +130,9 @@ export const useSubscription = () => {
             status = 'none';
         }
 
-        // If user has a plan but also has recent orders, use the more recent product name
-        if (recentOrder?.[0] && planType !== 'free') {
-          productName = recentOrder[0].product_name;
+        // If user has a plan but also has recent orders, prioritize order product name
+        if (recentOrder && recentOrder.product_name && planType !== 'free') {
+          productName = recentOrder.product_name;
         }
 
         setSubscription({
