@@ -70,27 +70,17 @@ const Footer = () => {
               <li>
                 <Link href="/explore/roleplay" className="text-gray-400 hover:text-white transition-colors flex items-center">
                   <i className="ri-user-star-line mr-2 text-pink-400"></i>
-                  Roleplay ASMR
+                  Roleplay Collections
                 </Link>
               </li>
               <li>
                 <Link href="/explore/relaxing" className="text-gray-400 hover:text-white transition-colors flex items-center">
                   <i className="ri-leaf-line mr-2 text-green-400"></i>
-                  Relaxing ASMR
+                  Relax Collections
                 </Link>
               </li>
-              <li>
-                <Link href="/ai-asmr-prompts" className="text-gray-400 hover:text-white transition-colors flex items-center">
-                  <i className="ri-quill-pen-line mr-2 text-blue-400"></i>
-                  AI Prompts
-                </Link>
-              </li>
-              <li>
-                <Link href="/explore" className="text-purple-300 hover:text-purple-200 transition-colors flex items-center">
-                  <i className="ri-grid-line mr-2"></i>
-                  All Templates
-                </Link>
-              </li>
+              
+      
             </ul>
           </div>
           

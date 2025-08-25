@@ -7,7 +7,7 @@ import RelaxingExploreClient from '@/components/RelaxingExploreClient';
 
 // Static metadata for SEO optimization
 export const metadata: Metadata = {
-  title: 'Relaxing ASMR Templates | Sleep & Meditation Video Creation | AIASMR',
+  title: 'Relax Collections | Sleep & Meditation Video Creation | AIASMR',
   description: 'Discover our collection of relaxing ASMR templates designed for sleep, meditation, and stress relief. Tapping, brushing, and facial treatment scenarios.',
   keywords: [
     'relaxing ASMR templates',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.aiasmr.vip/explore/relaxing',
-    title: 'Relaxing ASMR Templates - Sleep & Meditation Content',
+    title: 'Relax Collections - Sleep & Meditation Content',
     description: 'Create peaceful ASMR videos with our relaxing templates. Perfect for sleep aids, meditation guides, and stress relief content.',
     siteName: 'AIASMR',
     images: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@aiasmr',
     creator: '@aiasmr',
-    title: 'Relaxing ASMR Templates - Sleep & Meditation',
+    title: 'Relax Collections - Sleep & Meditation',
     description: 'Peaceful ASMR templates for creating relaxing sleep and meditation content.',
     images: ['https://www.aiasmr.vip/images/relaxing-asmr-twitter.jpg']
   },
@@ -73,7 +73,7 @@ export default function RelaxingExplorePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Relaxing ASMR Templates",
+    "name": "Relax Collections",
     "description": "Peaceful ASMR video templates designed for relaxation, sleep, and meditation",
     "url": "https://www.aiasmr.vip/explore/relaxing",
     "mainEntity": {
@@ -110,7 +110,7 @@ export default function RelaxingExplorePage() {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Relaxing ASMR",
+          "name": "Relax Collections",
           "item": "https://www.aiasmr.vip/explore/relaxing"
         }
       ]
@@ -135,7 +135,7 @@ export default function RelaxingExplorePage() {
         
         <Suspense fallback={
           <div className="min-h-screen hero-bg flex items-center justify-center">
-            <div className="text-white text-xl">Loading Relaxing Templates...</div>
+            <div className="text-white text-xl">Loading Relax Collections...</div>
           </div>
         }>
           <RelaxingExploreClient templates={relaxingTemplates} />

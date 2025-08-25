@@ -70,7 +70,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             <i className="ri-user-star-line mr-3 text-purple-300"></i>
-            Roleplay <span className="text-purple-300">ASMR</span> Templates
+            Roleplay <span className="text-purple-300">Collections</span>
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
             Immerse yourself in professional roleplay scenarios. From medical exams to beauty treatments, 
@@ -218,7 +218,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
           <div className="text-center py-16" data-aos="fade-up">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-12 max-w-2xl mx-auto">
               <i className="ri-user-star-line text-6xl text-white/50 mb-6"></i>
-              <h3 className="text-2xl font-bold text-white mb-4">No Roleplay Templates Found</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">No Roleplay Collections Found</h3>
               <p className="text-white/70 mb-6">
                 We&apos;re continuously adding new roleplay scenarios. Check back soon for more professional ASMR templates!
               </p>

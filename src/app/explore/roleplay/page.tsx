@@ -7,7 +7,7 @@ import RoleplayExploreClient from '@/components/RoleplayExploreClient';
 
 // Static metadata for SEO optimization
 export const metadata: Metadata = {
-  title: 'Roleplay ASMR Templates | Professional ASMR Video Creation | AIASMR',
+  title: 'Roleplay Collections | Professional ASMR Video Creation | AIASMR',
   description: 'Explore our collection of roleplay ASMR templates including medical exam, makeup artist, flight attendant, teacher, and more professional roleplay scenarios.',
   keywords: [
     'roleplay ASMR templates',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://www.aiasmr.vip/explore/roleplay',
-    title: 'Roleplay ASMR Templates - Professional ASMR Scenarios',
+    title: 'Roleplay Collections - Professional ASMR Scenarios',
     description: 'Browse professional roleplay ASMR templates for creating immersive video experiences. Medical, beauty, travel, and educational scenarios available.',
     siteName: 'AIASMR',
     images: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@aiasmr',
     creator: '@aiasmr',
-    title: 'Roleplay ASMR Templates - Professional Scenarios',
+    title: 'Roleplay Collections - Professional Scenarios',
     description: 'Professional roleplay ASMR templates for immersive video creation.',
     images: ['https://www.aiasmr.vip/images/roleplay-asmr-twitter.jpg']
   },
@@ -73,7 +73,7 @@ export default function RoleplayExplorePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Roleplay ASMR Templates",
+    "name": "Roleplay Collections",
     "description": "Professional roleplay ASMR video templates for creating immersive content experiences",
     "url": "https://www.aiasmr.vip/explore/roleplay",
     "mainEntity": {
@@ -110,7 +110,7 @@ export default function RoleplayExplorePage() {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Roleplay ASMR",
+          "name": "Roleplay Collections",
           "item": "https://www.aiasmr.vip/explore/roleplay"
         }
       ]
@@ -130,7 +130,7 @@ export default function RoleplayExplorePage() {
         
         <Suspense fallback={
           <div className="min-h-screen hero-bg flex items-center justify-center">
-            <div className="text-white text-xl">Loading Roleplay Templates...</div>
+            <div className="text-white text-xl">Loading Roleplay Collections...</div>
           </div>
         }>
           <RoleplayExploreClient templates={roleplayTemplates} />
