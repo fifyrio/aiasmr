@@ -836,6 +836,109 @@ export default function VEO3Page() {
               </div>
             </div>
           </div>
+
+          {/* VEO3 FAQ Section */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
+            <div className="text-center mb-8" data-aos="fade-up">
+              <h3 className="text-white text-xl font-semibold mb-4">
+                <i className="ri-question-line mr-2"></i>
+                VEO3 Frequently Asked Questions
+              </h3>
+              <p className="text-white/70">
+                Everything you need to know about generating ASMR videos with Google VEO3
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* FAQ Item 1 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-star-line mr-2 text-purple-300"></i>
+                  What makes VEO3 different from other AI models?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  VEO3 is Google&apos;s most advanced video generation model, offering superior quality, realistic motion, and better understanding of complex prompts compared to earlier models.
+                </p>
+              </div>
+
+              {/* FAQ Item 2 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-time-line mr-2 text-blue-300"></i>
+                  How long does VEO3 video generation take?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  VEO3 Fast typically takes 2-4 minutes, while VEO3 Standard takes 5-8 minutes for higher quality results. Processing time may vary during peak hours.
+                </p>
+              </div>
+
+              {/* FAQ Item 3 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-aspect-ratio-line mr-2 text-cyan-300"></i>
+                  What aspect ratios does VEO3 support?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  VEO3 currently supports 16:9 (landscape) and 9:16 (portrait) aspect ratios, making it perfect for YouTube, Instagram Stories, and TikTok content.
+                </p>
+              </div>
+
+              {/* FAQ Item 4 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-coins-line mr-2 text-yellow-300"></i>
+                  Why does VEO3 cost more credits than other models?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  VEO3 uses significantly more computational resources due to its advanced neural architecture, delivering premium quality that justifies the higher credit cost.
+                </p>
+              </div>
+
+              {/* FAQ Item 5 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-image-line mr-2 text-green-300"></i>
+                  Can I use reference images with VEO3?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  Yes! VEO3 supports reference images, allowing you to guide the visual style and composition of your ASMR videos for more precise results.
+                </p>
+              </div>
+
+              {/* FAQ Item 6 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-shield-check-line mr-2 text-orange-300"></i>
+                  Is VEO3 content safe for commercial use?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  Yes, all VEO3 generated content can be used commercially. You retain full rights to your created videos and can monetize them on any platform.
+                </p>
+              </div>
+
+              {/* FAQ Item 7 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-magic-line mr-2 text-pink-300"></i>
+                  How do I write better prompts for VEO3?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  Be specific about textures, lighting, and movement. VEO3 excels at understanding detailed descriptions like &quot;soft soap cutting with natural lighting&quot; or &quot;gentle water droplets on glass surface.&quot;
+                </p>
+              </div>
+
+              {/* FAQ Item 8 */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <h4 className="font-semibold text-white mb-3 flex items-center">
+                  <i className="ri-refresh-line mr-2 text-indigo-300"></i>
+                  What if my VEO3 generation fails?
+                </h4>
+                <p className="text-white/80 text-sm">
+                  Failed generations are automatically refunded. You can immediately retry with a modified prompt or different settings without losing credits.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
