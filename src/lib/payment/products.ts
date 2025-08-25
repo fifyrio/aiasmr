@@ -4,18 +4,17 @@ import { Product } from './types';
 import { getPaymentConfig } from './config';
 
 // Function to get products with current configuration
-export function getPlans(): Product[] {
-  // Only call getPaymentConfig when this function is called (server-side)
-  const config = getPaymentConfig();
-  
+type PlanIds = { trial: string; basic: string; pro: string };
+
+function createPlans(ids: PlanIds): Product[] {
   return [
     {
-      product_id: config.trialProductId,
+      product_id: ids.trial,
       product_name: 'AI ASMR Trial',
       price: 790, // $7.9 in cents
       originalPrice: 990, // $9.9 in cents
       credits: 100,
-      videos: 10,
+      videos: 8,
       pricePerVideo: 0.79,
       pricePerCredit: 0.079,
       duration: '8s',
@@ -34,12 +33,12 @@ export function getPlans(): Product[] {
       popular: false,
     },
     {
-      product_id: config.basicProductId,
+      product_id: ids.basic,
       product_name: 'AI ASMR Basic',
       price: 1990, // $19.9 in cents
       originalPrice: 2490, // $24.9 in cents
       credits: 300,
-      videos: 30,
+      videos: 25,
       pricePerVideo: 0.66,
       pricePerCredit: 0.066,
       duration: '8s',
@@ -65,12 +64,12 @@ export function getPlans(): Product[] {
       popular: true,
     },
     {
-      product_id: config.proProductId,
+      product_id: ids.pro,
       product_name: 'AI ASMR Pro',
       price: 4990, // $49.9 in cents
       originalPrice: 5990, // $59.9 in cents
       credits: 1500,
-      videos: 150,
+      videos: 125,
       pricePerVideo: 0.33,
       pricePerCredit: 0.033,
       duration: '8s',
@@ -97,94 +96,24 @@ export function getPlans(): Product[] {
   ];
 }
 
+export function getPlans(): Product[] {
+  // Only call getPaymentConfig when this function is called (server-side)
+  const config = getPaymentConfig();
+  return createPlans({
+    trial: config.trialProductId,
+    basic: config.basicProductId,
+    pro: config.proProductId,
+  });
+}
+
 // Static fallback plans for client-side use (with fallback values)
-export const PLANS: Product[] = [
-  {
-    product_id: 'prod_4U52gw2XCmcajBDwu6Ru6G', // Default trial product ID
-    product_name: 'AI ASMR Trial',
-    price: 790,
-    originalPrice: 990,
-    credits: 100,
-    videos: 10,
-    pricePerVideo: 0.79,
-    pricePerCredit: 0.079,
-    duration: '8s',
-    resolution: '720p',
-    commercial: false,
-    type: 'once',
-    features: [
-      'Google Veo 3 ASMR support',
-      'Max 8s video duration',
-      '720p resolution',
-      'Binaural audio effects',
-      'ASMR trigger library',
-    ],
-    buttonText: 'Try AI ASMR ⚡',
-    buttonColor: 'from-blue-500 to-purple-600',
-    popular: false,
-  },
-  {
-    product_id: 'prod_2Gj8BYSJ8CPf7AtK9RqtUy', // Default basic product ID
-    product_name: 'AI ASMR Basic',
-    price: 1990,
-    originalPrice: 2490,
-    credits: 300,
-    videos: 30,
-    pricePerVideo: 0.66,
-    pricePerCredit: 0.066,
-    duration: '8s',
-    resolution: '720p',
-    commercial: true,
-    priceIncrease: true,
-    type: 'subscription',
-    billing_period: 'monthly',
-    features: [
-      'Google Veo 3 ASMR support',
-      'Max 8s video duration',
-      '720p resolution',
-      'Whisper & voice sync',
-      'Binaural audio effects',
-      'ASMR trigger library',
-      'Commercial usage rights',
-      'Standard processing',
-      'Basic support',
-      'Global availability',
-    ],
-    buttonText: 'Subscribe to Basic ⚡',
-    buttonColor: 'from-blue-500 to-purple-600',
-    popular: true,
-  },
-  {
-    product_id: 'prod_6AmUBfwn7nqjKo6wh4K8U3', // Default pro product ID
-    product_name: 'AI ASMR Pro',
-    price: 4990,
-    originalPrice: 5990,
-    credits: 1500,
-    videos: 150,
-    pricePerVideo: 0.33,
-    pricePerCredit: 0.033,
-    duration: '8s',
-    resolution: '1080p',
-    commercial: true,
-    type: 'subscription',
-    billing_period: 'monthly',
-    features: [
-      'All Basic features included',
-      '1080p video resolution',
-      'Advanced whisper sync',
-      'Premium binaural audio',
-      'Full ASMR trigger library',
-      'Fastest processing',
-      'Commercial usage rights',
-      'Priority support',
-      'Global availability',
-      'Pro-level features',
-    ],
-    buttonText: 'Go Pro 🔥',
-    buttonColor: 'from-purple-600 to-pink-500',
-    popular: false,
-  },
-];
+const DEFAULT_IDS: PlanIds = {
+  trial: 'prod_4oJ0n9ZOU0x2Tn9rQ1oDJ5',
+  basic: 'prod_6JrHGnC707qbtiMBiLGlkX',
+  pro: 'prod_5H9ctZ7GUs425KayUilncU',
+};
+
+export const PLANS: Product[] = createPlans(DEFAULT_IDS);
 
 // For backward compatibility
 export const ALL_PRODUCTS: Product[] = PLANS;

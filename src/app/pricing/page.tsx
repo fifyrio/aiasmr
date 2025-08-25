@@ -172,7 +172,7 @@ const PricingPage = () => {
                           <div className="text-gray-600">Credits</div>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg text-center">
-                          <div className="font-semibold text-gray-900">{plan.videos}</div>
+                          <div className="font-semibold text-gray-900">Up to {plan.videos}</div>
                           <div className="text-gray-600">Videos</div>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-lg text-center">
