@@ -43,7 +43,12 @@ const Navigation = () => {
               >
                 AI Prompts
               </Link>
-              
+              <Link 
+                href="/veo3" 
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                VEO3
+              </Link>
               <Link 
                 href="/explore" 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
