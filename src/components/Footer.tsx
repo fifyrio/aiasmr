@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900/95 backdrop-blur-sm text-white border-t border-purple-500/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="text-2xl font-bold text-white">
               AIASMR <span className="text-purple-400">Video</span>
@@ -39,6 +39,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link href="/veo3" className="text-purple-300 hover:text-purple-200 transition-colors">
+                  VEO3 Generator
+                </Link>
+              </li>
+              <li>
                 <Link href="/explore" className="text-gray-400 hover:text-white transition-colors">
                   Explore
                 </Link>
@@ -53,9 +58,37 @@ const Footer = () => {
                   Blog
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-4">
+              <i className="ri-folder-line mr-2 text-purple-400"></i>
+              Categories
+            </h3>
+            <ul className="space-y-2">
               <li>
-                <Link href="/ai-asmr-prompts" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/explore/roleplay" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                  <i className="ri-user-star-line mr-2 text-pink-400"></i>
+                  Roleplay ASMR
+                </Link>
+              </li>
+              <li>
+                <Link href="/explore/relaxing" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                  <i className="ri-leaf-line mr-2 text-green-400"></i>
+                  Relaxing ASMR
+                </Link>
+              </li>
+              <li>
+                <Link href="/ai-asmr-prompts" className="text-gray-400 hover:text-white transition-colors flex items-center">
+                  <i className="ri-quill-pen-line mr-2 text-blue-400"></i>
                   AI Prompts
+                </Link>
+              </li>
+              <li>
+                <Link href="/explore" className="text-purple-300 hover:text-purple-200 transition-colors flex items-center">
+                  <i className="ri-grid-line mr-2"></i>
+                  All Templates
                 </Link>
               </li>
             </ul>
