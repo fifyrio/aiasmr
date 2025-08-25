@@ -1,4 +1,4 @@
-import { createClient } from './supabase/server';
+import { createServiceClient } from './supabase/server';
 
 export interface CreditTransaction {
   userId: string;
@@ -19,7 +19,7 @@ export async function deductCredits(
   taskId?: string
 ): Promise<{ success: boolean; remainingCredits?: number; error?: string }> {
   try {
-    const supabase = createClient();
+    const supabase = createServiceClient();
 
     // Start transaction - get current credits
     const { data: profile, error: profileError } = await supabase
@@ -65,6 +65,7 @@ export async function deductCredits(
         transaction_type: 'usage',
         amount: -amount,
         description: taskId ? `${description} - Task: ${taskId}` : description,
+        task_id: taskId,
         created_at: new Date().toISOString()
       });
 
@@ -94,7 +95,7 @@ export async function refundCredits(
   videoId?: string
 ): Promise<{ success: boolean; newCredits?: number; error?: string }> {
   try {
-    const supabase = createClient();
+    const supabase = createServiceClient();
 
     // Get current credits
     const { data: profile, error: profileError } = await supabase
@@ -133,6 +134,7 @@ export async function refundCredits(
         transaction_type: 'refund',
         amount: amount, // Positive amount for refunds
         description: taskId ? `${description} - Task: ${taskId}` : description,
+        task_id: taskId,
         created_at: new Date().toISOString()
       });
 
@@ -156,7 +158,7 @@ export async function refundCredits(
  */
 export async function getUserCredits(userId: string): Promise<{ credits: number; error?: string }> {
   try {
-    const supabase = createClient();
+    const supabase = createServiceClient();
     
     const { data: profile, error } = await supabase
       .from('user_profiles')
@@ -186,7 +188,7 @@ export async function recordVideoCompletion(
   videoId: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = createClient();
+    const supabase = createServiceClient();
 
     // Update the credit transaction with the video_id
     const { error: updateError } = await supabase

@@ -120,6 +120,15 @@ export class KieVeo3Client {
     this.validateGenerationOptions(options);
     
     const provider = options.provider || 'veo3';
+    
+    // Test mode: return mock data
+    if (process.env.NODE_ENV === 'development' && process.env.KIE_TEST_MODE === 'true') {
+      console.log('🧪 KIE Test Mode: Returning mock data');
+      return {
+        taskId: "ee603959-debb-48d1-98c4-a6d1c717eba6",
+        status: 'pending'
+      };
+    }
     const endpoint = provider === 'runway' ? '/runway/generate' : '/veo/generate';
     
     // Model selection based on provider and options

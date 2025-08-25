@@ -183,7 +183,7 @@ async function saveVeo3Video(taskId: string, result: {
     const { data: transaction } = await supabase
       .from('credit_transactions')
       .select('user_id')
-      .eq('video_id', taskId)
+      .eq('task_id', taskId)
       .eq('transaction_type', 'usage')
       .single();
     
@@ -240,7 +240,7 @@ async function saveFailedVideo(taskId: string, failureReason: string, provider: 
     const { data: transaction } = await supabase
       .from('credit_transactions')
       .select('user_id')
-      .eq('video_id', taskId)
+      .eq('task_id', taskId)
       .eq('transaction_type', 'usage')
       .single();
     
@@ -288,11 +288,11 @@ async function processRefundForFailedGeneration(taskId: string, errorMessage: st
     // Use service client to bypass RLS for admin operations
     const supabase = createServiceClient();
     
-    // Find the credit transaction for this task using video_id field
+    // Find the credit transaction for this task using task_id field
     const { data: transaction } = await supabase
       .from('credit_transactions')
       .select('user_id, amount')
-      .eq('video_id', taskId)
+      .eq('task_id', taskId)
       .eq('transaction_type', 'usage')
       .single();
     
@@ -354,7 +354,7 @@ async function processRefundWithServiceClient(
         transaction_type: 'refund',
         amount: amount,
         description: taskId ? `${description} - Task: ${taskId}` : description,
-        video_id: taskId,
+        task_id: taskId,
         created_at: new Date().toISOString()
       });
 
