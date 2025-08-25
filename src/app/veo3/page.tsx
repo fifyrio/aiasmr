@@ -324,40 +324,24 @@ export default function VEO3Page() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "VEO3 ASMR Video Generator",
-    "description": "Create premium ASMR videos with Google VEO3 AI model. Experience the highest quality video generation for realistic, immersive ASMR content.",
+    "name": "VEO3 ASMR Generator",
+    "description": "Generate premium ASMR videos with Google VEO3 AI. High-quality video creation from text prompts.",
     "url": "https://www.aiasmr.vip/veo3",
     "applicationCategory": "AI Video Generator",
-    "operatingSystem": "Web Browser",
     "offers": [
       {
         "@type": "Offer",
-        "name": "VEO3 Fast Model",
-        "description": "Fast VEO3 video generation",
+        "name": "VEO3 Fast",
         "price": "60",
         "priceCurrency": "CREDITS"
       },
       {
         "@type": "Offer", 
-        "name": "VEO3 Standard Model",
-        "description": "High-quality VEO3 video generation",
+        "name": "VEO3 Standard",
         "price": "300",
         "priceCurrency": "CREDITS"
       }
-    ],
-    "featureList": [
-      "VEO3 Fast and Standard models",
-      "16:9 and 9:16 aspect ratios",
-      "720p and 1080p quality options",
-      "Template-based generation",
-      "Image-to-video conversion",
-      "Custom watermarks"
-    ],
-    "creator": {
-      "@type": "Organization",
-      "name": "AIASMR Video",
-      "url": "https://www.aiasmr.vip"
-    }
+    ]
   };
 
   return (
