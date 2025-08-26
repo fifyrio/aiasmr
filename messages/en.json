@@ -822,6 +822,15 @@
       "browseAll": "Browse All Categories"
     }
   },
+  "featuredVideos": {
+    "title": "Featured",
+    "aiGeneratedSpan": "AI-Generated",
+    "videosText": "Videos",
+    "subtitle": "Discover amazing ASMR videos created by our AI. Get inspired and create your own masterpiece.",
+    "aiGenerated": "AI Generated",
+    "clickToPreview": "Click to Preview",
+    "exploreAllVideos": "Explore All Videos"
+  },
   "roleplayExplore": {
     "navigation": {
       "backToExplore": "Back to Explore"

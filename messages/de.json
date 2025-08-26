@@ -822,6 +822,15 @@
       "browseAll": "Alle Kategorien durchsuchen"
     }
   },
+  "featuredVideos": {
+    "title": "Empfohlene",
+    "aiGeneratedSpan": "KI-generierte",
+    "videosText": "Videos",
+    "subtitle": "Entdecken Sie erstaunliche ASMR-Videos, die von unserer KI erstellt wurden. Lassen Sie sich inspirieren und schaffen Sie Ihr eigenes Meisterwerk.",
+    "aiGenerated": "KI-generiert",
+    "clickToPreview": "Klicken für Vorschau",
+    "exploreAllVideos": "Alle Videos entdecken"
+  },
   "roleplayExplore": {
     "navigation": {
       "backToExplore": "Zurück zu Entdecken"

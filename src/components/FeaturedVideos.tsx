@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import { useTranslations } from 'next-intl'
 import AOS from 'aos'
 import ASMRModal, { ASMRTemplate } from './ASMRModal'
 
@@ -29,6 +30,7 @@ interface FeaturedVideosProps {
 }
 
 const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
+  const t = useTranslations('featuredVideos')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<ASMRTemplate | null>(null)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
@@ -55,7 +57,7 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
     duration: template.duration,
     views: template.downloads, // Use downloads as views
     likes: Math.floor(parseInt(template.downloads.replace(/[K,M]/g, '')) / 10) + 'K', // Generate likes based on downloads
-    author: 'AI Generated'
+    author: t('aiGenerated')
   }))
 
   const openModal = (index: number) => {
@@ -83,10 +85,10 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" data-aos="fade-up">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Featured <span className="text-purple-400">AI-Generated</span> Videos
+            {t('title')} <span className="text-purple-400">{t('aiGeneratedSpan')}</span> {t('videosText')}
           </h2>
           <p className="text-xl text-purple-200/80 max-w-2xl mx-auto">
-            Discover amazing ASMR videos created by our AI. Get inspired and create your own masterpiece.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -158,7 +160,7 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
                               parent.innerHTML += `
                                 <div class="text-white text-center">
                                   <i class="ri-play-circle-line text-6xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
-                                  <p class="text-sm opacity-80">Click to Preview</p>
+                                  <p class="text-sm opacity-80">${t('clickToPreview')}</p>
                                 </div>
                               `;
                             }
@@ -223,7 +225,7 @@ const FeaturedVideos: React.FC<FeaturedVideosProps> = () => {
         <div className="text-center mt-12" data-aos="fade-up" data-aos-delay="400">
           <button className="btn-primary">
             <i className="ri-compass-line mr-2"></i>
-            Explore All Videos
+            {t('exploreAllVideos')}
           </button>
         </div>
       </div>
