@@ -108,25 +108,39 @@ const Navigation = () => {
             {loading ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
             ) : user ? (
-              <div className="relative" ref={userDropdownRef}>
-                <button
-                  onClick={toggleUserDropdown}
-                  className="flex items-center space-x-2 hover:bg-gray-800 rounded-full p-2 transition-colors"
+              <div className="flex items-center space-x-3">
+                {/* Credits Display */}
+                <Link 
+                  href={`/${locale}/pricing`}
+                  className="flex items-center space-x-2 bg-orange-500/20 hover:bg-orange-500/30 rounded-full px-3 py-1.5 transition-colors group"
+                  title={t('credits')}
                 >
-                  <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">
-                      {user.email?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <svg 
-                    className={`w-4 h-4 text-gray-400 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
+                  <span className="text-orange-400 font-medium text-sm">💎</span>
+                  <span className="text-orange-400 text-sm font-semibold group-hover:text-orange-300">
+                    {creditsLoading ? '...' : credits?.credits ?? 0}
+                  </span>
+                </Link>
+                
+                {/* User Avatar Dropdown */}
+                <div className="relative" ref={userDropdownRef}>
+                  <button
+                    onClick={toggleUserDropdown}
+                    className="flex items-center space-x-2 hover:bg-gray-800 rounded-full p-1 transition-colors"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+                    <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <svg 
+                      className={`w-4 h-4 text-gray-400 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
 
                 {isUserDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
@@ -147,19 +161,6 @@ const Navigation = () => {
                         </div>
                       </div>
                       
-                      <div className="flex items-center space-x-3 mt-3">
-                        <div className="flex items-center space-x-2 bg-blue-50 rounded-full px-3 py-1.5 flex-1">
-                          <span className="text-blue-600 font-medium">💎</span>
-                          <span className="text-blue-600 text-sm font-medium">
-                            {creditsLoading ? '...' : credits?.credits ?? 0} Credits
-                          </span>
-                        </div>
-                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                          </svg>
-                        </button>
-                      </div>
                     </div>
                     
                     <div className="py-2">
@@ -259,12 +260,16 @@ const Navigation = () => {
                         {user.email?.split('@')[0] || 'User'}
                       </div>
                       <div className="flex items-center space-x-2 mt-1">
-                        <div className="flex items-center space-x-1 bg-blue-500/20 rounded-full px-2 py-0.5">
+                        <Link
+                          href={`/${locale}/pricing`}
+                          className="flex items-center space-x-1 bg-blue-500/20 hover:bg-blue-500/30 rounded-full px-2 py-0.5 transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
                           <span className="text-blue-400 text-xs">💎</span>
                           <span className="text-blue-400 text-xs font-medium">
                             {creditsLoading ? '...' : credits?.credits ?? 0}
                           </span>
-                        </div>
+                        </Link>
                       </div>
                     </div>
                   </div>
