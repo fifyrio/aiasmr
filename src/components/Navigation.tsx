@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
@@ -10,12 +10,14 @@ import LanguageSwitcher from './LanguageSwitcher'
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
   const { user, loading, signOut } = useAuth()
   // Only fetch credits when user is logged in to reduce unnecessary API calls
   const { credits, loading: creditsLoading } = useCredits()
   const t = useTranslations('nav')
   const params = useParams()
   const locale = params.locale as string
+  const userDropdownRef = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -23,7 +25,29 @@ const Navigation = () => {
 
   const handleSignOut = async () => {
     await signOut()
+    setIsUserDropdownOpen(false)
   }
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen)
+  }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false)
+      }
+    }
+
+    if (isUserDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isUserDropdownOpen])
 
   return (
     <nav className="bg-gray-900/90 backdrop-blur-md fixed w-full top-0 z-50 shadow-lg border-b border-purple-500/20">
@@ -84,32 +108,84 @@ const Navigation = () => {
             {loading ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
             ) : user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-2 bg-orange-500/20 rounded-full px-3 py-1">
-                    <span className="text-orange-400 font-medium">💎</span>
-                    <span className="text-orange-400 text-sm font-medium">
-                      {creditsLoading ? '...' : credits?.credits ?? 0}
-                    </span>
-                  </div>
+              <div className="relative" ref={userDropdownRef}>
+                <button
+                  onClick={toggleUserDropdown}
+                  className="flex items-center space-x-2 hover:bg-gray-800 rounded-full p-2 transition-colors"
+                >
                   <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
                       {user.email?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <Link 
-                    href={`/${locale}/user`} 
-                    className="text-gray-300 text-sm hover:text-purple-400 transition-colors cursor-pointer"
+                  <svg 
+                    className={`w-4 h-4 text-gray-400 transition-transform ${isUserDropdownOpen ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
                   >
-                    {user.email}
-                  </Link>
-                </div>
-                <button 
-                  onClick={handleSignOut}
-                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
-                >
-                  {t('logout')}
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
+
+                {isUserDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
+                    <div className="p-4 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                          <span className="text-white text-lg font-medium">
+                            {user.email?.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-gray-900 font-semibold text-lg">
+                            {user.email?.split('@')[0] || 'User'}
+                          </div>
+                          <div className="text-gray-500 text-sm">
+                            {user.email}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 mt-3">
+                        <div className="flex items-center space-x-2 bg-blue-50 rounded-full px-3 py-1.5 flex-1">
+                          <span className="text-blue-600 font-medium">💎</span>
+                          <span className="text-blue-600 text-sm font-medium">
+                            {creditsLoading ? '...' : credits?.credits ?? 0} Credits
+                          </span>
+                        </div>
+                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="py-2">
+                      <Link
+                        href={`/${locale}/my-videos`}
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <span className="text-gray-700">{t('myVideos')}</span>
+                      </Link>
+                      
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                      >
+                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span className="text-gray-700">{t('logout')}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <>
@@ -172,25 +248,25 @@ const Navigation = () => {
                 </div>
               ) : user ? (
                 <div className="space-y-2">
-                  <div className="flex items-center px-3 py-2 space-x-2">
-                    <div className="flex items-center space-x-2 bg-orange-500/20 rounded-full px-3 py-1">
-                      <span className="text-orange-400 font-medium">💎</span>
-                      <span className="text-orange-400 text-sm font-medium">
-                        {creditsLoading ? '...' : credits?.credits ?? 0}
-                      </span>
-                    </div>
-                    <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                  <div className="flex items-center px-3 py-2 space-x-3">
+                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {user.email?.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <Link 
-                      href={`/${locale}/user`} 
-                      className="text-gray-300 text-sm hover:text-purple-400 transition-colors cursor-pointer"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {user.email}
-                    </Link>
+                    <div className="flex-1">
+                      <div className="text-gray-200 font-medium">
+                        {user.email?.split('@')[0] || 'User'}
+                      </div>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <div className="flex items-center space-x-1 bg-blue-500/20 rounded-full px-2 py-0.5">
+                          <span className="text-blue-400 text-xs">💎</span>
+                          <span className="text-blue-400 text-xs font-medium">
+                            {creditsLoading ? '...' : credits?.credits ?? 0}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <button 
                     onClick={handleSignOut}
