@@ -10,7 +10,8 @@ interface LanguageSwitcherProps {
 
 const languages = {
   en: { name: 'English', flag: '🇺🇸' },
-  zh: { name: '中文', flag: '🇨🇳' }
+  zh: { name: '中文', flag: '🇨🇳' },
+  de: { name: 'Deutsch', flag: '🇩🇪' }
 }
 
 export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {

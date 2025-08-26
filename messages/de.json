@@ -1,0 +1,895 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolgreich!",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "create": "Erstellen",
+    "explore": "Entdecken",
+    "pricing": "Preise",
+    "myVideos": "Meine Videos",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "logout": "Abmelden",
+    "account": "Konto",
+    "aiPrompts": "KI-Prompts",
+    "veo3": "VEO3",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "credits": "Credits"
+  },
+  "auth": {
+    "login": {
+      "title": "In Ihr Konto einloggen",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "rememberMe": "Angemeldet bleiben",
+      "forgotPassword": "Passwort vergessen?",
+      "noAccount": "Noch kein Konto?",
+      "createAccount": "Hier eines erstellen",
+      "loginButton": "Anmelden"
+    },
+    "signup": {
+      "title": "Ihr Konto erstellen",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "agreeTerms": "Ich stimme den Nutzungsbedingungen und Datenschutzrichtlinien zu",
+      "hasAccount": "Haben Sie bereits ein Konto?",
+      "signInHere": "Hier anmelden",
+      "signupButton": "Konto erstellen"
+    }
+  },
+  "hero": {
+    "title": "ASMR-Videos mit KI in Sekunden generieren",
+    "subtitle": "Erstellen Sie hochwertige, KI-gestützte ASMR-Videos aus Textanweisungen, Bildern oder Referenzvideos. Generieren Sie immersive 4K-ASMR-Inhalte mit fortschrittlicher KI-Technologie in Schleife.",
+    "ctaCreate": "Kostenlos loslegen",
+    "ctaExplore": "Vorlagen entdecken",
+    "whyChooseTitle": "Warum KI ASMR-Videogenerierung wählen?",
+    "features": {
+      "aiPowered": {
+        "title": "KI-gestützte Generierung",
+        "description": "Fortschrittliche KI erstellt realistische ASMR-Videos aus Ihren Textbeschreibungen"
+      },
+      "highQuality": {
+        "title": "4K-Qualität",
+        "description": "Generieren Sie hochauflösende 4K-Videos in Schleife für erstklassige Erfahrungen"
+      },
+      "fastGeneration": {
+        "title": "Schnelle Generierung",
+        "description": "Erhalten Sie Ihre ASMR-Videos in 1-2 Minuten mit unserer optimierten Pipeline"
+      }
+    },
+    "communityTitle": "Treten Sie unserer wachsenden Community bei",
+    "stats": {
+      "videosGenerated": "Generierte Videos",
+      "activeCreators": "Aktive Ersteller",
+      "totalViews": "Gesamtaufrufe"
+    }
+  },
+  "create": {
+    "title": "Erstellen Sie Ihr ASMR-Video",
+    "subtitle": "Verwandeln Sie Ihre Ideen mit unserer KI-gestützten Generierung in immersive ASMR-Erlebnisse",
+    "loginRequired": "Bitte melden Sie sich an, um Videos zu generieren und Ihre Kreationen zu speichern.",
+    "credits": {
+      "remaining": "{credits} Credits verbleibend",
+      "cost": "Kosten: {credits} Credits",
+      "insufficient": "Sie benötigen {credits} Credits, um ein Video zu generieren",
+      "currentBalance": "Aktuelles Guthaben: {credits} Credits",
+      "getCredits": "Credits erhalten"
+    },
+    "prompt": {
+      "label": "Beschreiben Sie Ihre ASMR-Szene",
+      "placeholder": "Für bessere Ergebnisse Texturen, Geräusche und Visualisierungen einbeziehen. Seien Sie beschreibend und kreativ...",
+      "charCount": "{current}/{max}"
+    },
+    "image": {
+      "label": "Bild (Optional)",
+      "dragDrop": "Per Drag & Drop oder klicken",
+      "fileTypes": "PNG, JPG, JPEG oder WEBP (max 10MB)",
+      "uploading": "Bild wird hochgeladen...",
+      "uploadSuccess": "Bild erfolgreich hochgeladen",
+      "uploadDescription": "Dieses Bild wird als Referenz für Ihre Videogenerierung verwendet",
+      "remove": "Entfernen",
+      "loginToUpload": "Bitte melden Sie sich an, um Bilder hochzuladen."
+    },
+    "provider": {
+      "label": "KI-Anbieter",
+      "veo3": {
+        "title": "VEO3",
+        "subtitle": "Hohe Qualität"
+      },
+      "runway": {
+        "title": "Runway",
+        "subtitle": "Schnelle Generierung"
+      }
+    },
+    "model": {
+      "label": "VEO3-Modell",
+      "veo3Fast": {
+        "title": "VEO3 Schnell",
+        "subtitle": "60 Credits"
+      },
+      "veo3Standard": {
+        "title": "VEO3 Standard",
+        "subtitle": "300 Credits"
+      }
+    },
+    "duration": {
+      "label": "Videodauer",
+      "5seconds": {
+        "title": "5 Sekunden",
+        "subtitle": "12 Credits"
+      },
+      "8seconds": {
+        "title": "8 Sekunden",
+        "subtitle": "30 Credits"
+      }
+    },
+    "quality": {
+      "label": "Videoqualität",
+      "720p": {
+        "title": "720p HD",
+        "subtitle": "Standardqualität"
+      },
+      "1080p": {
+        "title": "1080p Full HD",
+        "subtitle": "Hohe Qualität",
+        "unavailable": "Nicht verfügbar für 8s"
+      }
+    },
+    "aspectRatio": {
+      "label": "Seitenverhältnis",
+      "ratios": {
+        "16:9": "Querformat",
+        "4:3": "Klassisch",
+        "1:1": "Quadratisch",
+        "3:4": "Foto",
+        "9:16": "Hochformat"
+      }
+    },
+    "watermark": {
+      "label": "Wasserzeichen (Optional)",
+      "placeholder": "Benutzerdefinierten Wasserzeichen-Text hinzufügen...",
+      "description": "Leer lassen für kein Wasserzeichen. Max 50 Zeichen."
+    },
+    "generate": {
+      "button": "ASMR-Video generieren",
+      "generating": "Wird generiert...",
+      "loginToGenerate": "Bitte melden Sie sich an, um Videos zu generieren."
+    },
+    "preview": {
+      "title": "Vorschau",
+      "result": "{provider} Ergebnis",
+      "description": "Ihr professionelles KI-generiertes Video wird hier erscheinen",
+      "templatePreview": "Vorlagen-Vorschau",
+      "demo": "Demo"
+    },
+    "progress": {
+      "creating": "Ihr ASMR-Video wird erstellt...",
+      "starting": "Generierung wird gestartet...",
+      "queued": "Aufgabe in der Warteschlange, wartet auf Start...",
+      "processing": "Video wird generiert... {progress}%",
+      "uploading": "Video wird verarbeitet und hochgeladen... {progress}%",
+      "ready": "Video verarbeitet und bereit!"
+    },
+    "result": {
+      "title": "Ihr generiertes ASMR-Video",
+      "download": "{provider} Video herunterladen • HD-Qualität",
+      "withImage": "Mit Referenzbild"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "failedGeneration": {
+        "title": "Was passiert, wenn meine Videogenerierung fehlschlägt?",
+        "answer": "Fehlgeschlagene Generierungen kosten keine Credits. Sie können es erneut versuchen, ohne Credits zu verlieren."
+      },
+      "generationTime": {
+        "title": "Wie lange dauert die Videogenerierung?",
+        "answer": "Die Videogenerierung dauert normalerweise 1–2 Minuten, kann aber zu Spitzenzeiten bis zu 4 Minuten dauern."
+      },
+      "freePlan": {
+        "title": "Kann ich Videos mit dem kostenlosen Plan generieren?",
+        "answer": "Nur kostenpflichtige Pläne können Videos generieren. Kostenlose Benutzer können vorhandene Inhalte durchsuchen und erkunden."
+      },
+      "betterResults": {
+        "title": "Wie kann ich bessere Ergebnisse erzielen?",
+        "answer": "Verwenden Sie klare, reichhaltige Prompts mit detaillierten Beschreibungen. Der Prompt-Inhalt steuert den visuellen Stil und die Qualität."
+      },
+      "commercialUse": {
+        "title": "Kann ich generierte Videos kommerziell nutzen?",
+        "answer": "Kommerzielle Nutzung ist für originale Uploads in kostenpflichtigen Plänen erlaubt."
+      },
+      "howToDownload": {
+        "title": "Wie lade ich mein Video herunter?",
+        "answer": "Klicken Sie auf die Schaltfläche \"HD herunterladen\", die nach der Videogenerierung erscheint."
+      }
+    }
+  },
+  "footer": {
+    "description": "Erstellen Sie hochwertige, KI-gestützte ASMR-Videos aus Textanweisungen, Bildern oder Referenzvideos. Erstellen Sie immersive 4K-ASMR-Inhalte mit unserer fortschrittlichen KI-Technologie in Schleife.",
+    "navigation": "Navigation",
+    "categories": "Kategorien",
+    "roleplayCollections": "Rollenspiel-Sammlungen",
+    "relaxCollections": "Entspannungs-Sammlungen",
+    "legalSupport": "Rechtliches & Support",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "termsOfService": "Nutzungsbedingungen",
+    "faq": "FAQ",
+    "support": "Support",
+    "copyright": "© 2024 AIASMR Video. Alle Rechte vorbehalten. Zuletzt aktualisiert: 27. Februar 2025",
+    "ageRestriction": "Altersbeschränkung: 18+ | Regionale Beschränkungen können gelten"
+  },
+  "pricing": {
+    "title": "Wählen Sie Ihren Plan",
+    "subtitle": "Flexible Preise für jeden Ersteller",
+    "mostPopular": "Beliebteste",
+    "plans": {
+      "free": {
+        "name": "Kostenloser Plan",
+        "price": "0€",
+        "credits": "20 Credits",
+        "features": [
+          "20 kostenlose Credits",
+          "720p Videoqualität",
+          "Basis ASMR-Trigger",
+          "Community-Support"
+        ]
+      },
+      "basic": {
+        "name": "KI ASMR Basis",
+        "price": "9,99€",
+        "credits": "100 Credits",
+        "features": [
+          "100 monatliche Credits",
+          "1080p Videoqualität",
+          "Alle ASMR-Trigger",
+          "Prioritätssupport",
+          "Kommerzielle Nutzung"
+        ]
+      },
+      "pro": {
+        "name": "KI ASMR Pro",
+        "price": "29,99€",
+        "credits": "500 Credits",
+        "features": [
+          "500 monatliche Credits",
+          "4K Videoqualität",
+          "Benutzerdefinierte Trigger",
+          "API-Zugang",
+          "Prioritäts-Verarbeitung",
+          "Kommerzielle Nutzung"
+        ]
+      }
+    }
+  },
+  "explore": {
+    "title": "KI ASMR Video Showcase",
+    "subtitle": "Entdecken Sie immersive 4K ASMR-Inhalte, die von unserer Community erstellt wurden. Erleben Sie die perfekte Mischung aus visueller Kunst und entspannenden Klängen.",
+    "searchPlaceholder": "Videos suchen...",
+    "filters": {
+      "all": "Alle",
+      "hot": "HEISS",
+      "new": "NEU",
+      "trending": "TRENDING"
+    },
+    "aiTemplate": "KI-Vorlage",
+    "view": "Ansehen",
+    "loadMore": "Mehr Videos laden",
+    "testimonials": {
+      "title": "Was unsere Community sagt",
+      "sarah": "\"Die KI-generierten ASMR-Videos sind unglaublich realistisch und haben mir nach stressigen Tagen beim Entspannen geholfen. Die Qualität ist erstaunlich!\"",
+      "mike": "\"Als Content-Ersteller spart mir diese Plattform stundenlange Arbeit. Die KI versteht genau, was gute ASMR-Inhalte ausmacht.\"",
+      "wei": "\"Die Vielfalt der Trigger und die 4K-Qualität machen dies zu meiner bevorzugten Plattform für ASMR-Inhalte. Sehr empfehlenswert!\""
+    },
+    "faq": {
+      "title": "Schnelle Antworten",
+      "whatTypes": {
+        "title": "Welche Arten können erstellt werden?",
+        "answer": "Unsere KI kann Schneidevideos, Wassergeräusche, Flüsterinhalte, Objektinteraktionen und mehr mit realistischen 4K-Visualisierungen generieren."
+      },
+      "howFast": {
+        "title": "Wie schnell ist die Generierung?",
+        "answer": "Die meisten Videos werden innerhalb von 1-2 Minuten generiert, sodass Sie schnell hochwertige Inhalte ohne lange Wartezeiten erhalten."
+      },
+      "qualityAdvantages": {
+        "title": "Qualitätsvorteile?",
+        "answer": "KI-generierte Inhalte bieten perfekte Audio-Video-Synchronisation, konstante Qualität und 4K-Auflösung, die professionellen ASMR-Videos entspricht."
+      },
+      "whoBenefits": {
+        "title": "Wer profitiert am meisten?",
+        "answer": "Content-Ersteller, Entspannungsbegeisterte und alle, die personalisierte ASMR-Erlebnisse suchen, profitieren von unserer Plattform."
+      }
+    },
+    "cta": {
+      "title": "Bereit, Ihr eigenes ASMR-Video zu erstellen?",
+      "subtitle": "Treten Sie Tausenden von Erstellern bei und beginnen Sie noch heute mit der Generierung personalisierter ASMR-Inhalte.",
+      "createButton": "Ihr eigenes erstellen",
+      "pricingButton": "Preise ansehen"
+    }
+  },
+  "veo3": {
+    "metadata": {
+      "title": "VEO3 KI Video Generator | Premium ASMR Content Erstellung | AIASMR",
+      "description": "Erstellen Sie hochwertige ASMR-Videos mit Googles VEO3 KI-Modell. Generieren Sie professionelle 720p-1080p Videos aus Textanweisungen mit fortschrittlicher neuronaler Technologie.",
+      "keywords": "VEO3 KI Video Generator, ASMR Video Erstellung, Google VEO3 Modell, KI Video Generierung, professioneller ASMR Content, Text zu Video KI, Video Synthese, neuronale Video Generierung, 720p 1080p Video, kommerzielle Video Lizenz",
+      "imageAlt": "VEO3 KI Video Generator - Erstellen Sie Premium ASMR Videos"
+    },
+    "client": {
+      "header": {
+        "title": "VEO3 KI Video Generator",
+        "subtitle": "Erleben Sie die höchste Qualität der ASMR-Videogenerierung mit Googles VEO3-Modell",
+        "loginRequired": "Bitte melden Sie sich an, um Videos zu generieren und Ihre Kreationen zu speichern."
+      },
+      "credits": {
+        "remaining": "{credits} Credits verbleibend",
+        "cost": "Kosten: {credits} Credits",
+        "insufficient": "Sie benötigen {credits} Credits, um ein Video zu generieren",
+        "currentBalance": "Aktuelles Guthaben: {credits} Credits",
+        "getCredits": "Credits erhalten"
+      },
+      "form": {
+        "prompt": {
+          "label": "Beschreiben Sie Ihre ASMR-Szene",
+          "placeholder": "Für bessere Ergebnisse Texturen, Geräusche und Visualisierungen einbeziehen. Seien Sie beschreibend und kreativ..."
+        },
+        "image": {
+          "label": "Bild (Optional)",
+          "dragDrop": "Per Drag & Drop oder klicken",
+          "fileTypes": "PNG, JPG, JPEG oder WEBP (max 10MB)",
+          "uploading": "Bild wird hochgeladen...",
+          "uploadSuccess": "Bild erfolgreich hochgeladen",
+          "uploadDescription": "Dieses Bild wird als Referenz für Ihre Videogenerierung verwendet",
+          "remove": "Entfernen",
+          "loginToUpload": "Bitte melden Sie sich an, um Bilder hochzuladen."
+        },
+        "model": {
+          "label": "VEO3-Modell",
+          "veo3Fast": {
+            "title": "VEO3 Schnell",
+            "subtitle": "60 Credits"
+          },
+          "veo3Standard": {
+            "title": "VEO3 Standard",
+            "subtitle": "300 Credits"
+          }
+        },
+        "quality": {
+          "label": "Videoqualität",
+          "720p": {
+            "title": "720p HD",
+            "subtitle": "Standardqualität"
+          },
+          "1080p": {
+            "title": "1080p Full HD",
+            "subtitle": "Hohe Qualität"
+          }
+        },
+        "aspectRatio": {
+          "label": "Seitenverhältnis",
+          "ratios": {
+            "16:9": "Querformat",
+            "9:16": "Hochformat"
+          }
+        },
+        "watermark": {
+          "label": "Wasserzeichen (Optional)",
+          "placeholder": "Benutzerdefinierten Wasserzeichen-Text hinzufügen...",
+          "description": "Leer lassen für kein Wasserzeichen. Max 50 Zeichen."
+        },
+        "generate": {
+          "button": "Mit VEO3 generieren",
+          "generating": "Wird generiert...",
+          "loginToGenerate": "Bitte melden Sie sich an, um Videos zu generieren."
+        }
+      },
+      "preview": {
+        "title": "Vorschau",
+        "result": "VEO3 Ergebnis",
+        "description": "Ihr professionelles VEO3 KI-generiertes Video wird hier erscheinen",
+        "templatePreview": "Vorlagen-Vorschau",
+        "demo": "Demo"
+      },
+      "progress": {
+        "creating": "Ihr VEO3-Video wird erstellt...",
+        "starting": "Generierung wird gestartet...",
+        "queued": "Aufgabe in der Warteschlange, wartet auf Start...",
+        "processing": "Video wird generiert... {progress}%",
+        "uploading": "Video wird verarbeitet und hochgeladen... {progress}%",
+        "ready": "Video verarbeitet und bereit!"
+      },
+      "result": {
+        "title": "Ihr VEO3 generiertes Video",
+        "download": "VEO3 Video herunterladen • HD-Qualität",
+        "withImage": "Mit Referenzbild"
+      },
+      "features": {
+        "title": "Warum VEO3 wählen?",
+        "quality": {
+          "title": "Überlegene Qualität",
+          "description": "VEO3 liefert die höchste Qualität der Videogenerierung mit unglaublicher Detailgenauigkeit und Realismus."
+        },
+        "ai": {
+          "title": "Fortschrittliche KI",
+          "description": "Angetrieben von Googles neuester Videogenerierungstechnologie für natürliche, fließende ASMR-Inhalte."
+        },
+        "settings": {
+          "title": "Optimierte Einstellungen",
+          "description": "Speziell für ASMR-Inhalte mit Unterstützung für 16:9 und 9:16 Seitenverhältnisse abgestimmt."
+        }
+      },
+      "showcase": {
+        "title": "VEO3 Video Showcase",
+        "subtitle": "Professionelle KI-generierte Videos erstellt mit VEO3-Technologie",
+        "copyPrompt": "Prompt kopieren",
+        "ready": "Bereit, Ihre eigenen Premium VEO3-Videos zu erstellen?",
+        "startCreating": "Mit VEO3 erstellen beginnen"
+      },
+      "faq": {
+        "title": "VEO3 Häufig gestellte Fragen",
+        "subtitle": "Alles was Sie über die Generierung von ASMR-Videos mit Google VEO3 wissen müssen",
+        "questions": {
+          "different": {
+            "question": "Was macht VEO3 anders als andere KI-Modelle?",
+            "answer": "VEO3 ist Googles fortschrittlichstes Videogenerierungsmodell und bietet überlegene Qualität, realistische Bewegungen und besseres Verständnis komplexer Prompts im Vergleich zu früheren Modellen."
+          },
+          "time": {
+            "question": "Wie lange dauert die VEO3-Videogenerierung?",
+            "answer": "VEO3 Schnell dauert normalerweise 2-4 Minuten, während VEO3 Standard 5-8 Minuten für höhere Qualitätsergebnisse benötigt. Die Verarbeitungszeit kann zu Spitzenzeiten variieren."
+          },
+          "aspectRatios": {
+            "question": "Welche Seitenverhältnisse unterstützt VEO3?",
+            "answer": "VEO3 unterstützt derzeit 16:9 (Querformat) und 9:16 (Hochformat) Seitenverhältnisse, perfekt für YouTube, Instagram Stories und TikTok-Inhalte."
+          },
+          "credits": {
+            "question": "Warum kostet VEO3 mehr Credits als andere Modelle?",
+            "answer": "VEO3 nutzt aufgrund seiner fortschrittlichen neuronalen Architektur deutlich mehr Rechenressourcen und liefert Premium-Qualität, die die höheren Credit-Kosten rechtfertigt."
+          },
+          "images": {
+            "question": "Kann ich Referenzbilder mit VEO3 verwenden?",
+            "answer": "Ja! VEO3 unterstützt Referenzbilder, mit denen Sie den visuellen Stil und die Komposition Ihrer ASMR-Videos für präzisere Ergebnisse steuern können."
+          },
+          "commercial": {
+            "question": "Sind VEO3-Inhalte für kommerzielle Nutzung sicher?",
+            "answer": "Ja, alle VEO3-generierten Inhalte können kommerziell genutzt werden. Sie behalten alle Rechte an Ihren erstellten Videos und können sie auf jeder Plattform monetarisieren."
+          },
+          "prompts": {
+            "question": "Wie schreibe ich bessere Prompts für VEO3?",
+            "answer": "Seien Sie spezifisch über Texturen, Beleuchtung und Bewegung. VEO3 versteht detaillierte Beschreibungen wie \"weiches Seifenschneiden mit natürlicher Beleuchtung\" oder \"sanfte Wassertropfen auf Glasoberfläche\" ausgezeichnet."
+          },
+          "fails": {
+            "question": "Was ist, wenn meine VEO3-Generierung fehlschlägt?",
+            "answer": "Fehlgeschlagene Generierungen werden automatisch erstattet. Sie können sofort mit einem modifizierten Prompt oder anderen Einstellungen erneut versuchen, ohne Credits zu verlieren."
+          }
+        }
+      },
+      "toast": {
+        "copied": "Prompt in die Zwischenablage kopiert!",
+        "failed": "Fehler beim Kopieren des Prompts"
+      },
+      "errors": {
+        "loginRequired": "Bitte melden Sie sich an, um Videos zu generieren.",
+        "downloadFailed": "Download fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "videoNotAvailable": "Video nicht zum Download verfügbar. Bitte versuchen Sie, das Video erneut zu generieren.",
+        "generationFailed": "Videogenerierung fehlgeschlagen",
+        "generationTimeout": "Videogenerierung Timeout. Bitte versuchen Sie es erneut.",
+        "statusCheckFailed": "Fehler beim Überprüfen des Generierungsstatus"
+      }
+    }
+  },
+  "aiPrompts": {
+    "metadata": {
+      "title": "KI ASMR Prompts | Sofort einsetzbare Videogenerierungsvorlagen | AIASMR",
+      "description": "Entdecken Sie Hunderte von sofort verwendbaren ASMR-Prompts für die KI-Videogenerierung. Erstellen Sie Seifenschneiden, Eiszerkleinern, Wassergeräusche und mehr mit professionellen Vorlagen.",
+      "keywords": "KI ASMR Prompts, ASMR Video Vorlagen, Seifenschneiden Prompts, Eiszerkleinern Prompts, Wassergeräusche Prompts, ASMR Video Generierung, KI Video Prompts, sofort einsetzbare ASMR Vorlagen",
+      "imageAlt": "KI ASMR Prompts - Sofort einsetzbare Videogenerierungsvorlagen"
+    },
+    "hero": {
+      "title": "KI ASMR Prompts",
+      "subtitle": "KI-gestützter ASMR-Videogenerator mit sofort verwendbaren Prompts",
+      "description": "Generieren Sie sofort atemberaubende ASMR-Inhalte mit unserer fortschrittlichen KI-Technologie. Von Seifenschneiden und Eiszerkleinern bis hin zu Wassertropfen und Seitenumblättern - verwandeln Sie einfache Textanweisungen in faszinierende Videos mit kristallklarem Audio und professionellen Visualisierungen in Minuten, nicht Stunden.",
+      "buttons": {
+        "viewClips": "Vollständige ASMR-Clips ansehen",
+        "createVideos": "Videos erstellen"
+      },
+      "stats": {
+        "creativeAssets": "Kreative Assets",
+        "downloads": "Downloads",
+        "activeCreators": "Aktive Ersteller"
+      }
+    },
+    "discover": {
+      "title": "Beruhigende ASMR entdecken",
+      "subtitle": "Visualisierungen & Audio [Prompts enthalten]",
+      "description": "Entdecken Sie, was mit AIASMR Videos KI-gestütztem ASMR-Videogenerator möglich ist. Erkunden Sie kuratierte Videobeispiele, die mit dem Google Veo 3-Modell in AIASMR Video erstellt wurden, jedes mit dem genauen verwendeten Prompt, damit Sie sie einfach replizieren oder für Ihre eigenen entspannenden Inhalte anpassen können.",
+      "loading": "ASMR-Vorlagen werden geladen...",
+      "audio": "Audio",
+      "cta": "Erstellen Sie Ihr erstes ASMR-Video in Minuten"
+    },
+    "whyChoose": {
+      "title": "Warum AIASMR Video wählen, um KI ASMR-Videos zu generieren?",
+      "subtitle": "Unsere fortschrittliche KI-Technologie und benutzerfreundliche Plattform machen die Erstellung professioneller ASMR-Inhalte mühelos und für alle zugänglich.",
+      "features": {
+        "fastGeneration": {
+          "title": "Blitzschnelle Generierung",
+          "description": "Erstellen Sie hochwertige ASMR-Videos in Minuten mit unserer fortschrittlichen KI-Technologie. Keine technischen Kenntnisse erforderlich."
+        },
+        "readyPrompts": {
+          "title": "Sofort verwendbare Prompts",
+          "description": "Greifen Sie auf unsere kuratierte Bibliothek bewährter ASMR-Prompts für Seifenschneiden, Eiszerkleinern, Seitenumblättern und mehr zu."
+        },
+        "professionalQuality": {
+          "title": "Professionelle Qualität",
+          "description": "Generieren Sie 4K-Qualitätsvideos mit kristallklarem Audio, perfekt für soziale Medien und professionelle Nutzung."
+        },
+        "customizable": {
+          "title": "Anpassbare Optionen",
+          "description": "Passen Sie Dauer, Qualität, Seitenverhältnis und Trigger an, um das perfekte ASMR-Video für Ihr Publikum zu erstellen."
+        },
+        "instantDownload": {
+          "title": "Sofortiger Download",
+          "description": "Laden Sie Ihre generierten ASMR-Videos sofort in mehreren Formaten herunter, bereit für den Upload auf jede Plattform."
+        },
+        "communitySupport": {
+          "title": "Community-Support",
+          "description": "Treten Sie Tausenden von Erstellern bei, die Tipps, Prompts und Inspiration in unserer lebendigen ASMR-Community teilen."
+        }
+      }
+    },
+    "faq": {
+      "title": "FAQs zur Erstellung von ASMR-Videos mit Prompts",
+      "subtitle": "Erhalten Sie Antworten auf die häufigsten Fragen zur Erstellung KI-generierter ASMR-Videos mit unserer Plattform.",
+      "questions": {
+        "whatTypes": {
+          "question": "Welche Arten von ASMR-Videos kann ich mit KI-Prompts erstellen?",
+          "answer": "Sie können eine Vielzahl von ASMR-Videos erstellen, einschließlich Seifenschneiden, Eiszerkleinern, Seitenumblättern, Schwammdrücken, Wassertropfen, Honigträufeln und viele andere zufriedenstellende und entspannende Inhaltstypen. Unsere KI unterstützt sowohl visuelle als auch auditive ASMR-Trigger."
+        },
+        "howLong": {
+          "question": "Wie lange dauert es, ein ASMR-Video zu generieren?",
+          "answer": "Die meisten ASMR-Videos werden innerhalb von 2-5 Minuten generiert, abhängig von der Komplexität Ihres Prompts und der gewählten Dauer. Unsere fortschrittliche KI-Technologie gewährleistet schnelle Verarbeitung bei gleichzeitiger Aufrechterhaltung hoher Ausgabequalität."
+        },
+        "videoQuality": {
+          "question": "Welche Videoqualität und -formate sind verfügbar?",
+          "answer": "Wir bieten mehrere Qualitätsoptionen einschließlich 720p und 1080p Auflösung. Videos können in verschiedenen Seitenverhältnissen (16:9, 4:3, 1:1, 3:4, 9:16) generiert werden, um verschiedenen Plattformen wie YouTube, Instagram, TikTok und mehr zu entsprechen."
+        },
+        "customizeTriggers": {
+          "question": "Kann ich die ASMR-Trigger in meinen Videos anpassen?",
+          "answer": "Ja! Sie können aus unserer Bibliothek von ASMR-Triggern einschließlich Seife, Schwamm, Eis, Wasser, Honig, Würfel, Blütenblätter und Seiten wählen. Sie können bis zu 3 verschiedene Trigger in einem einzigen Video kombinieren, um einzigartige und ansprechende Inhalte zu erstellen."
+        },
+        "cost": {
+          "question": "Wie viel kostet es, ASMR-Videos zu generieren?",
+          "answer": "Jede Videogenerierung kostet 20 Credits. Neue Benutzer erhalten 20 kostenlose Credits zum Einstieg. Zusätzliche Credits können über unsere flexiblen Preispläne erworben werden, und fehlgeschlagene Generierungen werden automatisch erstattet."
+        },
+        "commercial": {
+          "question": "Kann ich die generierten Videos kommerziell nutzen?",
+          "answer": "Ja, alle über unsere Plattform generierten Videos sind für kommerzielle Nutzung verfügbar. Sie behalten alle Rechte an Ihren erstellten Inhalten und können sie auf jeder Plattform einschließlich YouTube, sozialen Medien oder Ihrer eigenen Website monetarisieren."
+        }
+      }
+    },
+    "howTo": {
+      "title": "Wie man ein KI ASMR-Video aus Prompts in AIASMR Video erstellt",
+      "subtitle": "Folgen Sie diesen einfachen Schritten, um atemberaubende ASMR-Videos mit unserer KI-gestützten Plattform zu erstellen. Keine technischen Kenntnisse erforderlich - nur Ihre Kreativität!",
+      "steps": {
+        "writePrompt": {
+          "title": "Schreiben Sie Ihren Prompt",
+          "description": "Beschreiben Sie das ASMR-Video, das Sie erstellen möchten. Seien Sie spezifisch über die Trigger, Geräusche und visuellen Elemente, die Sie wünschen."
+        },
+        "customizeSettings": {
+          "title": "Einstellungen anpassen",
+          "description": "Wählen Sie Ihre bevorzugte Dauer, Qualität, Seitenverhältnis und ASMR-Trigger aus, um Ihr Video zu personalisieren."
+        },
+        "generateVideo": {
+          "title": "Video generieren",
+          "description": "Klicken Sie auf Generieren und lassen Sie unsere KI Ihr ASMR-Video erstellen. Der Prozess dauert normalerweise 2-5 Minuten."
+        },
+        "downloadShare": {
+          "title": "Herunterladen & Teilen",
+          "description": "Laden Sie Ihr fertiges ASMR-Video herunter und teilen Sie es auf Ihren bevorzugten Plattformen wie YouTube, TikTok oder Instagram."
+        }
+      },
+      "cta": "Beginnen Sie jetzt mit der Erstellung Ihres ASMR-Videos"
+    },
+    "modal": {
+      "title": "ASMR Beispiele",
+      "category": "Kategorie:",
+      "duration": "Dauer:",
+      "aspectRatio": "Seitenverhältnis:",
+      "copyPrompt": "Kopieren Sie diesen Prompt, um ein ähnliches Video zu generieren:",
+      "tags": "Tags:",
+      "audioIncluded": "Audio enthalten",
+      "makeASMR": "ASMR mit KI erstellen"
+    },
+    "toast": {
+      "copied": "Prompt in die Zwischenablage kopiert!",
+      "failed": "Fehler beim Kopieren des Prompts"
+    },
+    "errors": {
+      "failedToLoad": "Fehler beim Laden der Vorlagen",
+      "failedToFetch": "Fehler beim Abrufen der ASMR-Vorlagen"
+    }
+  },
+  "myVideos": {
+    "stats": {
+      "totalVideos": "Videos insgesamt",
+      "creditsSpent": "Credits diesen Monat ausgegeben",
+      "remainingCredits": "Verbleibende Credits",
+      "upgradePlan": "Plan upgraden",
+      "buyMoreCredits": "Mehr Credits kaufen"
+    },
+    "controls": {
+      "sortBy": "Sortieren nach:",
+      "sortOptions": {
+        "date": "Datum (Neueste)",
+        "cost": "Kosten (Höchste)",
+        "alphabetical": "A-Z"
+      },
+      "status": "Status:",
+      "statusOptions": {
+        "all": "Alle Status",
+        "processing": "Wird verarbeitet",
+        "ready": "Bereit",
+        "failed": "Fehlgeschlagen"
+      },
+      "category": "Kategorie:",
+      "allCategories": "Alle Kategorien",
+      "bulkActions": "Massenaktionen",
+      "selectAll": "Alle auswählen ({count} ausgewählt)",
+      "regenerateSelected": "Ausgewählte regenerieren",
+      "deleteSelected": "Ausgewählte löschen"
+    },
+    "videoCard": {
+      "preview": "Vorschau",
+      "download": "Herunterladen",
+      "regenerate": "Regenerieren",
+      "delete": "Löschen",
+      "credits": "Credits",
+      "clickToPreview": "Klicken für Vorschau"
+    },
+    "empty": {
+      "title": "Keine Videos gefunden",
+      "withFilters": "Versuchen Sie, Ihre Filter anzupassen oder erstellen Sie Ihr erstes Video.",
+      "noVideos": "Sie haben noch keine Videos erstellt. Beginnen Sie mit der Erstellung Ihres ersten ASMR-Videos!",
+      "createVideo": "Video erstellen"
+    },
+    "loadMore": "Mehr Videos laden",
+    "help": {
+      "title": "Hilfe benötigt?",
+      "description": "Haben Sie Probleme mit der Videogenerierung oder benötigen Support?",
+      "viewFaq": "FAQ ansehen",
+      "contactSupport": "Support kontaktieren"
+    },
+    "modals": {
+      "delete": {
+        "title": "Video löschen",
+        "message": "Sind Sie sicher, dass Sie dieses Video löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "cancel": "Abbrechen",
+        "delete": "Löschen"
+      },
+      "regenerate": {
+        "title": "Video regenerieren",
+        "message": "Dies erstellt ein neues Video mit dem ursprünglichen Prompt und den ursprünglichen Einstellungen.",
+        "costWarning": "Dies kostet {credits} Credits",
+        "cancel": "Abbrechen",
+        "regenerate": "Regenerieren"
+      }
+    },
+    "errors": {
+      "downloadFailed": "Download fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+      "downloadError": "Download fehlgeschlagen. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+      "testDownload": "Dies ist ein Testvideo. In der Produktion würde die Datei \"{filename}\" von hier heruntergeladen werden: {url}"
+    },
+    "header": {
+      "title": "Meine Videos",
+      "description": "Verwalten, Vorschau anzeigen und Ihre KI-generierten ASMR-Videos herunterladen"
+    }
+  },
+  "asmrModal": {
+    "title": "ASMR-Vorlage",
+    "videoPreview": "Video-Vorschau",
+    "audioIncluded": "Audio enthalten",
+    "details": {
+      "category": "Kategorie:",
+      "duration": "Dauer:",
+      "aspectRatio": "Seitenverhältnis:",
+      "downloads": "Downloads:",
+      "tags": "Tags:"
+    },
+    "prompt": {
+      "copyInstruction": "Kopieren Sie diesen Prompt, um ein ähnliches Video zu generieren:",
+      "copyTooltip": "In Zwischenablage kopieren",
+      "copySuccess": "In Zwischenablage kopiert!"
+    },
+    "generateButton": "Video mit diesem Prompt generieren",
+    "browserNotSupported": "Ihr Browser unterstützt das Video-Tag nicht."
+  },
+  "relaxingExplore": {
+    "navigation": {
+      "backToExplore": "Zurück zu Entdecken"
+    },
+    "header": {
+      "title": "Entspannen",
+      "collections": "Sammlungen",
+      "description": "Finden Sie Ihren perfekten Weg zur Entspannung mit unserer sorgfältig kuratierten Sammlung friedlicher ASMR-Vorlagen. Entwickelt, um Ihnen zu helfen, sich zu entspannen, Stress abzubauen und Ruhe zu erreichen.",
+      "stats": {
+        "templates": "{count} Vorlagen",
+        "focus": "Stressabbau-Fokus"
+      }
+    },
+    "benefits": {
+      "title": "Vorteile entspannender ASMR",
+      "betterSleep": {
+        "title": "Besserer Schlaf",
+        "description": "Sanfte Klänge und Bilder helfen, Ihren Geist für erholsamen Schlaf zu beruhigen"
+      },
+      "stressRelief": {
+        "title": "Stressabbau",
+        "description": "Reduzieren Sie Angst und Anspannung mit beruhigenden ASMR-Triggern"
+      },
+      "mentalFocus": {
+        "title": "Geistige Konzentration",
+        "description": "Verbessern Sie Konzentration und Achtsamkeit durch Entspannung"
+      }
+    },
+    "template": {
+      "generate": "Generieren",
+      "relaxing": "Entspannend",
+      "copyPrompt": "Prompt kopieren",
+      "useTemplate": "Vorlage verwenden",
+      "browserNotSupported": "Ihr Browser unterstützt das Video-Tag nicht."
+    },
+    "emptyState": {
+      "title": "Keine Entspannungs-Sammlungen gefunden",
+      "description": "Wir fügen kontinuierlich neue entspannende Inhalte hinzu. Schauen Sie bald wieder für mehr friedliche ASMR-Vorlagen vorbei!",
+      "exploreAllButton": "Alle Vorlagen entdecken"
+    },
+    "tips": {
+      "title": "Tipps für maximale Entspannung",
+      "useHeadphones": {
+        "title": "Kopfhörer verwenden",
+        "description": "Erleben Sie den vollen Stereoeffekt für bessere Immersion"
+      },
+      "lowVolume": {
+        "title": "Niedrige Lautstärke",
+        "description": "Halten Sie die Lautstärke angenehm, um erschreckende Effekte zu vermeiden"
+      },
+      "dimLighting": {
+        "title": "Gedimmte Beleuchtung",
+        "description": "Schaffen Sie eine ruhige Umgebung mit sanfter Beleuchtung"
+      },
+      "regularSchedule": {
+        "title": "Regelmäßiger Zeitplan",
+        "description": "Schauen Sie regelmäßig für bessere Entspannungseffekte"
+      }
+    },
+    "faq": {
+      "title": "Entspannende ASMR",
+      "subtitle": "Ihr Leitfaden zum Erstellen und Genießen friedlicher, stressabbauender ASMR-Inhalte",
+      "questions": {
+        "effective": {
+          "question": "Was macht ASMR effektiv für Entspannung?",
+          "answer": "ASMR aktiviert das parasympathische Nervensystem, senkt Herzfrequenz und Cortisolspiegel. Sanfte, sich wiederholende Klänge und Bilder schaffen einen meditativen Zustand, der Stress und Angst natürlich reduziert."
+        },
+        "sleep": {
+          "question": "Kann ASMR wirklich bei Schlafproblemen helfen?",
+          "answer": "Ja! Studien zeigen, dass ASMR die Schlafqualität verbessern kann, indem es rasende Gedanken, Muskelverspannungen und Angst reduziert. Die langsame, rhythmische Natur entspannender ASMR bereitet Geist und Körper natürlich auf Ruhe vor."
+        },
+        "bestTime": {
+          "question": "Was ist die beste Zeit, um entspannende ASMR zu schauen?",
+          "answer": "Abendstunden (1-2 Stunden vor dem Schlafengehen) sind ideal für schlaffokussierte Inhalte. Zum Stressabbau funktioniert jede Zeit, in der Sie sich überfordert fühlen. Morgensitzungen können einen ruhigen Ton für Ihren ganzen Tag setzen."
+        },
+        "headphones": {
+          "question": "Brauche ich spezielle Kopfhörer für entspannende ASMR?",
+          "answer": "Während alle Kopfhörer funktionieren, verbessern bequeme Over-Ear- oder hochwertige Ohrhörer die Erfahrung. Vermeiden Sie Noise-Canceling für die Schlafenszeit, da Sie Ihrer Umgebung bewusst bleiben möchten."
+        },
+        "volume": {
+          "question": "Was ist die optimale Lautstärke für entspannende ASMR?",
+          "answer": "Halten Sie die Lautstärke niedrig - etwa 20-30% der maximalen Lautstärke Ihres Geräts. Die Klänge sollten deutlich hörbar sein, aber nicht dominierend. Wenn Sie sanfte Hintergrundgeräusche nicht hören können, ist es zu laut."
+        },
+        "anxiety": {
+          "question": "Kann ASMR bei Angst und Depression helfen?",
+          "answer": "ASMR kann ein hilfreiches ergänzendes Werkzeug zur Bewältigung von Angst- und leichten Depressionssymptomen sein. Die Entspannungsreaktion und das Gefühl persönlicher Aufmerksamkeit können Trost spenden, obwohl es kein Ersatz für professionelle Behandlung ist."
+        },
+        "tingles": {
+          "question": "Warum fühle ich keine ASMR-Kribbeln?",
+          "answer": "Nicht jeder erlebt Kribbeln, und das ist völlig normal! Sie können trotzdem von der Entspannung, dem Stressabbau und der Schlafverbesserung profitieren, die ASMR bietet, auch ohne das Kribbelgefühl."
+        },
+        "frequency": {
+          "question": "Wie oft sollte ich entspannende ASMR schauen?",
+          "answer": "Tägliches Schauen ist sicher und vorteilhaft. Viele Menschen integrieren ASMR in ihre nächtliche Routine oder verwenden es in stressigen Zeiten. Hören Sie auf Ihren Körper und passen Sie die Häufigkeit basierend auf Ihren Bedürfnissen an."
+        },
+        "triggers": {
+          "question": "Welche Trigger funktionieren am besten für tiefe Entspannung?",
+          "answer": "Sanftes Klopfen, weiche Bürstengeräusche, geflüsterte Sprache, Seitenumblättern und Naturgeräusche sind sehr effektiv. Persönliche Vorlieben variieren, also experimentieren Sie, um Ihre entspannendsten Trigger zu finden."
+        },
+        "safety": {
+          "question": "Ist es sicher, zu ASMR-Videos einzuschlafen?",
+          "answer": "Ja, es ist völlig sicher! Viele Videos sind speziell für den Schlaf konzipiert. Verwenden Sie einen Schlaftimer, um Akku zu sparen, und stellen Sie sicher, dass Ihr Gerät Sie nicht mit Benachrichtigungen oder Autoplay stört."
+        }
+      }
+    },
+    "cta": {
+      "title": "Bereit, Ihre entspannenden ASMR-Inhalte zu erstellen?",
+      "description": "Verwandeln Sie diese friedlichen Vorlagen in personalisierte Entspannungsvideos. Perfekt für Schlafhilfen, Meditationsanleitungen und Stressabbau-Inhalte.",
+      "startCreating": "Mit VEO3 erstellen beginnen",
+      "browseAll": "Alle Kategorien durchsuchen"
+    }
+  },
+  "roleplayExplore": {
+    "navigation": {
+      "backToExplore": "Zurück zu Entdecken"
+    },
+    "header": {
+      "title": "Rollenspiel",
+      "collections": "Sammlungen",
+      "description": "Tauchen Sie in professionelle Rollenspielszenarien ein. Von medizinischen Untersuchungen bis hin zu Schönheitsbehandlungen erstellen Sie ansprechende ASMR-Videos mit authentischen professionellen Interaktionen.",
+      "stats": {
+        "templates": "{count} Vorlagen",
+        "scenarios": "Professionelle Szenarien"
+      }
+    },
+    "template": {
+      "generate": "Generieren",
+      "roleplay": "Rollenspiel",
+      "copyPrompt": "Prompt kopieren",
+      "useTemplate": "Vorlage verwenden",
+      "browserNotSupported": "Ihr Browser unterstützt das Video-Tag nicht."
+    },
+    "emptyState": {
+      "title": "Keine Rollenspiel-Sammlungen gefunden",
+      "description": "Wir fügen kontinuierlich neue Rollenspielszenarien hinzu. Schauen Sie bald wieder für mehr professionelle ASMR-Vorlagen vorbei!",
+      "exploreAllButton": "Alle Vorlagen entdecken"
+    },
+    "faq": {
+      "title": "Rollenspiel ASMR",
+      "subtitle": "Alles was Sie über die Erstellung professioneller Rollenspiel-ASMR-Inhalte wissen müssen",
+      "questions": {
+        "popular": {
+          "question": "Was macht Rollenspiel-ASMR so beliebt?",
+          "answer": "Rollenspiel-ASMR schafft immersive, persönliche Erfahrungen, die Zuschauern helfen, sich umsorgt und entspannt zu fühlen. Professionelle Szenarien wie medizinische Untersuchungen oder Schönheitsbehandlungen bieten strukturierte, tröstende Interaktionen."
+        },
+        "equipment": {
+          "question": "Welche Ausrüstung brauche ich für Rollenspiel-ASMR?",
+          "answer": "Ein Qualitätsmikrofon ist essentiell für das Erfassen klarer Flüster und Umgebungsgeräusche. Requisiten im Zusammenhang mit Ihrem Rollenspiel-Szenario (Stethoskop, Bürsten, etc.) verstärken Authentizität und Zuschauer-Immersion."
+        },
+        "duration": {
+          "question": "Wie lang sollten Rollenspiel-ASMR-Videos sein?",
+          "answer": "Die meisten erfolgreichen Rollenspiel-ASMR-Videos reichen von 15-45 Minuten. Dies ermöglicht genug Zeit, um das Szenario zu etablieren, Komfort aufzubauen und anhaltende Entspannung ohne Zuschauer-Ermüdung zu bieten."
+        },
+        "authentic": {
+          "question": "Wie mache ich Rollenspiel-Szenarien authentisch?",
+          "answer": "Recherchieren Sie den Beruf, den Sie darstellen, verwenden Sie angemessene Terminologie und halten Sie den Charakter durchgehend konsistent. Sanfter, fürsorglicher Ton und realistische Requisiten helfen, glaubwürdige Szenarien zu schaffen."
+        },
+        "triggers": {
+          "question": "Was sind die besten ASMR-Trigger für Rollenspiele?",
+          "answer": "Sanft gesprochener oder geflüsterter Dialog, sanftes Klopfen, Seitenumblättern, Tippgeräusche und berufsspezifische Geräusche (Stethoskop, Bürsten, Schere) funktionieren ausgezeichnet in Rollenspiel-Szenarien."
+        },
+        "audioVideo": {
+          "question": "Sollte sich Rollenspiel-ASMR auf Audio oder Video konzentrieren?",
+          "answer": "Während Audio am wichtigsten ist, verstärken visuelle Elemente die Immersion. Nahaufnahmen von Händen, die Aufgaben ausführen, sanfte Beleuchtung und angemessene Kostüme/Requisiten schaffen eine vollständige Erfahrung."
+        },
+        "requests": {
+          "question": "Wie gehe ich mit Zuschauer-Anfragen für Rollenspiel-Szenarien um?",
+          "answer": "Bleiben Sie in Ihrer Komfortzone und halten Sie professionelle Grenzen ein. Beliebte, sichere Szenarien umfassen medizinische Untersuchungen, Spa-Behandlungen, Bibliotheksbesuche und Bildungsinhalte."
+        },
+        "monetize": {
+          "question": "Kann ich Rollenspiel-ASMR-Inhalte monetarisieren?",
+          "answer": "Ja! Rollenspiel-ASMR ist hochgradig monetarisierbar durch Plattformpartnerschaften, Sponsorings und direkte Zuschauer-Unterstützung. Halten Sie konstante Qualität und Posting-Zeitplan für beste Ergebnisse ein."
+        }
+      }
+    },
+    "cta": {
+      "title": "Bereit, professionelle Rollenspiel-ASMR zu erstellen?",
+      "description": "Verwandeln Sie diese Vorlagen mit unseren KI-gestützten Generierungstools in hochwertige Videos. Perfekt für Content-Ersteller, die ansprechende Rollenspiel-Szenarien produzieren möchten.",
+      "startCreating": "Mit VEO3 erstellen beginnen",
+      "browseAll": "Alle Kategorien durchsuchen"
+    }
+  }
+}
