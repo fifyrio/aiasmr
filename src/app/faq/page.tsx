@@ -5,6 +5,8 @@ import AOS from 'aos'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
+export const dynamic = 'force-dynamic'
+
 const FAQPage = () => {
   const [openItem, setOpenItem] = useState<number | null>(null)
 

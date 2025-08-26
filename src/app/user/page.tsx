@@ -29,6 +29,8 @@ interface CreditTransaction {
   subscriptionId?: string;
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function UserAccountPage() {
   const { user, loading } = useAuth();
   const { credits, loading: creditsLoading, refreshCredits: refetchCredits } = useCredits();
