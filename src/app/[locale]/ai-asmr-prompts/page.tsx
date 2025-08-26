@@ -54,7 +54,7 @@ const AIASMRPromptsPage = () => {
     }
 
     fetchTemplates()
-  }, [])
+  }, [t])
 
   const openModal = (template: ASMRTemplate) => {
     setSelectedTemplate(template)

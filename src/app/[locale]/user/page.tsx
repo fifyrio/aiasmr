@@ -81,27 +81,7 @@ export default function UserAccountPage() {
     }
   }, [user, activeTab, fetchOrders]);
 
-  // Fetch credit history
-  useEffect(() => {
-    if (user && activeTab === 'credits') {
-      fetchCreditHistory();
-    }
-  }, [user, activeTab]);
-
-  // Debug: Log subscription data to verify it's correct
-  useEffect(() => {
-    if (subscription && !subscriptionLoading) {
-      console.log('User subscription data:', {
-        productName: subscription.productName,
-        status: subscription.status,
-        planType: subscription.planType,
-        currentPeriodEnd: subscription.currentPeriodEnd,
-        userId: user?.id
-      });
-    }
-  }, [subscription, subscriptionLoading, user?.id]);
-
-  const fetchCreditHistory = async () => {
+  const fetchCreditHistory = useCallback(async () => {
     if (!user) return;
     
     setCreditHistoryLoading(true);
@@ -126,7 +106,27 @@ export default function UserAccountPage() {
     } finally {
       setCreditHistoryLoading(false);
     }
-  };
+  }, [user]);
+
+  // Fetch credit history
+  useEffect(() => {
+    if (user && activeTab === 'credits') {
+      fetchCreditHistory();
+    }
+  }, [user, activeTab, fetchCreditHistory]);
+
+  // Debug: Log subscription data to verify it's correct
+  useEffect(() => {
+    if (subscription && !subscriptionLoading) {
+      console.log('User subscription data:', {
+        productName: subscription.productName,
+        status: subscription.status,
+        planType: subscription.planType,
+        currentPeriodEnd: subscription.currentPeriodEnd,
+        userId: user?.id
+      });
+    }
+  }, [subscription, subscriptionLoading, user?.id]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
