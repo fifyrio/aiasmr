@@ -1,75 +1,75 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import VEO3Client from '@/components/VEO3Client';
 import asmrTemplates from '@/data/asmr_templates.json';
 
-// Static metadata for SEO optimization
-export const metadata: Metadata = {
-  title: 'VEO3 AI Video Generator | Premium ASMR Content Creation | AIASMR',
-  description: 'Create high-quality ASMR videos with Google\'s VEO3 AI model. Generate professional 720p-1080p videos from text prompts with advanced neural technology.',
-  keywords: [
-    'VEO3 AI video generator',
-    'ASMR video creation',
-    'Google VEO3 model',
-    'AI video generation',
-    'professional ASMR content',
-    'text to video AI',
-    'video synthesis',
-    'neural video generation',
-    '720p 1080p video',
-    'commercial video license'
-  ],
-  authors: [{ name: 'AIASMR Team' }],
-  creator: 'AIASMR',
-  publisher: 'AIASMR',
-  alternates: {
-    canonical: 'https://www.aiasmr.vip/veo3'
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://www.aiasmr.vip/veo3',
-    title: 'VEO3 AI Video Generator - Premium ASMR Content Creation',
-    description: 'Generate professional ASMR videos with Google\'s advanced VEO3 AI model. Support for 16:9 and 9:16 aspect ratios, HD quality output.',
-    siteName: 'AIASMR',
-    images: [
-      {
-        url: 'https://www.aiasmr.vip/images/veo3-og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'VEO3 AI Video Generator - Create Premium ASMR Videos'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@aiasmr',
-    creator: '@aiasmr',
-    title: 'VEO3 AI Video Generator - Premium ASMR Creation',
-    description: 'Generate high-quality ASMR videos with Google\'s VEO3 AI. Professional results in minutes.',
-    images: ['https://www.aiasmr.vip/images/veo3-twitter-card.jpg']
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+// Dynamic metadata for SEO optimization with i18n
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'veo3' });
+  
+  return {
+    title: t('metadata.title'),
+    description: t('metadata.description'),
+    keywords: t('metadata.keywords'),
+    authors: [{ name: 'AIASMR Team' }],
+    creator: 'AIASMR',
+    publisher: 'AIASMR',
+    alternates: {
+      canonical: 'https://www.aiasmr.vip/veo3'
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+      url: 'https://www.aiasmr.vip/veo3',
+      title: t('metadata.title'),
+      description: t('metadata.description'),
+      siteName: 'AIASMR',
+      images: [
+        {
+          url: 'https://www.aiasmr.vip/images/veo3-og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: t('metadata.imageAlt')
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@aiasmr',
+      creator: '@aiasmr',
+      title: t('metadata.title'),
+      description: t('metadata.description'),
+      images: ['https://www.aiasmr.vip/images/veo3-twitter-card.jpg']
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1
-    }
-  },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code'
-  },
-  category: 'Technology'
-};
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1
+      }
+    },
+    verification: {
+      google: 'your-google-verification-code',
+      yandex: 'your-yandex-verification-code'
+    },
+    category: 'Technology'
+  };
+}
 
-export default function VEO3Page() {
+interface PageProps {
+  params: {
+    locale: string;
+  };
+}
+
+export default async function VEO3Page({ params: { locale } }: PageProps) {
 
   // Enhanced JSON-LD Structured Data for SEO
   const structuredData = {

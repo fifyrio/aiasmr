@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import AOS from 'aos';
 import Toast from '@/components/Toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +11,7 @@ import { calculateCredits } from '@/lib/credit-calculator';
 import asmrTemplates from '@/data/asmr_templates.json';
 
 export default function VEO3Client() {
+  const t = useTranslations('veo3.client');
   const { user } = useAuth();
   const { credits: userCredits, refreshCredits } = useCredits();
   const searchParams = useSearchParams();
@@ -19,7 +21,7 @@ export default function VEO3Client() {
   const [error, setError] = useState<string | null>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
   const [taskId, setTaskId] = useState<string | null>(null);
-  const [generationProgress, setGenerationProgress] = useState<string>('Starting generation...');
+  const [generationProgress, setGenerationProgress] = useState<string>(t('progress.starting'));
   const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16'>('16:9');
   const [quality, setQuality] = useState<'720p' | '1080p'>('720p');
   const [waterMark, setWaterMark] = useState<string>('');
@@ -44,13 +46,13 @@ export default function VEO3Client() {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setToastMessage('Prompt copied to clipboard!');
+      setToastMessage(t('toast.copied'));
       setToastType('success');
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
-      setToastMessage('Failed to copy prompt');
+      setToastMessage(t('toast.failed'));
       setToastType('error');
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
@@ -102,7 +104,7 @@ export default function VEO3Client() {
 
   const handleImageUpload = async (file: File) => {
     if (!user) {
-      setImageUploadError('Please login to upload images.');
+      setImageUploadError(t('form.image.loginToUpload'));
       return;
     }
 
@@ -163,7 +165,7 @@ export default function VEO3Client() {
         }
       } catch (error) {
         console.error('Download failed:', error);
-        setError('Failed to download video. Please try again.');
+        setError(t('errors.downloadFailed'));
       }
     } else if (generatedVideo) {
       console.log('Using direct video URL for download:', generatedVideo);
@@ -177,11 +179,11 @@ export default function VEO3Client() {
         document.body.removeChild(link);
       } catch (error) {
         console.error('Direct download failed:', error);
-        setError('Failed to download video. Please try again.');
+        setError(t('errors.downloadFailed'));
       }
     } else {
       console.error('No video ID or URL available for download');
-      setError('Video not available for download. Please try regenerating the video.');
+      setError(t('errors.videoNotAvailable'));
     }
   };
 
@@ -214,19 +216,19 @@ export default function VEO3Client() {
         
         switch (data.status) {
           case 'pending':
-            setGenerationProgress('Task queued, waiting to start...');
+            setGenerationProgress(t('progress.queued'));
             break;
           case 'processing':
             if (data.progress >= 75) {
-              setGenerationProgress(data.message || `Processing and uploading video... ${data.progress || 75}%`);
+              setGenerationProgress(data.message || t('progress.uploading', { progress: data.progress || 75 }));
             } else {
-              setGenerationProgress(`Generating video... ${data.progress || 0}%`);
+              setGenerationProgress(t('progress.processing', { progress: data.progress || 0 }));
             }
             break;
           case 'completed':
             if (data.result?.videoUrl) {
               setGeneratedVideo(data.result.videoUrl);
-              setGenerationProgress('Video processed and ready!');
+              setGenerationProgress(t('progress.ready'));
               setIsGenerating(false);
               
               if (data.videoId) {
@@ -237,7 +239,7 @@ export default function VEO3Client() {
             }
             break;
           case 'failed':
-            setError(data.error || 'Video generation failed');
+            setError(data.error || t('errors.generationFailed'));
             setIsGenerating(false);
             setTimeout(() => {
               refreshCredits();
@@ -252,7 +254,7 @@ export default function VEO3Client() {
         if (attempts < maxAttempts && (data.status === 'pending' || data.status === 'processing')) {
           setTimeout(poll, 10000);
         } else if (attempts >= maxAttempts) {
-          setError('Video generation timed out. Please try again.');
+          setError(t('errors.generationTimeout'));
           setIsGenerating(false);
         }
       } catch (error) {
@@ -260,7 +262,7 @@ export default function VEO3Client() {
         if (attempts < maxAttempts) {
           setTimeout(poll, 10000);
         } else {
-          setError('Failed to check generation status');
+          setError(t('errors.statusCheckFailed'));
           setIsGenerating(false);
         }
       }
@@ -272,14 +274,14 @@ export default function VEO3Client() {
   const handleGenerate = async () => {
     if (!prompt.trim() || userCredits.credits < currentCredits) return;
     if (!user) {
-      setError('Please login to generate videos.');
+      setError(t('errors.loginRequired'));
       return;
     }
 
     setIsGenerating(true);
     setError(null);
     setGeneratedVideo(null);
-    setGenerationProgress('Starting generation...');
+    setGenerationProgress(t('progress.starting'));
 
     try {
       const generateResponse = await fetch('/api/generate', {
@@ -316,7 +318,7 @@ export default function VEO3Client() {
       await pollTaskStatus(generateData.taskId);
 
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate video. Please try again.');
+      setError(err instanceof Error ? err.message : t('errors.generationFailed'));
       setIsGenerating(false);
     }
   };
@@ -330,16 +332,18 @@ export default function VEO3Client() {
           {/* Header */}
           <div className="text-center mb-12" data-aos="fade-up">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              <span className="text-purple-300">VEO3</span> AI Video Generator
+              {t('header.title').split(' ').map((word, index) => 
+                word === 'VEO3' ? <span key={index} className="text-purple-300">{word}</span> : word + ' '
+              )}
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Experience the highest quality ASMR video generation with Google&apos;s VEO3 model
+              {t('header.subtitle')}
             </p>
             {!user && (
               <div className="mt-6 bg-yellow-500/20 backdrop-blur-sm border border-yellow-400/50 rounded-xl p-4">
                 <p className="text-yellow-200 font-medium">
                   <i className="ri-information-line mr-2"></i>
-                  Please login to generate videos and save your creations.
+                  {t('header.loginRequired')}
                 </p>
               </div>
             )}
@@ -354,13 +358,13 @@ export default function VEO3Client() {
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
                   <span className="text-white font-semibold">
                     <i className="ri-coin-line mr-2"></i>
-                    {userCredits.credits} credits remaining
+                    {t('credits.remaining', { credits: userCredits.credits })}
                   </span>
                 </div>
                 <div className={`bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 ${userCredits.credits < currentCredits ? 'border-2 border-red-400' : ''}`}>
                   <span className={`font-semibold ${userCredits.credits < currentCredits ? 'text-red-300' : 'text-purple-300'}`}>
                     <i className="ri-flash-line mr-2"></i>
-                    Cost: {currentCredits} credits
+                    {t('credits.cost', { credits: currentCredits })}
                   </span>
                 </div>
               </div>
@@ -369,14 +373,14 @@ export default function VEO3Client() {
               <div className="mb-8" data-aos="fade-up" data-aos-delay="200">
                 <label htmlFor="prompt" className="block text-lg font-medium text-white mb-4">
                   <i className="ri-edit-2-line mr-2"></i>
-                  Describe your ASMR scene
+                  {t('form.prompt.label')}
                 </label>
                 <div className="relative">
                   <textarea
                     id="prompt"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Include textures, sounds, and visuals for better results. Be descriptive and creative..."
+                    placeholder={t('form.prompt.placeholder')}
                     className="w-full h-40 p-6 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-white/70 focus:ring-2 focus:ring-purple-400 focus:border-transparent resize-none text-lg"
                     maxLength={maxChars}
                   />
@@ -392,7 +396,7 @@ export default function VEO3Client() {
               <div className="mb-8" data-aos="fade-up" data-aos-delay="300">
                 <label className="block text-lg font-medium text-white mb-4">
                   <i className="ri-image-add-line mr-2"></i>
-                  Image (Optional)
+                  {t('form.image.label')}
                 </label>
                 
                 {!uploadedImage ? (
@@ -427,13 +431,13 @@ export default function VEO3Client() {
                       {isUploadingImage ? (
                         <div className="flex flex-col items-center">
                           <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/30 border-t-white mb-3"></div>
-                          <p className="text-white font-medium">Uploading image...</p>
+                          <p className="text-white font-medium">{t('form.image.uploading')}</p>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center">
                           <i className="ri-image-add-line text-4xl text-white/60 mb-3"></i>
-                          <p className="text-white font-medium mb-1">Drag & drop or click</p>
-                          <p className="text-white/70 text-sm">PNG, JPG, JPEG or WEBP (max 10MB)</p>
+                          <p className="text-white font-medium mb-1">{t('form.image.dragDrop')}</p>
+                          <p className="text-white/70 text-sm">{t('form.image.fileTypes')}</p>
                         </div>
                       )}
                     </div>
@@ -449,14 +453,14 @@ export default function VEO3Client() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium mb-2">Image uploaded successfully</p>
-                        <p className="text-white/70 text-sm mb-3">This image will be used as a reference for your video generation</p>
+                        <p className="text-white font-medium mb-2">{t('form.image.uploadSuccess')}</p>
+                        <p className="text-white/70 text-sm mb-3">{t('form.image.uploadDescription')}</p>
                         <button
                           onClick={handleRemoveImage}
                           className="inline-flex items-center px-3 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-400/50 rounded-lg text-red-300 text-sm font-medium transition-all duration-200"
                         >
                           <i className="ri-delete-bin-line mr-1"></i>
-                          Remove
+                          {t('form.image.remove')}
                         </button>
                       </div>
                     </div>
@@ -476,7 +480,7 @@ export default function VEO3Client() {
                 <div>
                   <label className="block text-lg font-medium text-white mb-4">
                     <i className="ri-cpu-line mr-2"></i>
-                    VEO3 Model
+                    {t('form.model.label')}
                   </label>
                   <div className="grid grid-cols-2 gap-4">
                     <button
@@ -487,8 +491,8 @@ export default function VEO3Client() {
                           : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                       }`}
                     >
-                      <div className="font-semibold">VEO3 Fast</div>
-                      <div className="text-sm opacity-80">60 credits</div>
+                      <div className="font-semibold">{t('form.model.veo3Fast.title')}</div>
+                      <div className="text-sm opacity-80">{t('form.model.veo3Fast.subtitle')}</div>
                     </button>
                     <button
                       onClick={() => setVeo3Model('veo3')}
@@ -498,8 +502,8 @@ export default function VEO3Client() {
                           : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                       }`}
                     >
-                      <div className="font-semibold">VEO3 Standard</div>
-                      <div className="text-sm opacity-80">300 credits</div>
+                      <div className="font-semibold">{t('form.model.veo3Standard.title')}</div>
+                      <div className="text-sm opacity-80">{t('form.model.veo3Standard.subtitle')}</div>
                     </button>
                   </div>
                 </div>
@@ -508,7 +512,7 @@ export default function VEO3Client() {
                 <div>
                   <label className="block text-lg font-medium text-white mb-4">
                     <i className="ri-hd-line mr-2"></i>
-                    Video Quality
+                    {t('form.quality.label')}
                   </label>
                   <div className="grid grid-cols-2 gap-4">
                     <button
@@ -519,8 +523,8 @@ export default function VEO3Client() {
                           : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                       }`}
                     >
-                      <div className="font-semibold">720p HD</div>
-                      <div className="text-sm opacity-80">Standard Quality</div>
+                      <div className="font-semibold">{t('form.quality.720p.title')}</div>
+                      <div className="text-sm opacity-80">{t('form.quality.720p.subtitle')}</div>
                     </button>
                     <button
                       onClick={() => setQuality('1080p')}
@@ -530,8 +534,8 @@ export default function VEO3Client() {
                           : 'bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30'
                       }`}
                     >
-                      <div className="font-semibold">1080p Full HD</div>
-                      <div className="text-sm opacity-80">High Quality</div>
+                      <div className="font-semibold">{t('form.quality.1080p.title')}</div>
+                      <div className="text-sm opacity-80">{t('form.quality.1080p.subtitle')}</div>
                     </button>
                   </div>
                 </div>
@@ -543,7 +547,7 @@ export default function VEO3Client() {
                 <div>
                   <label className="block text-lg font-medium text-white mb-4">
                     <i className="ri-aspect-ratio-line mr-2"></i>
-                    Aspect Ratio
+                    {t('form.aspectRatio.label')}
                   </label>
                   <div className="grid grid-cols-2 gap-4">
                     {availableAspectRatios.map((ratio) => (
@@ -558,7 +562,7 @@ export default function VEO3Client() {
                       >
                         <div className="font-semibold">{ratio}</div>
                         <div className="text-sm opacity-80">
-                          {ratio === '16:9' ? 'Landscape' : 'Portrait'}
+                          {t(`form.aspectRatio.ratios.${ratio}`)}
                         </div>
                       </button>
                     ))}
@@ -569,19 +573,19 @@ export default function VEO3Client() {
                 <div>
                   <label htmlFor="watermark" className="block text-lg font-medium text-white mb-4">
                     <i className="ri-copyright-line mr-2"></i>
-                    Watermark (Optional)
+                    {t('form.watermark.label')}
                   </label>
                   <input
                     id="watermark"
                     type="text"
                     value={waterMark}
                     onChange={(e) => setWaterMark(e.target.value)}
-                    placeholder="Add custom watermark text..."
+                    placeholder={t('form.watermark.placeholder')}
                     className="w-full p-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-white/70 focus:ring-2 focus:ring-purple-400 focus:border-transparent"
                     maxLength={50}
                   />
                   <div className="mt-2 text-sm text-white/70">
-                    Leave empty for no watermark. Max 50 characters.
+                    {t('form.watermark.description')}
                   </div>
                 </div>
               </div>
@@ -598,7 +602,7 @@ export default function VEO3Client() {
                   }`}
                 >
                   <i className="ri-magic-line mr-2"></i>
-                  {isGenerating ? 'Generating...' : 'Generate with VEO3'}
+                  {isGenerating ? t('form.generate.generating') : t('form.generate.button')}
                 </button>
               </div>
 
@@ -615,17 +619,17 @@ export default function VEO3Client() {
                       <div className="flex-1 min-w-0">
                         <p className="text-purple-300 font-semibold text-lg mb-2">
                           <i className="ri-information-line mr-2"></i>
-                          You need {currentCredits} credits to generate a video
+                          {t('credits.insufficient', { credits: currentCredits })}
                         </p>
                         <p className="text-purple-200/90 mb-4">
-                          Current balance: <span className="font-medium">{userCredits.credits} credits</span>
+                          {t('credits.currentBalance', { credits: userCredits.credits })}
                         </p>
                         <button
                           onClick={() => window.location.href = '/pricing'}
                           className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                         >
                           <i className="ri-shopping-cart-line mr-2"></i>
-                          Get Credits
+                          {t('credits.getCredits')}
                         </button>
                       </div>
                     </div>
@@ -638,12 +642,12 @@ export default function VEO3Client() {
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 order-first lg:order-last lg:sticky lg:top-8 h-fit">
               <div className="mb-6">
                 <p className="text-2xl font-bold text-white mb-2">
-                  {generatedVideo ? 'VEO3 Result' : 'Preview'}
+                  {generatedVideo ? t('preview.result') : t('preview.title')}
                 </p>
                 <p className="text-white/70">
                   {generatedVideo 
                     ? 'Your professional VEO3 AI-generated video' 
-                    : 'Your professional VEO3 AI-generated video will appear here'}
+                    : t('preview.description')}
                 </p>
               </div>
 
@@ -664,7 +668,7 @@ export default function VEO3Client() {
                       </video>
                       <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1">
                         <span className="text-white text-xs font-medium">
-                          {searchParams.get('template') ? 'Template Preview' : 'Demo'}
+                          {searchParams.get('template') ? t('preview.templatePreview') : t('preview.demo')}
                         </span>
                       </div>
                     </div>
@@ -694,7 +698,7 @@ export default function VEO3Client() {
                           <i className="ri-magic-line text-white text-xl"></i>
                         </div>
                       </div>
-                      <p className="text-white text-xl font-semibold mt-4 mb-2">Creating your VEO3 video...</p>
+                      <p className="text-white text-xl font-semibold mt-4 mb-2">{t('progress.creating')}</p>
                       <p className="text-white/70">{generationProgress}</p>
                       <div className="mt-4 bg-white/20 rounded-full h-2 w-64 overflow-hidden">
                         <div className="bg-gradient-to-r from-purple-400 to-indigo-500 h-full animate-pulse"></div>
@@ -719,7 +723,7 @@ export default function VEO3Client() {
                 <div className="mb-8" data-aos="fade-up">
                   <div className="text-white text-xl font-semibold mb-6 text-center">
                     <i className="ri-video-line mr-2"></i>
-                    Your VEO3 Generated Video
+                    {t('result.title')}
                   </div>
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6 border border-white/30">
                     <video
@@ -742,7 +746,7 @@ export default function VEO3Client() {
                         }`}
                       >
                         <i className="ri-download-2-line mr-2"></i>
-                        Download VEO3 Video • HD Quality
+                        {t('result.download')}
                       </button>
                     </div>
                     
@@ -760,7 +764,7 @@ export default function VEO3Client() {
                       {uploadedImage && (
                         <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                           <span className="text-white text-xs font-medium">
-                            With Reference Image
+                            {t('result.withImage')}
                           </span>
                         </div>
                       )}
@@ -776,29 +780,29 @@ export default function VEO3Client() {
             <div className="text-center mb-8" data-aos="fade-up">
               <h2 className="text-white text-xl font-semibold mb-4">
                 <i className="ri-star-line mr-2"></i>
-                Why Choose VEO3?
+                {t('features.title')}
               </h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                   <h3 className="font-semibold text-white mb-3 flex items-center">
                     <i className="ri-eye-line mr-2 text-purple-300"></i>
-                    Superior Quality
+                    {t('features.quality.title')}
                   </h3>
-                  <p className="text-white/80 text-sm">VEO3 delivers the highest quality video generation with incredible detail and realism.</p>
+                  <p className="text-white/80 text-sm">{t('features.quality.description')}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                   <h3 className="font-semibold text-white mb-3 flex items-center">
                     <i className="ri-palette-line mr-2 text-blue-300"></i>
-                    Advanced AI
+                    {t('features.ai.title')}
                   </h3>
-                  <p className="text-white/80 text-sm">Powered by Google&apos;s latest video generation technology for natural, flowing ASMR content.</p>
+                  <p className="text-white/80 text-sm">{t('features.ai.description')}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                   <h3 className="font-semibold text-white mb-3 flex items-center">
                     <i className="ri-settings-line mr-2 text-green-300"></i>
-                    Optimized Settings
+                    {t('features.settings.title')}
                   </h3>
-                  <p className="text-white/80 text-sm">Specially tuned for ASMR content with support for 16:9 and 9:16 aspect ratios.</p>
+                  <p className="text-white/80 text-sm">{t('features.settings.description')}</p>
                 </div>
               </div>
             </div>
@@ -808,10 +812,12 @@ export default function VEO3Client() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mt-8">
             <div className="text-center mb-8" data-aos="fade-up">
               <h2 className="text-3xl font-bold text-white mb-4">
-                <span className="text-purple-300">VEO3</span> Video Showcase
+                {t('showcase.title').split(' ').map((word, index) => 
+                  word === 'VEO3' ? <span key={index} className="text-purple-300">{word}</span> : word + ' '
+                )}
               </h2>
               <p className="text-white/80 text-lg max-w-3xl mx-auto">
-                Professional AI-generated videos created with VEO3 technology
+                {t('showcase.subtitle')}
               </p>
             </div>
             
@@ -845,7 +851,7 @@ export default function VEO3Client() {
                       className="inline-flex items-center text-purple-400 text-sm hover:text-purple-300 transition-colors"
                     >
                       <i className="ri-file-copy-line mr-1"></i>
-                      Copy Prompt
+                      {t('showcase.copyPrompt')}
                     </button>
                   </div>
                 </div>
@@ -854,14 +860,14 @@ export default function VEO3Client() {
 
             <div className="text-center mt-8" data-aos="fade-up" data-aos-delay="400">
               <p className="text-white/80 mb-4">
-                Ready to create your own premium VEO3 videos?
+                {t('showcase.ready')}
               </p>
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 <i className="ri-magic-line mr-2"></i>
-                Start Creating with VEO3
+                {t('showcase.startCreating')}
               </button>
             </div>
           </div>
@@ -871,10 +877,10 @@ export default function VEO3Client() {
             <div className="text-center mb-8" data-aos="fade-up">
               <h2 className="text-white text-xl font-semibold mb-4">
                 <i className="ri-question-line mr-2"></i>
-                VEO3 Frequently Asked Questions
+                {t('faq.title')}
               </h2>
               <p className="text-white/70">
-                Everything you need to know about generating ASMR videos with Google VEO3
+                {t('faq.subtitle')}
               </p>
             </div>
             
@@ -882,80 +888,80 @@ export default function VEO3Client() {
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-star-line mr-2 text-purple-300"></i>
-                  What makes VEO3 different from other AI models?
+                  {t('faq.questions.different.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  VEO3 is Google&apos;s most advanced video generation model, offering superior quality, realistic motion, and better understanding of complex prompts compared to earlier models.
+                  {t('faq.questions.different.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-time-line mr-2 text-blue-300"></i>
-                  How long does VEO3 video generation take?
+                  {t('faq.questions.time.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  VEO3 Fast typically takes 2-4 minutes, while VEO3 Standard takes 5-8 minutes for higher quality results. Processing time may vary during peak hours.
+                  {t('faq.questions.time.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-aspect-ratio-line mr-2 text-cyan-300"></i>
-                  What aspect ratios does VEO3 support?
+                  {t('faq.questions.aspectRatios.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  VEO3 currently supports 16:9 (landscape) and 9:16 (portrait) aspect ratios, making it perfect for YouTube, Instagram Stories, and TikTok content.
+                  {t('faq.questions.aspectRatios.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-coins-line mr-2 text-yellow-300"></i>
-                  Why does VEO3 cost more credits than other models?
+                  {t('faq.questions.credits.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  VEO3 uses significantly more computational resources due to its advanced neural architecture, delivering premium quality that justifies the higher credit cost.
+                  {t('faq.questions.credits.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-image-line mr-2 text-green-300"></i>
-                  Can I use reference images with VEO3?
+                  {t('faq.questions.images.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Yes! VEO3 supports reference images, allowing you to guide the visual style and composition of your ASMR videos for more precise results.
+                  {t('faq.questions.images.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-shield-check-line mr-2 text-orange-300"></i>
-                  Is VEO3 content safe for commercial use?
+                  {t('faq.questions.commercial.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Yes, all VEO3 generated content can be used commercially. You retain full rights to your created videos and can monetize them on any platform.
+                  {t('faq.questions.commercial.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-magic-line mr-2 text-pink-300"></i>
-                  How do I write better prompts for VEO3?
+                  {t('faq.questions.prompts.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Be specific about textures, lighting, and movement. VEO3 excels at understanding detailed descriptions like &quot;soft soap cutting with natural lighting&quot; or &quot;gentle water droplets on glass surface.&quot;
+                  {t('faq.questions.prompts.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-refresh-line mr-2 text-indigo-300"></i>
-                  What if my VEO3 generation fails?
+                  {t('faq.questions.fails.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Failed generations are automatically refunded. You can immediately retry with a modified prompt or different settings without losing credits.
+                  {t('faq.questions.fails.answer')}
                 </p>
               </div>
             </div>

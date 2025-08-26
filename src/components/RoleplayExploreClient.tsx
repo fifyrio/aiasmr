@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import AOS from 'aos';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 interface Template {
   id: number;
@@ -25,6 +26,7 @@ interface RoleplayExploreClientProps {
 
 export default function RoleplayExploreClient({ templates }: RoleplayExploreClientProps) {
   const [hoveredVideo, setHoveredVideo] = useState<number | null>(null);
+  const t = useTranslations('roleplayExplore');
 
   useEffect(() => {
     AOS.init({
@@ -65,16 +67,15 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               href="/explore" 
               className="text-white/70 hover:text-white transition-colors mr-3"
             >
-              <i className="ri-arrow-left-line"></i> Back to Explore
+              <i className="ri-arrow-left-line"></i> {t('navigation.backToExplore')}
             </Link>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             <i className="ri-user-star-line mr-3 text-purple-300"></i>
-            Roleplay <span className="text-purple-300">Collections</span>
+            {t('header.title')} <span className="text-purple-300">{t('header.collections')}</span>
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Immerse yourself in professional roleplay scenarios. From medical exams to beauty treatments, 
-            create engaging ASMR videos with authentic professional interactions.
+            {t('header.description')}
           </p>
           
           {/* Stats */}
@@ -82,13 +83,13 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
             <div className="bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
               <span className="text-white font-semibold">
                 <i className="ri-play-line mr-2"></i>
-                {templates.length} Templates
+                {t('header.stats.templates', { count: templates.length })}
               </span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
               <span className="text-white font-semibold">
                 <i className="ri-star-line mr-2"></i>
-                Professional Scenarios
+                {t('header.stats.scenarios')}
               </span>
             </div>
           </div>
@@ -116,7 +117,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
                   className="w-full h-full object-cover"
                   {...(hoveredVideo === template.id ? { autoPlay: true } : {})}
                 >
-                  Your browser does not support the video tag.
+                  {t('template.browserNotSupported')}
                 </video>
                 
                 {/* Video Overlay */}
@@ -136,7 +137,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
                         className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-purple-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
                       >
                         <i className="ri-magic-line mr-1"></i>
-                        Generate
+                        {t('template.generate')}
                       </Link>
                     </div>
                   </div>
@@ -146,7 +147,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
                 <div className="absolute top-3 left-3">
                   <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full font-medium">
                     <i className="ri-user-star-line mr-1"></i>
-                    Roleplay
+                    {t('template.roleplay')}
                   </div>
                 </div>
 
@@ -197,7 +198,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
                     className="flex items-center text-white/70 hover:text-white text-sm transition-colors"
                   >
                     <i className="ri-file-copy-line mr-2"></i>
-                    Copy Prompt
+                    {t('template.copyPrompt')}
                   </button>
                   
                   <Link
@@ -205,7 +206,7 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
                     className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 transform hover:scale-105"
                   >
                     <i className="ri-magic-line mr-2"></i>
-                    Use Template
+                    {t('template.useTemplate')}
                   </Link>
                 </div>
               </div>
@@ -218,16 +219,16 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
           <div className="text-center py-16" data-aos="fade-up">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-12 max-w-2xl mx-auto">
               <i className="ri-user-star-line text-6xl text-white/50 mb-6"></i>
-              <h3 className="text-2xl font-bold text-white mb-4">No Roleplay Collections Found</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">{t('emptyState.title')}</h3>
               <p className="text-white/70 mb-6">
-                We&apos;re continuously adding new roleplay scenarios. Check back soon for more professional ASMR templates!
+                {t('emptyState.description')}
               </p>
               <Link
                 href="/explore"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-full transition-all duration-200"
               >
                 <i className="ri-arrow-left-line mr-2"></i>
-                Explore All Templates
+                {t('emptyState.exploreAllButton')}
               </Link>
             </div>
           </div>
@@ -239,10 +240,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-white mb-4">
                 <i className="ri-question-line mr-3 text-purple-300"></i>
-                Roleplay ASMR <span className="text-purple-300">FAQ</span>
+                {t('faq.title')} <span className="text-purple-300">FAQ</span>
               </h2>
               <p className="text-white/80 text-lg max-w-3xl mx-auto">
-                Everything you need to know about creating professional roleplay ASMR content
+                {t('faq.subtitle')}
               </p>
             </div>
             
@@ -251,10 +252,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-user-star-line mr-2 text-purple-300"></i>
-                  What makes roleplay ASMR so popular?
+                  {t('faq.questions.popular.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Roleplay ASMR creates immersive, personal experiences that help viewers feel cared for and relaxed. Professional scenarios like medical exams or beauty treatments provide structured, comforting interactions.
+                  {t('faq.questions.popular.answer')}
                 </p>
               </div>
 
@@ -262,10 +263,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-mic-line mr-2 text-pink-300"></i>
-                  What equipment do I need for roleplay ASMR?
+                  {t('faq.questions.equipment.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  A quality microphone is essential for capturing clear whispers and ambient sounds. Props related to your roleplay scenario (stethoscope, brushes, etc.) enhance authenticity and viewer immersion.
+                  {t('faq.questions.equipment.answer')}
                 </p>
               </div>
 
@@ -273,10 +274,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-time-line mr-2 text-blue-300"></i>
-                  How long should roleplay ASMR videos be?
+                  {t('faq.questions.duration.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Most successful roleplay ASMR videos range from 15-45 minutes. This allows enough time to establish the scenario, build comfort, and provide sustained relaxation without viewer fatigue.
+                  {t('faq.questions.duration.answer')}
                 </p>
               </div>
 
@@ -284,10 +285,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-emotion-line mr-2 text-green-300"></i>
-                  How do I make roleplay scenarios feel authentic?
+                  {t('faq.questions.authentic.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Research the profession you&apos;re portraying, use appropriate terminology, and maintain consistent character throughout. Gentle, caring tone and realistic props help create believable scenarios.
+                  {t('faq.questions.authentic.answer')}
                 </p>
               </div>
 
@@ -295,10 +296,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-volume-down-line mr-2 text-yellow-300"></i>
-                  What are the best ASMR triggers for roleplay?
+                  {t('faq.questions.triggers.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Soft-spoken or whispered dialogue, gentle tapping, page turning, typing sounds, and profession-specific sounds (stethoscope, brushes, scissors) work excellently in roleplay scenarios.
+                  {t('faq.questions.triggers.answer')}
                 </p>
               </div>
 
@@ -306,10 +307,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-camera-line mr-2 text-orange-300"></i>
-                  Should roleplay ASMR focus on audio or video?
+                  {t('faq.questions.audioVideo.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  While audio is most important, visual elements enhance immersion. Close-up shots of hands performing tasks, gentle lighting, and appropriate costumes/props create a complete experience.
+                  {t('faq.questions.audioVideo.answer')}
                 </p>
               </div>
 
@@ -317,10 +318,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-heart-line mr-2 text-red-300"></i>
-                  How do I handle viewer requests for roleplay scenarios?
+                  {t('faq.questions.requests.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Stay within your comfort zone and maintain professional boundaries. Popular, safe scenarios include medical exams, spa treatments, library visits, and educational content.
+                  {t('faq.questions.requests.answer')}
                 </p>
               </div>
 
@@ -328,10 +329,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-money-dollar-circle-line mr-2 text-cyan-300"></i>
-                  Can I monetize roleplay ASMR content?
+                  {t('faq.questions.monetize.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Yes! Roleplay ASMR is highly monetizable through platform partnerships, sponsorships, and direct viewer support. Maintain consistent quality and posting schedule for best results.
+                  {t('faq.questions.monetize.answer')}
                 </p>
               </div>
             </div>
@@ -342,11 +343,10 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
         <div className="text-center mt-16" data-aos="fade-up">
           <div className="bg-gradient-to-r from-purple-500/20 to-indigo-600/20 backdrop-blur-sm border border-purple-400/30 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-white mb-4">
-              Ready to Create Professional Roleplay ASMR?
+              {t('cta.title')}
             </h2>
             <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-              Transform these templates into high-quality videos using our AI-powered generation tools. 
-              Perfect for content creators looking to produce engaging roleplay scenarios.
+              {t('cta.description')}
             </p>
             <div className="flex items-center justify-center gap-4">
               <Link
@@ -354,14 +354,14 @@ export default function RoleplayExploreClient({ templates }: RoleplayExploreClie
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <i className="ri-magic-line mr-2"></i>
-                Start Creating with VEO3
+                {t('cta.startCreating')}
               </Link>
               <Link
                 href="/explore"
                 className="inline-flex items-center px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold rounded-full transition-all duration-300"
               >
                 <i className="ri-grid-line mr-2"></i>
-                Browse All Categories
+                {t('cta.browseAll')}
               </Link>
             </div>
           </div>

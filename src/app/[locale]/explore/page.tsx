@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import AOS from 'aos';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ASMRModal, { ASMRTemplate } from '@/components/ASMRModal';
@@ -35,6 +37,10 @@ const categories = getUniqueCategories();
 const statusFilters = ["All", "HOT", "NEW", "TRENDING"];
 
 export default function ExplorePage() {
+  const t = useTranslations('explore');
+  const params = useParams();
+  const locale = params.locale as string;
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
@@ -109,6 +115,16 @@ export default function ExplorePage() {
     }
   };
 
+  const getFilterLabel = (filter: string) => {
+    switch (filter) {
+      case 'All': return t('filters.all');
+      case 'HOT': return t('filters.hot');
+      case 'NEW': return t('filters.new');
+      case 'TRENDING': return t('filters.trending');
+      default: return filter;
+    }
+  };
+
   return (
     <div className="min-h-screen hero-bg">
       <Navigation />
@@ -118,10 +134,10 @@ export default function ExplorePage() {
           {/* Hero Section */}
           <div className="text-center mb-16" data-aos="fade-up">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              AI ASMR Video <span className="text-yellow-300">Showcase</span>
+              {t('title')}
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              Discover immersive 4K ASMR content created by our community. Experience the perfect blend of visual artistry and relaxing sounds.
+              {t('subtitle')}
             </p>
           </div>
 
@@ -132,7 +148,7 @@ export default function ExplorePage() {
               <div className="relative max-w-md mx-auto">
                 <input
                   type="text"
-                  placeholder="Search videos..."
+                  placeholder={t('searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full px-4 py-3 pl-12 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-white placeholder-white/70 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
@@ -153,7 +169,7 @@ export default function ExplorePage() {
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
-                  {category}
+                  {category === 'All' ? t('filters.all') : category}
                 </button>
               ))}
             </div>
@@ -170,7 +186,7 @@ export default function ExplorePage() {
                       : 'bg-white/20 text-white hover:bg-white/30'
                   }`}
                 >
-                  {status}
+                  {getFilterLabel(status)}
                 </button>
               ))}
             </div>
@@ -222,7 +238,7 @@ export default function ExplorePage() {
                     
                     {/* Status Badge */}
                     <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold text-white ${getStatusColor(status)}`}>
-                      {status}
+                      {getFilterLabel(status)}
                     </div>
 
                     {/* Only show play overlay when not playing video */}
@@ -245,7 +261,7 @@ export default function ExplorePage() {
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
                         <i className="ri-robot-line text-white text-sm"></i>
                       </div>
-                      <span className="text-white/80 text-sm">AI Template</span>
+                      <span className="text-white/80 text-sm">{t('aiTemplate')}</span>
                     </div>
 
                     {/* Engagement Buttons */}
@@ -269,7 +285,7 @@ export default function ExplorePage() {
                         }}
                       >
                         <i className="ri-eye-line mr-2"></i>
-                        View
+                        {t('view')}
                       </button>
                     </div>
 
@@ -291,7 +307,7 @@ export default function ExplorePage() {
           <div className="text-center mb-16" data-aos="fade-up">
             <button className="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-full font-semibold hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
               <i className="ri-arrow-down-line mr-2"></i>
-              Load More Videos
+              {t('loadMore')}
             </button>
           </div>
 
@@ -299,7 +315,7 @@ export default function ExplorePage() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-16 border border-white/20" data-aos="fade-up">
             <h2 className="text-3xl font-bold text-white text-center mb-8">
               <i className="ri-chat-quote-line mr-2"></i>
-              What Our Community Says
+              {t('testimonials.title')}
             </h2>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -314,7 +330,7 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <p className="text-white/90 text-sm">
-                  &quot;The AI-generated ASMR videos are incredibly realistic and helped me relax after stressful days. The quality is amazing!&quot;
+                  {t('testimonials.sarah')}
                 </p>
               </div>
 
@@ -329,7 +345,7 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <p className="text-white/90 text-sm">
-                  &quot;As a content creator, this platform saves me hours of work. The AI understands exactly what makes good ASMR content.&quot;
+                  {t('testimonials.mike')}
                 </p>
               </div>
 
@@ -344,7 +360,7 @@ export default function ExplorePage() {
                   </div>
                 </div>
                 <p className="text-white/90 text-sm">
-                  &quot;The variety of triggers and the 4K quality make this my go-to platform for ASMR content. Highly recommended!&quot;
+                  {t('testimonials.wei')}
                 </p>
               </div>
             </div>
@@ -354,47 +370,47 @@ export default function ExplorePage() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-16 border border-white/20" data-aos="fade-up">
             <h2 className="text-3xl font-bold text-white text-center mb-8">
               <i className="ri-question-line mr-2"></i>
-              Quick Answers
+              {t('faq.title')}
             </h2>
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="text-white font-semibold mb-3 flex items-center">
                   <i className="ri-palette-line mr-2 text-yellow-400"></i>
-                  What types can be created?
+                  {t('faq.whatTypes.title')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Our AI can generate cutting videos, water sounds, whisper content, object interactions, and more with realistic 4K visuals.
+                  {t('faq.whatTypes.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="text-white font-semibold mb-3 flex items-center">
                   <i className="ri-timer-2-line mr-2 text-blue-400"></i>
-                  How fast is generation?
+                  {t('faq.howFast.title')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Most videos are generated within 1-2 minutes, ensuring you get high-quality content quickly without long wait times.
+                  {t('faq.howFast.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="text-white font-semibold mb-3 flex items-center">
                   <i className="ri-hd-line mr-2 text-green-400"></i>
-                  Quality advantages?
+                  {t('faq.qualityAdvantages.title')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  AI-generated content offers perfect audio-visual sync, consistent quality, and 4K resolution that rivals professional ASMR videos.
+                  {t('faq.qualityAdvantages.answer')}
                 </p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="text-white font-semibold mb-3 flex items-center">
                   <i className="ri-group-line mr-2 text-purple-400"></i>
-                  Who benefits most?
+                  {t('faq.whoBenefits.title')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Content creators, relaxation enthusiasts, and anyone seeking personalized ASMR experiences benefit from our platform.
+                  {t('faq.whoBenefits.answer')}
                 </p>
               </div>
             </div>
@@ -404,21 +420,21 @@ export default function ExplorePage() {
           <div className="text-center" data-aos="fade-up">
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
               <h2 className="text-3xl font-bold text-white mb-4">
-                Ready to Create Your Own ASMR Video?
+                {t('cta.title')}
               </h2>
               <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                Join thousands of creators and start generating personalized ASMR content today.
+                {t('cta.subtitle')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-8 py-4 rounded-full font-semibold hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
                   <i className="ri-add-circle-line mr-2"></i>
-                  Create Your Own
+                  {t('cta.createButton')}
                 </button>
                 
                 <button className="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-full font-semibold hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
                   <i className="ri-price-tag-3-line mr-2"></i>
-                  View Pricing
+                  {t('cta.pricingButton')}
                 </button>
               </div>
             </div>

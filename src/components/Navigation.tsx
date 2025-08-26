@@ -39,38 +39,38 @@ const Navigation = () => {
             <div className="ml-10 flex items-baseline space-x-4">
               <Link 
                 href={`/${locale}/create`} 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
               >
                 {t('create')}
               </Link>
               <Link 
                 href={`/${locale}/ai-asmr-prompts`} 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
               >
                 {t('aiPrompts')}
               </Link>
               <Link 
                 href={`/${locale}/veo3`} 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
               >
                 {t('veo3')}
               </Link>
               <Link 
                 href={`/${locale}/explore`} 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
               >
                 {t('explore')}
               </Link>
               <Link 
                 href={`/${locale}/pricing`} 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
               >
                 {t('pricing')}
               </Link>
               {user && (
                 <Link 
                   href={`/${locale}/my-videos`} 
-                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
                 >
                   {t('myVideos')}
                 </Link>
@@ -106,7 +106,7 @@ const Navigation = () => {
                 </div>
                 <button 
                   onClick={handleSignOut}
-                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
                 >
                   {t('logout')}
                 </button>
@@ -115,13 +115,13 @@ const Navigation = () => {
               <>
                 <Link 
                   href={`/${locale}/auth/login`}
-                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
                 >
                   {t('login')}
                 </Link>
                 <Link 
                   href={`/${locale}/auth/signup`}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-xs font-medium transition-colors"
                 >
                   {t('signup')}
                 </Link>

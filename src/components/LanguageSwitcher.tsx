@@ -19,10 +19,26 @@ export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProp
   const router = useRouter()
 
   const switchLanguage = (locale: string) => {
-    // Remove current locale from pathname
-    const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/'
-    // Add new locale
-    const newPath = `/${locale}${pathWithoutLocale}`
+    // Remove current locale from pathname if it exists
+    let pathWithoutLocale = pathname
+    
+    // Check if pathname starts with a valid locale (only check against our defined locales)
+    for (const loc of locales) {
+      if (pathname.startsWith(`/${loc}/`) || pathname === `/${loc}`) {
+        // Remove the locale prefix
+        pathWithoutLocale = pathname.substring(`/${loc}`.length) || '/'
+        break
+      }
+    }
+    
+    // For English (default locale), don't add prefix due to 'as-needed' configuration
+    let newPath: string
+    if (locale === 'en') {
+      newPath = pathWithoutLocale === '/' ? '/' : pathWithoutLocale
+    } else {
+      newPath = pathWithoutLocale === '/' ? `/${locale}` : `/${locale}${pathWithoutLocale}`
+    }
+    
     router.push(newPath)
     setIsOpen(false)
   }

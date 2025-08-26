@@ -6,11 +6,14 @@ import Footer from '@/components/Footer'
 import MyVideosContent from '@/components/MyVideosContent'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import AOS from 'aos'
 
 export default function MyVideos() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const t = useTranslations('myVideos')
+  const tNav = useTranslations('nav')
 
   useEffect(() => {
     AOS.init({
@@ -28,7 +31,7 @@ export default function MyVideos() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gray-50">
+      <main className="min-h-screen hero-bg">
         <Navigation />
         <div className="pt-24 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,20 +50,20 @@ export default function MyVideos() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen hero-bg">
       <Navigation />
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div data-aos="fade-up">
             <div className="mb-8">
-              <nav className="text-sm text-gray-500 mb-4">
-                <span>Home</span> <span className="mx-2">/</span> <span className="text-gray-700 font-medium">My Videos</span>
+              <nav className="text-sm text-white/70 mb-4">
+                <span>{tNav('home')}</span> <span className="mx-2">/</span> <span className="text-white font-medium">{tNav('myVideos')}</span>
               </nav>
               <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2">
-                My Videos
+                {t('header.title')}
               </h1>
-              <p className="text-gray-600 text-lg">
-                Manage, preview, and download your AI-generated ASMR videos
+              <p className="text-white/80 text-lg">
+                {t('header.description')}
               </p>
             </div>
           </div>

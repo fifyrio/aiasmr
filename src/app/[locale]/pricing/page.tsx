@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { useAuth } from '@/contexts/AuthContext'
@@ -8,6 +9,7 @@ import { getPlans, formatPrice } from '@/lib/payment/products'
 import { Product } from '@/lib/payment/types'
 
 const PricingPage = () => {
+  const t = useTranslations('pricing');
   const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
   const [pageReady, setPageReady] = useState(false);
@@ -106,10 +108,12 @@ const PricingPage = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div data-aos="fade-up" data-aos-delay="200">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Choose Your <span className="text-yellow-300">AI ASMR</span> Plan
+              {t('title').split(' ').map((word: string, index: number) => 
+                word === 'ASMR' ? <span key={index} className="text-yellow-300">{word}</span> : word + ' '
+              )}
             </h1>
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-              Select the perfect plan for your ASMR video generation needs. All plans include our advanced AI technology and premium features.
+              {t('subtitle')}
             </p>
             
           </div>
@@ -135,7 +139,7 @@ const PricingPage = () => {
                 >
                   {isPopular && (
                     <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-2 text-sm font-semibold">
-                      Most Popular
+                      {t('mostPopular')}
                     </div>
                   )}
                   

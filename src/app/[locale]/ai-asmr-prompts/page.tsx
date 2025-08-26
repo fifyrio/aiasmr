@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import Toast from '@/components/Toast'
@@ -22,6 +23,7 @@ interface ASMRTemplate {
 }
 
 const AIASMRPromptsPage = () => {
+  const t = useTranslations('aiPrompts')
   const [templates, setTemplates] = useState<ASMRTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -41,10 +43,10 @@ const AIASMRPromptsPage = () => {
         if (result.success) {
           setTemplates(result.data)
         } else {
-          setError(result.error || 'Failed to load templates')
+          setError(result.error || t('errors.failedToLoad'))
         }
       } catch (err) {
-        setError('Failed to fetch ASMR templates')
+        setError(t('errors.failedToFetch'))
         console.error('Error fetching templates:', err)
       } finally {
         setLoading(false)
@@ -67,13 +69,13 @@ const AIASMRPromptsPage = () => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
-      setToastMessage('Prompt copied to clipboard!')
+      setToastMessage(t('toast.copied'))
       setToastType('success')
       setShowToast(true)
       setTimeout(() => setShowToast(false), 3000)
     } catch (err) {
       console.error('Failed to copy text: ', err)
-      setToastMessage('Failed to copy prompt')
+      setToastMessage(t('toast.failed'))
       setToastType('error')
       setShowToast(true)
       setTimeout(() => setShowToast(false), 3000)
@@ -116,15 +118,13 @@ const AIASMRPromptsPage = () => {
         
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            AI ASMR Prompts
+            {t('hero.title')}
           </h1>
           <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-4xl mx-auto">
-            AI-Powered ASMR Video Generator with Ready-to-Use Prompts
+            {t('hero.subtitle')}
           </p>
           <p className="text-lg text-gray-300 mb-12 max-w-5xl mx-auto">
-            Generate stunning ASMR content instantly using our advanced AI technology. From soap cutting and ice crushing to water droplets 
-            and page turning, transform simple text prompts into mesmerizing videos with crystal-clear audio and professional-grade visuals 
-            in minutes, not hours.
+            {t('hero.description')}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -132,11 +132,11 @@ const AIASMRPromptsPage = () => {
               onClick={scrollToDiscoverASMR}
               className="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
             >
-              View Full ASMR Clips
+              {t('hero.buttons.viewClips')}
             </button>
             <Link href="/create">
               <button className="border-2 border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white font-semibold px-8 py-4 rounded-lg transition-colors">
-                Create Videos
+                {t('hero.buttons.createVideos')}
               </button>
             </Link>
           </div>
@@ -145,15 +145,15 @@ const AIASMRPromptsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30">
               <div className="text-4xl font-bold text-purple-300 mb-2">2.3M+</div>
-              <div className="text-gray-300">Creative Assets</div>
+              <div className="text-gray-300">{t('hero.stats.creativeAssets')}</div>
             </div>
             <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30">
               <div className="text-4xl font-bold text-purple-300 mb-2">150M+</div>
-              <div className="text-gray-300">Downloads</div>
+              <div className="text-gray-300">{t('hero.stats.downloads')}</div>
             </div>
             <div className="bg-purple-500/20 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30">
               <div className="text-4xl font-bold text-purple-300 mb-2">30M+</div>
-              <div className="text-gray-300">Active Creators</div>
+              <div className="text-gray-300">{t('hero.stats.activeCreators')}</div>
             </div>
           </div>
         </div>
@@ -164,15 +164,13 @@ const AIASMRPromptsPage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
-              Discover Soothing ASMR
+              {t('discover.title')}
             </h2>
             <h3 className="text-3xl font-semibold text-purple-400 mb-6">
-              Visuals & Audio [Prompts Included]
+              {t('discover.subtitle')}
             </h3>
             <p className="text-lg text-gray-300 max-w-4xl mx-auto">
-              Discover what&apos;s possible with AIASMR Video&apos;s AI-powered ASMR video generator. Explore curated video 
-              examples created with Google Veo 3 model in AIASMR Video, each paired with the exact prompt used, so you 
-              can easily replicate or customize them for your own relaxing content.
+              {t('discover.description')}
             </p>
           </div>
           
@@ -180,7 +178,7 @@ const AIASMRPromptsPage = () => {
           {loading && (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-              <p className="mt-4 text-gray-600">Loading ASMR templates...</p>
+              <p className="mt-4 text-gray-600">{t('discover.loading')}</p>
             </div>
           )}
 
@@ -237,7 +235,7 @@ const AIASMRPromptsPage = () => {
                     {template.hasAudio && (
                       <div className="absolute bottom-3 left-3 bg-purple-600/80 text-white text-xs px-2 py-1 rounded flex items-center">
                         <span className="mr-1">🔊</span>
-                        <span>Audio</span>
+                        <span>{t('discover.audio')}</span>
                       </div>
                     )}
                     {/* Play overlay - only show when not playing video */}
@@ -268,7 +266,7 @@ const AIASMRPromptsPage = () => {
           <div className="text-center mt-12">
             <Link href="/create">
               <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg">
-                Make Your First ASMR Video in Minutes
+                {t('discover.cta')}
               </button>
             </Link>
           </div>
@@ -280,10 +278,10 @@ const AIASMRPromptsPage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-6">
-              Why Choose AIASMR Video to Generate AI ASMR Videos?
+              {t('whyChoose.title')}
             </h2>
             <p className="text-lg text-gray-300 max-w-4xl mx-auto">
-              Our advanced AI technology and user-friendly platform make creating professional ASMR content effortless and accessible for everyone.
+              {t('whyChoose.subtitle')}
             </p>
           </div>
           
@@ -295,9 +293,9 @@ const AIASMRPromptsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Lightning-Fast Generation</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t('whyChoose.features.fastGeneration.title')}</h3>
               <p className="text-gray-300">
-                Create high-quality ASMR videos in minutes with our advanced AI technology. No technical skills required.
+                {t('whyChoose.features.fastGeneration.description')}
               </p>
             </div>
             
@@ -308,9 +306,9 @@ const AIASMRPromptsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Ready-to-Use Prompts</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t('whyChoose.features.readyPrompts.title')}</h3>
               <p className="text-gray-300">
-                Access our curated library of proven ASMR prompts for soap cutting, ice crushing, page turning, and more.
+                {t('whyChoose.features.readyPrompts.description')}
               </p>
             </div>
             
@@ -321,9 +319,9 @@ const AIASMRPromptsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Professional Quality</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t('whyChoose.features.professionalQuality.title')}</h3>
               <p className="text-gray-300">
-                Generate 4K quality videos with crystal-clear audio, perfect for social media and professional use.
+                {t('whyChoose.features.professionalQuality.description')}
               </p>
             </div>
             
@@ -334,9 +332,9 @@ const AIASMRPromptsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Customizable Options</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t('whyChoose.features.customizable.title')}</h3>
               <p className="text-gray-300">
-                Adjust duration, quality, aspect ratio, and triggers to create the perfect ASMR video for your audience.
+                {t('whyChoose.features.customizable.description')}
               </p>
             </div>
             
@@ -347,9 +345,9 @@ const AIASMRPromptsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Instant Download</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t('whyChoose.features.instantDownload.title')}</h3>
               <p className="text-gray-300">
-                Download your generated ASMR videos immediately in multiple formats, ready for upload to any platform.
+                {t('whyChoose.features.instantDownload.description')}
               </p>
             </div>
             
@@ -360,9 +358,9 @@ const AIASMRPromptsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4">Community Support</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">{t('whyChoose.features.communitySupport.title')}</h3>
               <p className="text-gray-300">
-                Join thousands of creators sharing tips, prompts, and inspiration in our vibrant ASMR community.
+                {t('whyChoose.features.communitySupport.description')}
               </p>
             </div>
           </div>
@@ -374,10 +372,10 @@ const AIASMRPromptsPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-6">
-              FAQs on Making ASMR Videos With Prompts
+              {t('faq.title')}
             </h2>
             <p className="text-lg text-gray-300">
-              Get answers to the most common questions about creating AI-generated ASMR videos with our platform.
+              {t('faq.subtitle')}
             </p>
           </div>
           
@@ -392,12 +390,10 @@ const AIASMRPromptsPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-3">
-                    What types of ASMR videos can I create with AI prompts?
+                    {t('faq.questions.whatTypes.question')}
                   </h3>
                   <p className="text-gray-300">
-                    You can create a wide variety of ASMR videos including soap cutting, ice crushing, page turning, sponge squeezing, 
-                    water droplets, honey dripping, and many other satisfying and relaxing content types. Our AI supports both visual 
-                    and audio ASMR triggers.
+                    {t('faq.questions.whatTypes.answer')}
                   </p>
                 </div>
               </div>
@@ -413,11 +409,10 @@ const AIASMRPromptsPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-3">
-                    How long does it take to generate an ASMR video?
+                    {t('faq.questions.howLong.question')}
                   </h3>
                   <p className="text-gray-300">
-                    Most ASMR videos are generated within 2-5 minutes, depending on the complexity of your prompt and the selected 
-                    duration. Our advanced AI technology ensures fast processing while maintaining high quality output.
+                    {t('faq.questions.howLong.answer')}
                   </p>
                 </div>
               </div>
@@ -433,11 +428,10 @@ const AIASMRPromptsPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-3">
-                    What video quality and formats are available?
+                    {t('faq.questions.videoQuality.question')}
                   </h3>
                   <p className="text-gray-300">
-                    We offer multiple quality options including 720p and 1080p resolution. Videos can be generated in various 
-                    aspect ratios (16:9, 4:3, 1:1, 3:4, 9:16) to suit different platforms like YouTube, Instagram, TikTok, and more.
+                    {t('faq.questions.videoQuality.answer')}
                   </p>
                 </div>
               </div>
@@ -453,11 +447,10 @@ const AIASMRPromptsPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-3">
-                    Can I customize the ASMR triggers in my videos?
+                    {t('faq.questions.customizeTriggers.question')}
                   </h3>
                   <p className="text-gray-300">
-                    Yes! You can select from our library of ASMR triggers including soap, sponge, ice, water, honey, cubes, petals, 
-                    and pages. You can combine up to 3 different triggers in a single video to create unique and engaging content.
+                    {t('faq.questions.customizeTriggers.answer')}
                   </p>
                 </div>
               </div>
@@ -473,11 +466,10 @@ const AIASMRPromptsPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-3">
-                    How much does it cost to generate ASMR videos?
+                    {t('faq.questions.cost.question')}
                   </h3>
                   <p className="text-gray-300">
-                    Each video generation costs 20 credits. New users receive 20 free credits to get started. Additional credits 
-                    can be purchased through our flexible pricing plans, and failed generations are automatically refunded.
+                    {t('faq.questions.cost.answer')}
                   </p>
                 </div>
               </div>
@@ -493,11 +485,10 @@ const AIASMRPromptsPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white mb-3">
-                    Can I use the generated videos commercially?
+                    {t('faq.questions.commercial.question')}
                   </h3>
                   <p className="text-gray-300">
-                    Yes, all videos generated through our platform are available for commercial use. You retain full rights to 
-                    your created content and can monetize them on any platform including YouTube, social media, or your own website.
+                    {t('faq.questions.commercial.answer')}
                   </p>
                 </div>
               </div>
@@ -511,11 +502,10 @@ const AIASMRPromptsPage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-6">
-              How to Make an AI ASMR Video From Prompts in AIASMR Video
+              {t('howTo.title')}
             </h2>
             <p className="text-lg text-gray-300 max-w-4xl mx-auto">
-              Follow these simple steps to create stunning ASMR videos using our AI-powered platform. 
-              No technical skills required - just your creativity!
+              {t('howTo.subtitle')}
             </p>
           </div>
           
@@ -528,9 +518,9 @@ const AIASMRPromptsPage = () => {
                 </div>
                
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Write Your Prompt</h3>
+              <h3 className="text-xl font-semibold text-white mb-3">{t('howTo.steps.writePrompt.title')}</h3>
               <p className="text-gray-300">
-                Describe the ASMR video you want to create. Be specific about the triggers, sounds, and visual elements you desire.
+                {t('howTo.steps.writePrompt.description')}
               </p>
             </div>
             
@@ -542,9 +532,9 @@ const AIASMRPromptsPage = () => {
                 </div>
                 
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Customize Settings</h3>
+              <h3 className="text-xl font-semibold text-white mb-3">{t('howTo.steps.customizeSettings.title')}</h3>
               <p className="text-gray-300">
-                Select your preferred duration, quality, aspect ratio, and ASMR triggers to personalize your video.
+                {t('howTo.steps.customizeSettings.description')}
               </p>
             </div>
             
@@ -556,9 +546,9 @@ const AIASMRPromptsPage = () => {
                 </div>
                 
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Generate Video</h3>
+              <h3 className="text-xl font-semibold text-white mb-3">{t('howTo.steps.generateVideo.title')}</h3>
               <p className="text-gray-300">
-                Click generate and let our AI create your ASMR video. The process typically takes 2-5 minutes to complete.
+                {t('howTo.steps.generateVideo.description')}
               </p>
             </div>
             
@@ -570,9 +560,9 @@ const AIASMRPromptsPage = () => {
                 </div>
                 
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Download & Share</h3>
+              <h3 className="text-xl font-semibold text-white mb-3">{t('howTo.steps.downloadShare.title')}</h3>
               <p className="text-gray-300">
-                Download your completed ASMR video and share it on your favorite platforms like YouTube, TikTok, or Instagram.
+                {t('howTo.steps.downloadShare.description')}
               </p>
             </div>
           </div>          
@@ -580,7 +570,7 @@ const AIASMRPromptsPage = () => {
           <div className="text-center mt-12">
             <Link href="/create">
               <button className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white font-semibold px-8 py-4 rounded-lg transition-colors shadow-lg">
-                Start Creating Your ASMR Video Now
+                {t('howTo.cta')}
               </button>
             </Link>
           </div>
@@ -593,7 +583,7 @@ const AIASMRPromptsPage = () => {
           <div className="bg-black rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-700">
-              <h2 className="text-2xl font-bold text-white">ASMR Examples</h2>
+              <h2 className="text-2xl font-bold text-white">{t('modal.title')}</h2>
               <button 
                 onClick={closeModal}
                 className="text-gray-400 hover:text-white transition-colors"
@@ -634,7 +624,7 @@ const AIASMRPromptsPage = () => {
                   {selectedTemplate.hasAudio && (
                     <div className="flex items-center text-gray-300 text-sm">
                       <span className="mr-2">🔊</span>
-                      <span>Audio Included</span>
+                      <span>{t('modal.audioIncluded')}</span>
                     </div>
                   )}
                 </div>
@@ -648,7 +638,7 @@ const AIASMRPromptsPage = () => {
                     <div className="space-y-3">
                       <div className="flex items-center">
                         <span className="w-6 h-6 mr-3 text-gray-400">🏷️</span>
-                        <span className="text-gray-300">Category:</span>
+                        <span className="text-gray-300">{t('modal.category')}</span>
                         <span className="ml-2 bg-purple-600 text-white px-2 py-1 rounded text-sm">
                           {selectedTemplate.category[0]}
                         </span>
@@ -656,7 +646,7 @@ const AIASMRPromptsPage = () => {
                       
                       <div className="flex items-center">
                         <span className="w-6 h-6 mr-3 text-gray-400">⏱️</span>
-                        <span className="text-gray-300">Duration:</span>
+                        <span className="text-gray-300">{t('modal.duration')}</span>
                         <span className="ml-2 bg-gray-700 text-white px-2 py-1 rounded text-sm">
                           {selectedTemplate.duration}
                         </span>
@@ -664,7 +654,7 @@ const AIASMRPromptsPage = () => {
                       
                       <div className="flex items-center">
                         <span className="w-6 h-6 mr-3 text-gray-400">📐</span>
-                        <span className="text-gray-300">Aspect Ratio:</span>
+                        <span className="text-gray-300">{t('modal.aspectRatio')}</span>
                         <span className="ml-2 bg-gray-700 text-white px-2 py-1 rounded text-sm">
                           {selectedTemplate.ratio.replace('ratio-', '').replace('-', ':')}
                         </span>
@@ -676,7 +666,7 @@ const AIASMRPromptsPage = () => {
                   <div className="bg-gray-900 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="text-lg font-semibold text-white">
-                        Copy this prompt to generate a similar video:
+                        {t('modal.copyPrompt')}
                       </h4>
                       <button
                         onClick={() => copyToClipboard(selectedTemplate.prompt)}
@@ -695,7 +685,7 @@ const AIASMRPromptsPage = () => {
 
                   {/* Tags */}
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Tags:</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">{t('modal.tags')}</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedTemplate.tags.map((tag, index) => (
                         <span 
@@ -715,7 +705,7 @@ const AIASMRPromptsPage = () => {
                       className="block w-full"
                     >
                       <button className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center">                        
-                        Make ASMR with AI
+                        {t('modal.makeASMR')}
                       </button>
                     </Link>
                   </div>

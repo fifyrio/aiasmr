@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 export interface ASMRTemplate {
   id: number;
@@ -26,6 +27,7 @@ interface ASMRModalProps {
 export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps) {
   const [copySuccess, setCopySuccess] = useState(false);
   const router = useRouter();
+  const t = useTranslations('asmrModal');
 
   if (!isOpen || !template) return null;
 
@@ -49,7 +51,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
       <div className="bg-black rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-700">
-          <h2 className="text-2xl font-bold text-white">ASMR Template</h2>
+          <h2 className="text-2xl font-bold text-white">{t('title')}</h2>
           <button 
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
@@ -84,13 +86,13 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
                     }}
                   >
                     <source src={template.video} type="video/mp4" />
-                    Your browser does not support the video tag.
+                    {t('browserNotSupported')}
                   </video>
                 ) : (
                   <div className="w-full h-64 bg-gradient-to-br from-purple-900 to-indigo-900 flex items-center justify-center">
                     <div className="text-center">
                       <div className="text-4xl mb-2">🎬</div>
-                      <p className="text-gray-300">Video Preview</p>
+                      <p className="text-gray-300">{t('videoPreview')}</p>
                     </div>
                   </div>
                 )}
@@ -101,7 +103,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
               {template.hasAudio && (
                 <div className="flex items-center text-gray-300 text-sm">
                   <span className="mr-2">🔊</span>
-                  <span>Audio Included</span>
+                  <span>{t('audioIncluded')}</span>
                 </div>
               )}
             </div>
@@ -115,7 +117,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
                 <div className="space-y-3">
                   <div className="flex items-center">
                     <span className="w-6 h-6 mr-3 text-gray-400">🏷️</span>
-                    <span className="text-gray-300">Category:</span>
+                    <span className="text-gray-300">{t('details.category')}</span>
                     <span className="ml-2 bg-purple-600 text-white px-2 py-1 rounded text-sm">
                       {template.category[0]}
                     </span>
@@ -123,7 +125,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
                   
                   <div className="flex items-center">
                     <span className="w-6 h-6 mr-3 text-gray-400">⏱️</span>
-                    <span className="text-gray-300">Duration:</span>
+                    <span className="text-gray-300">{t('details.duration')}</span>
                     <span className="ml-2 bg-gray-700 text-white px-2 py-1 rounded text-sm">
                       {template.duration}
                     </span>
@@ -131,7 +133,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
                   
                   <div className="flex items-center">
                     <span className="w-6 h-6 mr-3 text-gray-400">📐</span>
-                    <span className="text-gray-300">Aspect Ratio:</span>
+                    <span className="text-gray-300">{t('details.aspectRatio')}</span>
                     <span className="ml-2 bg-gray-700 text-white px-2 py-1 rounded text-sm">
                       {template.ratio.replace('ratio-', '').replace('-', ':')}
                     </span>
@@ -139,7 +141,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
 
                   <div className="flex items-center">
                     <span className="w-6 h-6 mr-3 text-gray-400">📊</span>
-                    <span className="text-gray-300">Downloads:</span>
+                    <span className="text-gray-300">{t('details.downloads')}</span>
                     <span className="ml-2 bg-gray-700 text-white px-2 py-1 rounded text-sm">
                       {template.downloads}
                     </span>
@@ -150,7 +152,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
               {/* Tags */}
               {template.tags && template.tags.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Tags:</h4>
+                  <h4 className="text-sm font-medium text-gray-400 mb-2">{t('details.tags')}</h4>
                   <div className="flex flex-wrap gap-2">
                     {template.tags.map((tag, index) => (
                       <span key={index} className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">
@@ -165,12 +167,12 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
               <div className="bg-gray-900 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-lg font-semibold text-white">
-                    Copy this prompt to generate a similar video:
+                    {t('prompt.copyInstruction')}
                   </h4>
                   <button
                     onClick={() => copyToClipboard(template.prompt)}
                     className="text-gray-400 hover:text-white transition-colors"
-                    title="Copy to clipboard"
+                    title={t('prompt.copyTooltip')}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -187,7 +189,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Copied to clipboard!
+                    {t('prompt.copySuccess')}
                   </div>
                 )}
               </div>
@@ -197,7 +199,7 @@ export default function ASMRModal({ isOpen, template, onClose }: ASMRModalProps)
                 onClick={handleGenerateVideo}
                 className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105"
               >
-                Generate Video with This Prompt
+                {t('generateButton')}
               </button>
             </div>
           </div>

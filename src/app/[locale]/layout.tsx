@@ -77,7 +77,7 @@ export default async function LocaleLayout({
             />
           </>
         )}
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
             {children}
             <Analytics />

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import FsLightbox from 'fslightbox-react'
 import AOS from 'aos'
 import { useAuth } from '@/contexts/AuthContext'
@@ -32,6 +33,7 @@ interface UserStats {
 }
 
 const MyVideosContent = () => {
+  const t = useTranslations('myVideos')
   const router = useRouter()
   const { user } = useAuth()
   const [videos, setVideos] = useState<Video[]>([])
@@ -215,7 +217,7 @@ const MyVideosContent = () => {
         // Check if it's a real video URL or test URL
         if (data.downloadUrl.includes('file.com/k/') || data.downloadUrl.includes('xxxxxxx')) {
           // Test environment - show info to user
-          alert(`This is a test video. In production, the file "${filename}" would be downloaded from: ${data.downloadUrl}`)
+          alert(t('errors.testDownload', { filename, url: data.downloadUrl }))
         } else {
           // Real URL - attempt download
           try {
@@ -245,11 +247,11 @@ const MyVideosContent = () => {
         }
       } else {
         console.error('Download failed:', data.error)
-        alert('Download failed. Please try again later.')
+        alert(t('errors.downloadFailed'))
       }
     } catch (error) {
       console.error('Download error:', error)
-      alert('Download failed. Please check your connection and try again.')
+      alert(t('errors.downloadError'))
     }
   }
 
@@ -332,21 +334,21 @@ const MyVideosContent = () => {
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <div className="w-2 h-2 bg-yellow-400 rounded-full mr-1 animate-pulse"></div>
-            Processing
+            {t('controls.statusOptions.processing')}
           </span>
         )
       case 'ready':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <div className="w-2 h-2 bg-green-400 rounded-full mr-1"></div>
-            Ready
+            {t('controls.statusOptions.ready')}
           </span>
         )
       case 'failed':
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
             <div className="w-2 h-2 bg-red-400 rounded-full mr-1"></div>
-            Failed
+            {t('controls.statusOptions.failed')}
           </span>
         )
       default:
@@ -383,15 +385,15 @@ const MyVideosContent = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center md:text-left">
             <div className="text-2xl font-bold text-gray-800">{userStats.total_videos}</div>
-            <div className="text-sm text-gray-600">Total Videos</div>
+            <div className="text-sm text-gray-600">{t('stats.totalVideos')}</div>
           </div>
           <div className="text-center md:text-left">
             <div className="text-2xl font-bold text-gray-800">{userStats.total_credits_spent}</div>
-            <div className="text-sm text-gray-600">Credits Spent This Month</div>
+            <div className="text-sm text-gray-600">{t('stats.creditsSpent')}</div>
           </div>
           <div className="text-center md:text-left">
             <div className="text-2xl font-bold text-purple-600">{userStats.remaining_credits}</div>
-            <div className="text-sm text-gray-600">Remaining Credits</div>
+            <div className="text-sm text-gray-600">{t('stats.remainingCredits')}</div>
           </div>
           <div className="text-center md:text-left">
             <button
@@ -399,7 +401,7 @@ const MyVideosContent = () => {
               className="btn-primary w-full md:w-auto"
             >
               <i className="ri-vip-crown-line mr-2"></i>
-              {userStats.plan_type === 'free' ? 'Upgrade Plan' : 'Buy More Credits'}
+              {userStats.plan_type === 'free' ? t('stats.upgradePlan') : t('stats.buyMoreCredits')}
             </button>
           </div>
         </div>
@@ -411,7 +413,7 @@ const MyVideosContent = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Sort Controls */}
             <div className="flex items-center space-x-2">
-              <label className="text-sm font-medium text-gray-700">Sort by:</label>
+              <label className="text-sm font-medium text-gray-700">{t('controls.sortBy')}</label>
               <select 
                 value={sortBy} 
                 onChange={(e) => {
@@ -421,15 +423,15 @@ const MyVideosContent = () => {
                 }}
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="date">Date (Newest)</option>
-                <option value="cost">Cost (Highest)</option>
-                <option value="alphabetical">A-Z</option>
+                <option value="date">{t('controls.sortOptions.date')}</option>
+                <option value="cost">{t('controls.sortOptions.cost')}</option>
+                <option value="alphabetical">{t('controls.sortOptions.alphabetical')}</option>
               </select>
             </div>
 
             {/* Filter Controls */}
             <div className="flex items-center space-x-2">
-              <label className="text-sm font-medium text-gray-700">Status:</label>
+              <label className="text-sm font-medium text-gray-700">{t('controls.status')}</label>
               <select 
                 value={filterStatus} 
                 onChange={(e) => {
@@ -439,15 +441,15 @@ const MyVideosContent = () => {
                 }}
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="all">All Status</option>
-                <option value="processing">Processing</option>
-                <option value="ready">Ready</option>
-                <option value="failed">Failed</option>
+                <option value="all">{t('controls.statusOptions.all')}</option>
+                <option value="processing">{t('controls.statusOptions.processing')}</option>
+                <option value="ready">{t('controls.statusOptions.ready')}</option>
+                <option value="failed">{t('controls.statusOptions.failed')}</option>
               </select>
             </div>
 
             <div className="flex items-center space-x-2">
-              <label className="text-sm font-medium text-gray-700">Category:</label>
+              <label className="text-sm font-medium text-gray-700">{t('controls.category')}</label>
               <select 
                 value={filterCategory} 
                 onChange={(e) => {
@@ -459,7 +461,7 @@ const MyVideosContent = () => {
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category}
+                    {category === 'all' ? t('controls.allCategories') : category}
                   </option>
                 ))}
               </select>
@@ -493,7 +495,7 @@ const MyVideosContent = () => {
               }`}
             >
               <i className="ri-checkbox-multiple-line mr-2"></i>
-              Bulk Actions
+              {t('controls.bulkActions')}
             </button>
           </div>
         </div>
@@ -511,7 +513,7 @@ const MyVideosContent = () => {
                     className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <span className="text-sm text-gray-700">
-                    Select All ({selectedVideos.length} selected)
+                    {t('controls.selectAll', { count: selectedVideos.length })}
                   </span>
                 </label>
               </div>
@@ -523,14 +525,14 @@ const MyVideosContent = () => {
                     className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                   >
                     <i className="ri-refresh-line mr-2"></i>
-                    Regenerate Selected
+                    {t('controls.regenerateSelected')}
                   </button>
                   <button
                     onClick={handleBulkDelete}
                     className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors"
                   >
                     <i className="ri-delete-bin-line mr-2"></i>
-                    Delete Selected
+                    {t('controls.deleteSelected')}
                   </button>
                 </div>
               )}
@@ -546,16 +548,16 @@ const MyVideosContent = () => {
             <div className="text-gray-400 mb-4">
               <i className="ri-video-line text-6xl"></i>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">No videos found</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('empty.title')}</h3>
             <p className="text-gray-600 mb-6">
               {filterStatus !== 'all' || filterCategory !== 'all' 
-                ? 'Try adjusting your filters or create your first video.'
-                : 'You haven\'t created any videos yet. Start creating your first ASMR video!'
+                ? t('empty.withFilters')
+                : t('empty.noVideos')
               }
             </p>
             <button className="btn-primary">
               <i className="ri-add-circle-line mr-2"></i>
-              Create Video
+              {t('empty.createVideo')}
             </button>
           </div>
         ) : (
@@ -598,7 +600,7 @@ const MyVideosContent = () => {
                     }`}>
                       <div className="text-white text-center">
                         <i className="ri-play-circle-line text-4xl mb-2 opacity-80 group-hover:opacity-100 transition-opacity"></i>
-                        <p className="text-sm opacity-80">Click to Preview</p>
+                        <p className="text-sm opacity-80">{t('videoCard.clickToPreview')}</p>
                       </div>
                     </div>
                     
@@ -649,7 +651,7 @@ const MyVideosContent = () => {
                         </span>
                         <span className="flex items-center">
                           <i className="ri-coin-line mr-1"></i>
-                          {video.credit_cost} credits
+                          {video.credit_cost} {t('videoCard.credits')}
                         </span>
                       </div>
                       {video.status === 'ready' && (
@@ -674,7 +676,7 @@ const MyVideosContent = () => {
                           className="px-3 py-1.5 bg-purple-100 text-purple-600 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors"
                         >
                           <i className="ri-play-line mr-1"></i>
-                          Preview
+                          {t('videoCard.preview')}
                         </button>
                         
                         {video.status === 'ready' && (
@@ -683,7 +685,7 @@ const MyVideosContent = () => {
                             className="px-3 py-1.5 bg-green-100 text-green-600 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
                           >
                             <i className="ri-download-line mr-1"></i>
-                            Download
+                            {t('videoCard.download')}
                           </button>
                         )}
                       </div>
@@ -692,14 +694,14 @@ const MyVideosContent = () => {
                         <button
                           onClick={() => handleRegenerate(video.id)}
                           className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                          title="Regenerate"
+                          title={t('videoCard.regenerate')}
                         >
                           <i className="ri-refresh-line"></i>
                         </button>
                         <button
                           onClick={() => handleDelete(video.id)}
                           className="p-1.5 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
-                          title="Delete"
+                          title={t('videoCard.delete')}
                         >
                           <i className="ri-delete-bin-line"></i>
                         </button>
@@ -725,7 +727,7 @@ const MyVideosContent = () => {
             className="btn-secondary"
           >
             <i className="ri-arrow-down-line mr-2"></i>
-            Load More Videos
+            {t('loadMore')}
           </button>
         </div>
       )}
@@ -734,19 +736,19 @@ const MyVideosContent = () => {
       <div data-aos="fade-up" data-aos-delay="800" className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6">
         <div className="text-center">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            Need Help?
+            {t('help.title')}
           </h3>
           <p className="text-gray-600 mb-4">
-            Having trouble with video generation or need support?
+            {t('help.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="btn-secondary">
+            <button className="btn-secondary bg-purple-600/10 border-purple-400/30 text-purple-900">
               <i className="ri-question-line mr-2"></i>
-              View FAQ
+              {t('help.viewFaq')}
             </button>
             <button className="btn-primary">
               <i className="ri-mail-line mr-2"></i>
-              Contact Support
+              {t('help.contactSupport')}
             </button>
           </div>
         </div>
@@ -754,30 +756,30 @@ const MyVideosContent = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-xl p-6 max-w-md w-full mx-4 border border-gray-700">
             <div className="text-center">
-              <div className="text-red-600 mb-4">
+              <div className="text-red-500 mb-4">
                 <i className="ri-error-warning-line text-4xl"></i>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Delete Video
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {t('modals.delete.title')}
               </h3>
-              <p className="text-gray-600 mb-6">
-                Are you sure you want to delete this video? This action cannot be undone.
+              <p className="text-gray-300 mb-6">
+                {t('modals.delete.message')}
               </p>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShowDeleteModal(false)}
-                  className="flex-1 btn-secondary"
+                  className="flex-1 bg-gray-700 text-gray-300 px-4 py-2 rounded-lg font-medium hover:bg-gray-600 hover:text-white transition-colors"
                 >
-                  Cancel
+                  {t('modals.delete.cancel')}
                 </button>
                 <button
                   onClick={confirmDelete}
                   className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
                 >
-                  Delete
+                  {t('modals.delete.delete')}
                 </button>
               </div>
             </div>
@@ -787,36 +789,36 @@ const MyVideosContent = () => {
 
       {/* Regenerate Confirmation Modal */}
       {showRegenerateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-xl p-6 max-w-md w-full mx-4 border border-gray-700">
             <div className="text-center">
-              <div className="text-blue-600 mb-4">
+              <div className="text-blue-500 mb-4">
                 <i className="ri-refresh-line text-4xl"></i>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Regenerate Video
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {t('modals.regenerate.title')}
               </h3>
-              <p className="text-gray-600 mb-4">
-                This will create a new video using the original prompt and settings.
+              <p className="text-gray-300 mb-4">
+                {t('modals.regenerate.message')}
               </p>
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
-                <p className="text-sm text-yellow-800">
+              <div className="bg-yellow-900/30 border border-yellow-700/50 rounded-lg p-3 mb-6">
+                <p className="text-sm text-yellow-300">
                   <i className="ri-coin-line mr-1"></i>
-                  This will cost {actionVideoId ? videos.find(v => v.id === actionVideoId)?.credit_cost : 0} credits
+                  {t('modals.regenerate.costWarning', { credits: actionVideoId ? (videos.find(v => v.id === actionVideoId)?.credit_cost || 0) : 0 })}
                 </p>
               </div>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShowRegenerateModal(false)}
-                  className="flex-1 btn-secondary"
+                  className="flex-1 bg-gray-700 text-gray-300 px-4 py-2 rounded-lg font-medium hover:bg-gray-600 hover:text-white transition-colors"
                 >
-                  Cancel
+                  {t('modals.regenerate.cancel')}
                 </button>
                 <button
                   onClick={confirmRegenerate}
                   className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Regenerate
+                  {t('modals.regenerate.regenerate')}
                 </button>
               </div>
             </div>

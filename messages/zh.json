@@ -77,34 +77,161 @@
   },
   "create": {
     "title": "创建您的ASMR视频",
-    "prompt": {
-      "label": "视频提示",
-      "placeholder": "描述您想要创建的ASMR视频..."
+    "subtitle": "使用我们的AI驱动生成技术，将您的想法转化为沉浸式ASMR体验",
+    "loginRequired": "请登录以生成视频并保存您的作品。",
+    "credits": {
+      "remaining": "剩余{credits}积分",
+      "cost": "费用：{credits}积分",
+      "insufficient": "您需要{credits}积分来生成视频",
+      "currentBalance": "当前余额：{credits}积分",
+      "getCredits": "获取积分"
     },
-    "triggers": {
-      "label": "选择ASMR触发器",
-      "options": {
-        "soap": "肥皂",
-        "sponge": "海绵",
-        "ice": "冰块",
-        "water": "流水",
-        "honey": "蜂蜜",
-        "cubes": "方块",
-        "petals": "花瓣",
-        "pages": "翻页"
+    "prompt": {
+      "label": "描述您的ASMR场景",
+      "placeholder": "为了获得更好的效果，请包含纹理、声音和视觉细节。请详细描述并发挥创意...",
+      "charCount": "{current}/{max}"
+    },
+    "image": {
+      "label": "图片（可选）",
+      "dragDrop": "拖拽或点击",
+      "fileTypes": "PNG、JPG、JPEG或WEBP（最大10MB）",
+      "uploading": "正在上传图片...",
+      "uploadSuccess": "图片上传成功",
+      "uploadDescription": "此图片将作为视频生成的参考",
+      "remove": "移除",
+      "loginToUpload": "请登录以上传图片。"
+    },
+    "provider": {
+      "label": "AI提供商",
+      "veo3": {
+        "title": "VEO3",
+        "subtitle": "高质量"
+      },
+      "runway": {
+        "title": "Runway",
+        "subtitle": "快速生成"
       }
     },
-    "settings": {
-      "duration": "时长",
-      "quality": "画质",
-      "aspectRatio": "宽高比"
+    "model": {
+      "label": "VEO3模型",
+      "veo3Fast": {
+        "title": "VEO3快速版",
+        "subtitle": "60积分"
+      },
+      "veo3Standard": {
+        "title": "VEO3标准版",
+        "subtitle": "300积分"
+      }
     },
-    "generate": "生成视频",
-    "credits": "需要积分：{credits}"
+    "duration": {
+      "label": "视频时长",
+      "5seconds": {
+        "title": "5秒",
+        "subtitle": "12积分"
+      },
+      "8seconds": {
+        "title": "8秒",
+        "subtitle": "30积分"
+      }
+    },
+    "quality": {
+      "label": "视频质量",
+      "720p": {
+        "title": "720p高清",
+        "subtitle": "标准质量"
+      },
+      "1080p": {
+        "title": "1080p全高清",
+        "subtitle": "高质量",
+        "unavailable": "8秒时不可用"
+      }
+    },
+    "aspectRatio": {
+      "label": "宽高比",
+      "ratios": {
+        "16:9": "横屏",
+        "4:3": "经典",
+        "1:1": "正方形",
+        "3:4": "照片",
+        "9:16": "竖屏"
+      }
+    },
+    "watermark": {
+      "label": "水印（可选）",
+      "placeholder": "添加自定义水印文本...",
+      "description": "留空表示无水印。最多50个字符。"
+    },
+    "generate": {
+      "button": "生成ASMR视频",
+      "generating": "正在生成...",
+      "loginToGenerate": "请登录以生成视频。"
+    },
+    "preview": {
+      "title": "预览",
+      "result": "{provider}结果",
+      "description": "您的专业AI生成视频将在这里显示",
+      "templatePreview": "模板预览",
+      "demo": "演示"
+    },
+    "progress": {
+      "creating": "正在创建您的ASMR视频...",
+      "starting": "开始生成...",
+      "queued": "任务已排队，等待开始...",
+      "processing": "正在生成视频... {progress}%",
+      "uploading": "正在处理和上传视频... {progress}%",
+      "ready": "视频处理完成并已就绪！"
+    },
+    "result": {
+      "title": "您生成的ASMR视频",
+      "download": "下载{provider}视频 • 高清质量",
+      "withImage": "包含参考图片"
+    },
+    "faq": {
+      "title": "常见问题",
+      "failedGeneration": {
+        "title": "如果视频生成失败会怎样？",
+        "answer": "生成失败不会消耗积分。您可以重新尝试而不会损失任何积分。"
+      },
+      "generationTime": {
+        "title": "视频生成需要多长时间？",
+        "answer": "视频生成通常需要1-2分钟，但在高峰期可能需要最多4分钟。"
+      },
+      "freePlan": {
+        "title": "免费套餐可以生成视频吗？",
+        "answer": "只有付费套餐可以生成视频。免费用户可以浏览和探索现有内容。"
+      },
+      "betterResults": {
+        "title": "如何获得更好的结果？",
+        "answer": "使用清晰、丰富的提示和详细描述。提示内容控制视觉风格和质量。"
+      },
+      "commercialUse": {
+        "title": "我可以将生成的视频用于商业用途吗？",
+        "answer": "付费套餐的原创上传内容允许商业使用。"
+      },
+      "howToDownload": {
+        "title": "如何下载我的视频？",
+        "answer": "点击视频生成后出现的\"下载高清\"按钮。"
+      }
+    }
+  },
+  "footer": {
+    "description": "通过文本提示、图像或参考视频创建高质量的AI驱动ASMR视频。使用先进的AI技术生成沉浸式4K循环ASMR内容。",
+    "navigation": "导航",
+    "categories": "分类",
+    "roleplayCollections": "角色扮演合集",
+    "relaxCollections": "放松合集",
+    "legalSupport": "法律与支持",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "faq": "常见问题",
+    "support": "客服支持",
+    "copyright": "© 2024 AIASMR Video. 保留所有权利。最后更新：2025年2月27日",
+    "ageRestriction": "年龄限制：18+ | 可能适用地区限制"
   },
   "pricing": {
     "title": "选择您的套餐",
     "subtitle": "灵活的定价方案，满足每个创作者",
+    "mostPopular": "最受欢迎",
     "plans": {
       "free": {
         "name": "免费套餐",
@@ -142,6 +269,627 @@
           "商业使用"
         ]
       }
+    }
+  },
+  "explore": {
+    "title": "AI ASMR 视频展示",
+    "subtitle": "发现我们社区创建的沉浸式4K ASMR内容。体验视觉艺术与放松声音的完美融合。",
+    "searchPlaceholder": "搜索视频...",
+    "filters": {
+      "all": "全部",
+      "hot": "热门",
+      "new": "最新",
+      "trending": "趋势"
+    },
+    "aiTemplate": "AI 模板",
+    "view": "查看",
+    "loadMore": "加载更多视频",
+    "testimonials": {
+      "title": "用户评价",
+      "sarah": "AI生成的ASMR视频非常逼真，帮助我在压力大的日子里放松。质量非常棒！",
+      "mike": "作为内容创作者，这个平台为我节省了大量工作时间。AI完全理解什么是好的ASMR内容。",
+      "wei": "丰富的触发器和4K质量让这成为我首选的ASMR内容平台。强烈推荐！"
+    },
+    "faq": {
+      "title": "快速解答",
+      "whatTypes": {
+        "title": "可以创建哪些类型？",
+        "answer": "我们的AI可以生成切割视频、水声、耳语内容、物品互动等，具有逼真的4K视觉效果。"
+      },
+      "howFast": {
+        "title": "生成速度有多快？",
+        "answer": "大部分视频在1-2分钟内完成生成，确保您快速获得高质量内容，无需长时间等待。"
+      },
+      "qualityAdvantages": {
+        "title": "质量优势？",
+        "answer": "AI生成的内容提供完美的音视频同步、稳定的质量和与专业ASMR视频相媲美的4K分辨率。"
+      },
+      "whoBenefits": {
+        "title": "谁最受益？",
+        "answer": "内容创作者、放松爱好者以及任何寻求个性化ASMR体验的人都能从我们的平台中受益。"
+      }
+    },
+    "cta": {
+      "title": "准备创建您自己的ASMR视频？",
+      "subtitle": "加入数千名创作者，今天就开始生成个性化ASMR内容。",
+      "createButton": "立即创建",
+      "pricingButton": "查看定价"
+    }
+  },
+  "veo3": {
+    "metadata": {
+      "title": "VEO3 AI视频生成器 | 高级ASMR内容创作 | AIASMR",
+      "description": "使用Google的VEO3 AI模型创建高质量ASMR视频。通过文本提示生成专业720p-1080p视频，采用先进的神经网络技术。",
+      "keywords": "VEO3 AI视频生成器, ASMR视频创作, Google VEO3模型, AI视频生成, 专业ASMR内容, 文本转视频AI, 视频合成, 神经网络视频生成, 720p 1080p视频, 商业视频许可",
+      "imageAlt": "VEO3 AI视频生成器 - 创建高级ASMR视频"
+    },
+    "client": {
+      "header": {
+        "title": "VEO3 AI视频生成器",
+        "subtitle": "体验Google VEO3模型带来的最高质量ASMR视频生成",
+        "loginRequired": "请登录以生成视频并保存您的作品。"
+      },
+      "credits": {
+        "remaining": "剩余{credits}积分",
+        "cost": "费用：{credits}积分",
+        "insufficient": "您需要{credits}积分来生成视频",
+        "currentBalance": "当前余额：{credits}积分",
+        "getCredits": "获取积分"
+      },
+      "form": {
+        "prompt": {
+          "label": "描述您的ASMR场景",
+          "placeholder": "为了获得更好的效果，请包含纹理、声音和视觉细节。请详细描述并发挥创意..."
+        },
+        "image": {
+          "label": "图片（可选）",
+          "dragDrop": "拖拽或点击",
+          "fileTypes": "PNG、JPG、JPEG或WEBP（最大10MB）",
+          "uploading": "正在上传图片...",
+          "uploadSuccess": "图片上传成功",
+          "uploadDescription": "此图片将作为视频生成的参考",
+          "remove": "移除",
+          "loginToUpload": "请登录以上传图片。"
+        },
+        "model": {
+          "label": "VEO3模型",
+          "veo3Fast": {
+            "title": "VEO3快速版",
+            "subtitle": "60积分"
+          },
+          "veo3Standard": {
+            "title": "VEO3标准版",
+            "subtitle": "300积分"
+          }
+        },
+        "quality": {
+          "label": "视频质量",
+          "720p": {
+            "title": "720p高清",
+            "subtitle": "标准质量"
+          },
+          "1080p": {
+            "title": "1080p全高清",
+            "subtitle": "高质量"
+          }
+        },
+        "aspectRatio": {
+          "label": "宽高比",
+          "ratios": {
+            "16:9": "横屏",
+            "9:16": "竖屏"
+          }
+        },
+        "watermark": {
+          "label": "水印（可选）",
+          "placeholder": "添加自定义水印文本...",
+          "description": "留空表示无水印。最多50个字符。"
+        },
+        "generate": {
+          "button": "使用VEO3生成",
+          "generating": "正在生成...",
+          "loginToGenerate": "请登录以生成视频。"
+        }
+      },
+      "preview": {
+        "title": "预览",
+        "result": "VEO3结果",
+        "description": "您的专业VEO3 AI生成视频将在这里显示",
+        "templatePreview": "模板预览",
+        "demo": "演示"
+      },
+      "progress": {
+        "creating": "正在创建您的VEO3视频...",
+        "starting": "开始生成...",
+        "queued": "任务已排队，等待开始...",
+        "processing": "正在生成视频... {progress}%",
+        "uploading": "正在处理和上传视频... {progress}%",
+        "ready": "视频处理完成并已就绪！"
+      },
+      "result": {
+        "title": "您生成的VEO3视频",
+        "download": "下载VEO3视频 • 高清质量",
+        "withImage": "包含参考图片"
+      },
+      "features": {
+        "title": "为什么选择VEO3？",
+        "quality": {
+          "title": "卓越品质",
+          "description": "VEO3提供最高质量的视频生成，具有令人难以置信的细节和真实感。"
+        },
+        "ai": {
+          "title": "先进AI",
+          "description": "由Google最新的视频生成技术驱动，创造自然流畅的ASMR内容。"
+        },
+        "settings": {
+          "title": "优化设置",
+          "description": "专为ASMR内容调优，支持16:9和9:16宽高比。"
+        }
+      },
+      "showcase": {
+        "title": "VEO3视频展示",
+        "subtitle": "使用VEO3技术创建的专业AI生成视频",
+        "copyPrompt": "复制提示词",
+        "ready": "准备创建您自己的高级VEO3视频？",
+        "startCreating": "开始使用VEO3创建"
+      },
+      "faq": {
+        "title": "VEO3常见问题",
+        "subtitle": "关于使用Google VEO3生成ASMR视频的一切信息",
+        "questions": {
+          "different": {
+            "question": "VEO3与其他AI模型有什么不同？",
+            "answer": "VEO3是Google最先进的视频生成模型，相比早期模型提供卓越的质量、逼真的动作和对复杂提示的更好理解。"
+          },
+          "time": {
+            "question": "VEO3视频生成需要多长时间？",
+            "answer": "VEO3快速版通常需要2-4分钟，而VEO3标准版需要5-8分钟以获得更高质量的结果。处理时间在高峰期可能会有所不同。"
+          },
+          "aspectRatios": {
+            "question": "VEO3支持哪些宽高比？",
+            "answer": "VEO3目前支持16:9（横屏）和9:16（竖屏）宽高比，非常适合YouTube、Instagram Stories和TikTok内容。"
+          },
+          "credits": {
+            "question": "为什么VEO3比其他模型消耗更多积分？",
+            "answer": "VEO3由于其先进的神经架构使用了显著更多的计算资源，提供的优质品质证明了较高的积分成本是合理的。"
+          },
+          "images": {
+            "question": "我可以在VEO3中使用参考图片吗？",
+            "answer": "是的！VEO3支持参考图片，允许您指导ASMR视频的视觉风格和构图，获得更精确的结果。"
+          },
+          "commercial": {
+            "question": "VEO3内容可以安全用于商业用途吗？",
+            "answer": "是的，所有VEO3生成的内容都可以用于商业用途。您保留对创建视频的完整权利，可以在任何平台上进行变现。"
+          },
+          "prompts": {
+            "question": "如何为VEO3编写更好的提示词？",
+            "answer": "具体描述纹理、光照和动作。VEO3擅长理解详细描述，如\"自然光照下的柔软肥皂切割\"或\"玻璃表面上的轻柔水滴\"。"
+          },
+          "fails": {
+            "question": "如果我的VEO3生成失败怎么办？",
+            "answer": "失败的生成会自动退款。您可以立即使用修改后的提示词或不同的设置重试，而不会损失积分。"
+          }
+        }
+      },
+      "toast": {
+        "copied": "提示词已复制到剪贴板！",
+        "failed": "复制提示词失败"
+      },
+      "errors": {
+        "loginRequired": "请登录以生成视频。",
+        "downloadFailed": "下载视频失败。请重试。",
+        "videoNotAvailable": "视频不可下载。请尝试重新生成视频。",
+        "generationFailed": "视频生成失败",
+        "generationTimeout": "视频生成超时。请重试。",
+        "statusCheckFailed": "检查生成状态失败"
+      }
+    }
+  },
+  "aiPrompts": {
+    "metadata": {
+      "title": "AI ASMR提示词 | 即用型视频生成模板 | AIASMR",
+      "description": "探索数百个即用型ASMR提示词用于AI视频生成。使用专业模板创建切肥皂、碎冰块、水声等内容。",
+      "keywords": "AI ASMR提示词, ASMR视频模板, 切肥皂提示词, 碎冰块提示词, 水声提示词, ASMR视频生成, AI视频提示词, 即用型ASMR模板",
+      "imageAlt": "AI ASMR提示词 - 即用型视频生成模板"
+    },
+    "hero": {
+      "title": "AI ASMR 提示词",
+      "subtitle": "AI驱动的ASMR视频生成器，配备即用提示词",
+      "description": "使用我们先进的AI技术即时生成惊艳的ASMR内容。从切肥皂、碎冰块到水滴和翻页，将简单的文本提示转换为迷人的视频，具备清晰的音频和专业级视觉效果，只需几分钟而非数小时。",
+      "buttons": {
+        "viewClips": "查看完整ASMR片段",
+        "createVideos": "创建视频"
+      },
+      "stats": {
+        "creativeAssets": "创意素材",
+        "downloads": "下载量",
+        "activeCreators": "活跃创作者"
+      }
+    },
+    "discover": {
+      "title": "探索舒缓ASMR",
+      "subtitle": "视觉与音频 [包含提示词]",
+      "description": "探索AIASMR Video的AI驱动ASMR视频生成器的可能性。浏览使用Google Veo 3模型在AIASMR Video中创建的精选视频示例，每个都配有使用的确切提示词，让您可以轻松复制或自定义它们用于您自己的放松内容。",
+      "loading": "正在加载ASMR模板...",
+      "audio": "音频",
+      "cta": "几分钟内制作您的第一个ASMR视频"
+    },
+    "whyChoose": {
+      "title": "为什么选择AIASMR Video生成AI ASMR视频？",
+      "subtitle": "我们先进的AI技术和用户友好的平台让创建专业ASMR内容变得轻松且人人可及。",
+      "features": {
+        "fastGeneration": {
+          "title": "闪电般快速生成",
+          "description": "使用我们先进的AI技术在几分钟内创建高质量ASMR视频。无需技术技能。"
+        },
+        "readyPrompts": {
+          "title": "即用提示词",
+          "description": "访问我们精选的经过验证的ASMR提示词库，包括切肥皂、碎冰块、翻页等。"
+        },
+        "professionalQuality": {
+          "title": "专业品质",
+          "description": "生成4K品质视频，音频清晰，完美适用于社交媒体和专业用途。"
+        },
+        "customizable": {
+          "title": "可自定义选项",
+          "description": "调整时长、质量、宽高比和触发器，为您的观众创建完美的ASMR视频。"
+        },
+        "instantDownload": {
+          "title": "即时下载",
+          "description": "立即下载生成的ASMR视频，支持多种格式，可直接上传到任何平台。"
+        },
+        "communitySupport": {
+          "title": "社区支持",
+          "description": "加入成千上万的创作者，在我们充满活力的ASMR社区中分享技巧、提示词和灵感。"
+        }
+      }
+    },
+    "faq": {
+      "title": "使用提示词制作ASMR视频的常见问题",
+      "subtitle": "获得关于使用我们平台创建AI生成ASMR视频最常见问题的答案。",
+      "questions": {
+        "whatTypes": {
+          "question": "我可以使用AI提示词创建哪些类型的ASMR视频？",
+          "answer": "您可以创建各种各样的ASMR视频，包括切肥皂、碎冰块、翻页、挤海绵、水滴、滴蜂蜜等许多令人满足和放松的内容类型。我们的AI支持视觉和音频ASMR触发器。"
+        },
+        "howLong": {
+          "question": "生成一个ASMR视频需要多长时间？",
+          "answer": "大多数ASMR视频在2-5分钟内生成完成，具体取决于提示词的复杂性和选择的时长。我们先进的AI技术确保快速处理，同时保持高质量输出。"
+        },
+        "videoQuality": {
+          "question": "有哪些视频质量和格式可用？",
+          "answer": "我们提供多种质量选项，包括720p和1080p分辨率。视频可以生成各种宽高比（16:9、4:3、1:1、3:4、9:16），适合YouTube、Instagram、TikTok等不同平台。"
+        },
+        "customizeTriggers": {
+          "question": "我可以自定义视频中的ASMR触发器吗？",
+          "answer": "是的！您可以从我们的ASMR触发器库中选择，包括肥皂、海绵、冰块、水、蜂蜜、方块、花瓣和纸张。您可以在单个视频中组合多达3种不同的触发器，创建独特且引人入胜的内容。"
+        },
+        "cost": {
+          "question": "生成ASMR视频需要多少费用？",
+          "answer": "每次视频生成需要20积分。新用户可获得20免费积分开始使用。可通过我们灵活的定价计划购买额外积分，生成失败会自动退款。"
+        },
+        "commercial": {
+          "question": "我可以将生成的视频用于商业用途吗？",
+          "answer": "是的，通过我们平台生成的所有视频都可用于商业用途。您保留对创建内容的完整权利，可以在包括YouTube、社交媒体或自己网站在内的任何平台上进行变现。"
+        }
+      }
+    },
+    "howTo": {
+      "title": "如何在AIASMR Video中用提示词制作AI ASMR视频",
+      "subtitle": "按照这些简单步骤使用我们的AI驱动平台创建惊艳的ASMR视频。无需技术技能 - 只需要您的创意！",
+      "steps": {
+        "writePrompt": {
+          "title": "编写您的提示词",
+          "description": "描述您想要创建的ASMR视频。具体说明您想要的触发器、声音和视觉元素。"
+        },
+        "customizeSettings": {
+          "title": "自定义设置",
+          "description": "选择您偏好的时长、质量、宽高比和ASMR触发器来个性化您的视频。"
+        },
+        "generateVideo": {
+          "title": "生成视频",
+          "description": "点击生成，让我们的AI创建您的ASMR视频。该过程通常需要2-5分钟完成。"
+        },
+        "downloadShare": {
+          "title": "下载和分享",
+          "description": "下载您完成的ASMR视频，并在您喜爱的平台上分享，如YouTube、TikTok或Instagram。"
+        }
+      },
+      "cta": "立即开始创建您的ASMR视频"
+    },
+    "modal": {
+      "title": "ASMR示例",
+      "category": "类别：",
+      "duration": "时长：",
+      "aspectRatio": "宽高比：",
+      "copyPrompt": "复制此提示词以生成类似视频：",
+      "tags": "标签：",
+      "audioIncluded": "包含音频",
+      "makeASMR": "用AI制作ASMR"
+    },
+    "toast": {
+      "copied": "提示词已复制到剪贴板！",
+      "failed": "复制提示词失败"
+    },
+    "errors": {
+      "failedToLoad": "模板加载失败",
+      "failedToFetch": "获取ASMR模板失败"
+    }
+  },
+  "myVideos": {
+    "stats": {
+      "totalVideos": "总视频数",
+      "creditsSpent": "本月消费积分",
+      "remainingCredits": "剩余积分",
+      "upgradePlan": "升级套餐",
+      "buyMoreCredits": "购买更多积分"
+    },
+    "controls": {
+      "sortBy": "排序方式：",
+      "sortOptions": {
+        "date": "日期（最新）",
+        "cost": "成本（最高）",
+        "alphabetical": "A-Z"
+      },
+      "status": "状态：",
+      "statusOptions": {
+        "all": "所有状态",
+        "processing": "处理中",
+        "ready": "已完成",
+        "failed": "失败"
+      },
+      "category": "类别：",
+      "allCategories": "所有类别",
+      "bulkActions": "批量操作",
+      "selectAll": "全选（已选{count}个）",
+      "regenerateSelected": "重新生成选中的",
+      "deleteSelected": "删除选中的"
+    },
+    "videoCard": {
+      "preview": "预览",
+      "download": "下载",
+      "regenerate": "重新生成",
+      "delete": "删除",
+      "credits": "积分",
+      "clickToPreview": "点击预览"
+    },
+    "empty": {
+      "title": "未找到视频",
+      "withFilters": "请尝试调整筛选条件或创建您的第一个视频。",
+      "noVideos": "您还没有创建任何视频。开始创建您的第一个ASMR视频！",
+      "createVideo": "创建视频"
+    },
+    "loadMore": "加载更多视频",
+    "help": {
+      "title": "需要帮助？",
+      "description": "在视频生成方面遇到问题或需要支持？",
+      "viewFaq": "查看常见问题",
+      "contactSupport": "联系客服"
+    },
+    "modals": {
+      "delete": {
+        "title": "删除视频",
+        "message": "您确定要删除这个视频吗？此操作无法撤销。",
+        "cancel": "取消",
+        "delete": "删除"
+      },
+      "regenerate": {
+        "title": "重新生成视频",
+        "message": "这将使用原始提示词和设置创建一个新视频。",
+        "costWarning": "这将消费{credits}积分",
+        "cancel": "取消",
+        "regenerate": "重新生成"
+      }
+    },
+    "errors": {
+      "downloadFailed": "下载失败。请稍后重试。",
+      "downloadError": "下载失败。请检查您的网络连接并重试。",
+      "testDownload": "这是一个测试视频。在正式环境中，文件\"{filename}\"将从以下地址下载：{url}"
+    },
+    "header": {
+      "title": "我的视频",
+      "description": "管理、预览和下载您的AI生成ASMR视频"
+    }
+  },
+  "asmrModal": {
+    "title": "ASMR模板",
+    "videoPreview": "视频预览",
+    "audioIncluded": "包含音频",
+    "details": {
+      "category": "类别：",
+      "duration": "时长：",
+      "aspectRatio": "宽高比：",
+      "downloads": "下载量：",
+      "tags": "标签："
+    },
+    "prompt": {
+      "copyInstruction": "复制此提示词以生成类似视频：",
+      "copyTooltip": "复制到剪贴板",
+      "copySuccess": "已复制到剪贴板！"
+    },
+    "generateButton": "使用此提示词生成视频",
+    "browserNotSupported": "您的浏览器不支持视频标签。"
+  },
+  "relaxingExplore": {
+    "navigation": {
+      "backToExplore": "返回探索"
+    },
+    "header": {
+      "title": "放松",
+      "collections": "合集",
+      "description": "通过我们精心策划的宁静ASMR模板合集，找到您的完美放松之路。专为帮助您放松、减压和获得宁静而设计。",
+      "stats": {
+        "templates": "{count}个模板",
+        "focus": "专注减压"
+      }
+    },
+    "benefits": {
+      "title": "放松ASMR的益处",
+      "betterSleep": {
+        "title": "更好睡眠",
+        "description": "轻柔的声音和视觉效果有助于平静您的心灵，获得安稳睡眠"
+      },
+      "stressRelief": {
+        "title": "缓解压力",
+        "description": "通过舒缓的ASMR触发器减少焦虑和紧张"
+      },
+      "mentalFocus": {
+        "title": "精神专注",
+        "description": "通过放松提高注意力和正念"
+      }
+    },
+    "template": {
+      "generate": "生成",
+      "relaxing": "放松",
+      "copyPrompt": "复制提示词",
+      "useTemplate": "使用模板",
+      "browserNotSupported": "您的浏览器不支持视频标签。"
+    },
+    "emptyState": {
+      "title": "未找到放松合集",
+      "description": "我们正在不断添加新的放松内容。请稍后查看更多宁静的ASMR模板！",
+      "exploreAllButton": "探索所有模板"
+    },
+    "tips": {
+      "title": "获得最大放松效果的技巧",
+      "useHeadphones": {
+        "title": "使用耳机",
+        "description": "体验完整的立体声效果以获得更好的沉浸感"
+      },
+      "lowVolume": {
+        "title": "低音量",
+        "description": "保持舒适的音量以避免惊吓效果"
+      },
+      "dimLighting": {
+        "title": "昏暗照明",
+        "description": "用柔和的照明创造平静的环境"
+      },
+      "regularSchedule": {
+        "title": "规律安排",
+        "description": "持续观看以获得更好的放松效果"
+      }
+    },
+    "faq": {
+      "title": "放松ASMR",
+      "subtitle": "创建和享受平静、缓解压力的ASMR内容指南",
+      "questions": {
+        "effective": {
+          "question": "什么让ASMR对放松如此有效？",
+          "answer": "ASMR会触发副交感神经系统，降低心率和皮质醇水平。轻柔、重复的声音和视觉效果创造出自然减压和缓解焦虑的冥想状态。"
+        },
+        "sleep": {
+          "question": "ASMR真的能帮助解决睡眠问题吗？",
+          "answer": "是的！研究表明ASMR可以通过减少杂念、肌肉紧张和焦虑来改善睡眠质量。放松ASMR缓慢、有节奏的特性自然地为您的身心做好休息准备。"
+        },
+        "bestTime": {
+          "question": "观看放松ASMR的最佳时间是什么时候？",
+          "answer": "晚上（睡前1-2小时）是睡眠导向内容的理想时间。对于缓解压力，任何感到不堪重负的时候都可以。晨间观看可以为您的整天定下平静的基调。"
+        },
+        "headphones": {
+          "question": "我需要特殊耳机来听放松ASMR吗？",
+          "answer": "虽然任何耳机都可以，但舒适的头戴式或高质量耳塞能增强体验。睡前使用时避免降噪功能，因为您需要保持对环境的感知。"
+        },
+        "volume": {
+          "question": "放松ASMR的最佳音量是多少？",
+          "answer": "保持低音量 - 大约设备最大音量的20-30%。声音应该清晰可听但不占主导。如果您听不到轻柔的背景噪音，那就太大声了。"
+        },
+        "anxiety": {
+          "question": "ASMR能帮助缓解焦虑和抑郁吗？",
+          "answer": "ASMR可以作为管理焦虑和轻度抑郁症状的有用辅助工具。放松反应和个人关注感可以提供安慰，但它不能替代专业治疗。"
+        },
+        "tingles": {
+          "question": "为什么我感受不到ASMR的刺痛感？",
+          "answer": "不是每个人都会体验到刺痛感，这完全正常！即使没有刺痛感觉，您仍然可以从ASMR提供的放松、减压和睡眠改善中受益。"
+        },
+        "frequency": {
+          "question": "我应该多久观看一次放松ASMR？",
+          "answer": "每日观看是安全且有益的。许多人将ASMR融入他们的夜间例行程序，或在压力大的时候使用。倾听您的身体，根据需要调整频率。"
+        },
+        "triggers": {
+          "question": "哪些触发器最适合深度放松？",
+          "answer": "轻柔的敲击、柔软的刷子声、耳语、翻页声和自然声音非常有效。个人偏好有所不同，所以试验找到您最放松的触发器。"
+        },
+        "safety": {
+          "question": "伴着ASMR视频入睡安全吗？",
+          "answer": "是的，这完全安全！许多视频专为睡眠而设计。使用睡眠定时器节省电量，确保您的设备不会因通知或自动播放打扰您。"
+        }
+      }
+    },
+    "cta": {
+      "title": "准备创建您的放松ASMR内容吗？",
+      "description": "将这些宁静模板转换为个性化的放松视频。非常适合制作睡眠辅助、冥想指南和减压内容。",
+      "startCreating": "开始使用VEO3创建",
+      "browseAll": "浏览所有类别"
+    }
+  },
+  "roleplayExplore": {
+    "navigation": {
+      "backToExplore": "返回探索"
+    },
+    "header": {
+      "title": "角色扮演",
+      "collections": "合集",
+      "description": "沉浸在专业的角色扮演场景中。从医疗检查到美容护理，创造引人入胜的ASMR视频，带来真实的专业互动体验。",
+      "stats": {
+        "templates": "{count}个模板",
+        "scenarios": "专业场景"
+      }
+    },
+    "template": {
+      "generate": "生成",
+      "roleplay": "角色扮演",
+      "copyPrompt": "复制提示词",
+      "useTemplate": "使用模板",
+      "browserNotSupported": "您的浏览器不支持视频标签。"
+    },
+    "emptyState": {
+      "title": "未找到角色扮演合集",
+      "description": "我们正在不断添加新的角色扮演场景。请稍后查看更多专业的ASMR模板！",
+      "exploreAllButton": "探索所有模板"
+    },
+    "faq": {
+      "title": "角色扮演ASMR",
+      "subtitle": "创建专业角色扮演ASMR内容所需了解的一切",
+      "questions": {
+        "popular": {
+          "question": "什么让角色扮演ASMR如此受欢迎？",
+          "answer": "角色扮演ASMR创造沉浸式的个人体验，帮助观众感受到被关心和放松。像医疗检查或美容护理这样的专业场景提供结构化、令人安慰的互动。"
+        },
+        "equipment": {
+          "question": "角色扮演ASMR需要什么设备？",
+          "answer": "高质量的麦克风对于捕捉清晰的耳语和环境声音至关重要。与您的角色扮演场景相关的道具（听诊器、刷子等）增强真实感和观众沉浸感。"
+        },
+        "duration": {
+          "question": "角色扮演ASMR视频应该多长？",
+          "answer": "最成功的角色扮演ASMR视频通常在15-45分钟之间。这有足够的时间建立场景、建立舒适感，并提供持续的放松，而不会让观众疲劳。"
+        },
+        "authentic": {
+          "question": "如何让角色扮演场景感觉真实？",
+          "answer": "研究您所扮演的职业，使用适当的术语，并在整个过程中保持角色的一致性。温和、关怀的语调和逼真的道具有助于创造可信的场景。"
+        },
+        "triggers": {
+          "question": "角色扮演的最佳ASMR触发器是什么？",
+          "answer": "轻声细语或耳语对话、轻柔敲击、翻页声、打字声和特定职业的声音（听诊器、刷子、剪刀）在角色扮演场景中效果极佳。"
+        },
+        "audioVideo": {
+          "question": "角色扮演ASMR应该专注于音频还是视频？",
+          "answer": "虽然音频最重要，但视觉元素增强沉浸感。手部执行任务的特写镜头、柔和照明和适当的服装/道具创造完整体验。"
+        },
+        "requests": {
+          "question": "如何处理观众对角色扮演场景的要求？",
+          "answer": "保持在您的舒适区内并维护专业界限。受欢迎的安全场景包括医疗检查、水疗护理、图书馆参观和教育内容。"
+        },
+        "monetize": {
+          "question": "我可以将角色扮演ASMR内容货币化吗？",
+          "answer": "是的！角色扮演ASMR通过平台合作伙伴关系、赞助和观众直接支持具有很高的货币化潜力。保持一致的质量和发布时间表以获得最佳效果。"
+        }
+      }
+    },
+    "cta": {
+      "title": "准备创建专业角色扮演ASMR吗？",
+      "description": "使用我们的AI驱动生成工具将这些模板转换为高质量视频。非常适合希望制作引人入胜的角色扮演场景的内容创作者。",
+      "startCreating": "开始使用VEO3创建",
+      "browseAll": "浏览所有类别"
     }
   }
 }

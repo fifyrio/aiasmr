@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import AOS from 'aos';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 interface Template {
   id: number;
@@ -25,6 +26,7 @@ interface RelaxingExploreClientProps {
 
 export default function RelaxingExploreClient({ templates }: RelaxingExploreClientProps) {
   const [hoveredVideo, setHoveredVideo] = useState<number | null>(null);
+  const t = useTranslations('relaxingExplore');
 
   useEffect(() => {
     AOS.init({
@@ -65,16 +67,15 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               href="/explore" 
               className="text-white/70 hover:text-white transition-colors mr-3"
             >
-              <i className="ri-arrow-left-line"></i> Back to Explore
+              <i className="ri-arrow-left-line"></i> {t('navigation.backToExplore')}
             </Link>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             <i className="ri-leaf-line mr-3 text-green-300"></i>
-            Relax <span className="text-green-300">Collections</span>
+            {t('header.title')} <span className="text-green-300">{t('header.collections')}</span>
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Find your perfect path to relaxation with our carefully curated collection of peaceful ASMR templates. 
-            Designed to help you unwind, reduce stress, and achieve tranquility.
+            {t('header.description')}
           </p>
           
           {/* Stats */}
@@ -82,13 +83,13 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
             <div className="bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
               <span className="text-white font-semibold">
                 <i className="ri-play-line mr-2"></i>
-                {templates.length} Templates
+                {t('header.stats.templates', { count: templates.length })}
               </span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
               <span className="text-white font-semibold">
                 <i className="ri-heart-line mr-2"></i>
-                Stress Relief Focus
+                {t('header.stats.focus')}
               </span>
             </div>
           </div>
@@ -99,29 +100,29 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
           <div className="bg-gradient-to-r from-green-500/10 to-blue-600/10 backdrop-blur-sm border border-green-400/20 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">
               <i className="ri-heart-pulse-line mr-2 text-green-300"></i>
-              Benefits of Relaxing ASMR
+              {t('benefits.title')}
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="ri-moon-line text-2xl text-white"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Better Sleep</h3>
-                <p className="text-white/70 text-sm">Gentle sounds and visuals help calm your mind for restful sleep</p>
+                <h3 className="text-white font-semibold mb-2">{t('benefits.betterSleep.title')}</h3>
+                <p className="text-white/70 text-sm">{t('benefits.betterSleep.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="ri-heart-line text-2xl text-white"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Stress Relief</h3>
-                <p className="text-white/70 text-sm">Reduce anxiety and tension with soothing ASMR triggers</p>
+                <h3 className="text-white font-semibold mb-2">{t('benefits.stressRelief.title')}</h3>
+                <p className="text-white/70 text-sm">{t('benefits.stressRelief.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="ri-focus-line text-2xl text-white"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Mental Focus</h3>
-                <p className="text-white/70 text-sm">Improve concentration and mindfulness through relaxation</p>
+                <h3 className="text-white font-semibold mb-2">{t('benefits.mentalFocus.title')}</h3>
+                <p className="text-white/70 text-sm">{t('benefits.mentalFocus.description')}</p>
               </div>
             </div>
           </div>
@@ -149,7 +150,7 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
                   className="w-full h-full object-cover"
                   {...(hoveredVideo === template.id ? { autoPlay: true } : {})}
                 >
-                  Your browser does not support the video tag.
+                  {t('template.browserNotSupported')}
                 </video>
                 
                 {/* Video Overlay */}
@@ -169,7 +170,7 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
                         className="bg-gradient-to-r from-green-500 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-green-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105"
                       >
                         <i className="ri-magic-line mr-1"></i>
-                        Generate
+                        {t('template.generate')}
                       </Link>
                     </div>
                   </div>
@@ -179,7 +180,7 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
                 <div className="absolute top-3 left-3">
                   <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">
                     <i className="ri-leaf-line mr-1"></i>
-                    Relaxing
+                    {t('template.relaxing')}
                   </div>
                 </div>
 
@@ -230,7 +231,7 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
                     className="flex items-center text-white/70 hover:text-white text-sm transition-colors"
                   >
                     <i className="ri-file-copy-line mr-2"></i>
-                    Copy Prompt
+                    {t('template.copyPrompt')}
                   </button>
                   
                   <Link
@@ -238,7 +239,7 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
                     className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 transform hover:scale-105"
                   >
                     <i className="ri-magic-line mr-2"></i>
-                    Use Template
+                    {t('template.useTemplate')}
                   </Link>
                 </div>
               </div>
@@ -251,16 +252,16 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
           <div className="text-center py-16" data-aos="fade-up">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-12 max-w-2xl mx-auto">
               <i className="ri-leaf-line text-6xl text-white/50 mb-6"></i>
-              <h3 className="text-2xl font-bold text-white mb-4">No Relax Collections Found</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">{t('emptyState.title')}</h3>
               <p className="text-white/70 mb-6">
-                We&apos;re continuously adding new relaxing content. Check back soon for more peaceful ASMR templates!
+                {t('emptyState.description')}
               </p>
               <Link
                 href="/explore"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-200"
               >
                 <i className="ri-arrow-left-line mr-2"></i>
-                Explore All Templates
+                {t('emptyState.exploreAllButton')}
               </Link>
             </div>
           </div>
@@ -271,36 +272,36 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
           <div className="bg-gradient-to-r from-green-500/20 to-blue-600/20 backdrop-blur-sm border border-green-400/30 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">
               <i className="ri-lightbulb-line mr-2 text-green-300"></i>
-              Tips for Maximum Relaxation
+              {t('tips.title')}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <i className="ri-headphone-line text-green-300 text-xl"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Use Headphones</h3>
-                <p className="text-white/70 text-sm">Experience the full stereo effect for better immersion</p>
+                <h3 className="text-white font-semibold mb-2">{t('tips.useHeadphones.title')}</h3>
+                <p className="text-white/70 text-sm">{t('tips.useHeadphones.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <i className="ri-volume-down-line text-blue-300 text-xl"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Low Volume</h3>
-                <p className="text-white/70 text-sm">Keep volume comfortable to avoid startling effects</p>
+                <h3 className="text-white font-semibold mb-2">{t('tips.lowVolume.title')}</h3>
+                <p className="text-white/70 text-sm">{t('tips.lowVolume.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <i className="ri-moon-clear-line text-purple-300 text-xl"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Dim Lighting</h3>
-                <p className="text-white/70 text-sm">Create a calm environment with soft lighting</p>
+                <h3 className="text-white font-semibold mb-2">{t('tips.dimLighting.title')}</h3>
+                <p className="text-white/70 text-sm">{t('tips.dimLighting.description')}</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <i className="ri-timer-line text-pink-300 text-xl"></i>
                 </div>
-                <h3 className="text-white font-semibold mb-2">Regular Schedule</h3>
-                <p className="text-white/70 text-sm">Watch consistently for better relaxation effects</p>
+                <h3 className="text-white font-semibold mb-2">{t('tips.regularSchedule.title')}</h3>
+                <p className="text-white/70 text-sm">{t('tips.regularSchedule.description')}</p>
               </div>
             </div>
           </div>
@@ -312,10 +313,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-white mb-4">
                 <i className="ri-question-line mr-3 text-green-300"></i>
-                Relaxing ASMR <span className="text-green-300">FAQ</span>
+                {t('faq.title')} <span className="text-green-300">FAQ</span>
               </h2>
               <p className="text-white/80 text-lg max-w-3xl mx-auto">
-                Your guide to creating and enjoying peaceful, stress-relieving ASMR content
+                {t('faq.subtitle')}
               </p>
             </div>
             
@@ -324,10 +325,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-leaf-line mr-2 text-green-300"></i>
-                  What makes ASMR effective for relaxation?
+                  {t('faq.questions.effective.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  ASMR triggers the parasympathetic nervous system, lowering heart rate and cortisol levels. Gentle, repetitive sounds and visuals create a meditative state that naturally reduces stress and anxiety.
+                  {t('faq.questions.effective.answer')}
                 </p>
               </div>
 
@@ -335,10 +336,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-moon-line mr-2 text-blue-300"></i>
-                  Can ASMR really help with sleep problems?
+                  {t('faq.questions.sleep.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Yes! Studies show ASMR can improve sleep quality by reducing racing thoughts, muscle tension, and anxiety. The slow, rhythmic nature of relaxing ASMR naturally prepares your mind and body for rest.
+                  {t('faq.questions.sleep.answer')}
                 </p>
               </div>
 
@@ -346,10 +347,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-timer-line mr-2 text-purple-300"></i>
-                  What&apos;s the best time to watch relaxing ASMR?
+                  {t('faq.questions.bestTime.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Evening hours (1-2 hours before bed) are ideal for sleep-focused content. For stress relief, any time you feel overwhelmed works. Morning sessions can set a calm tone for your entire day.
+                  {t('faq.questions.bestTime.answer')}
                 </p>
               </div>
 
@@ -357,10 +358,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-headphone-line mr-2 text-yellow-300"></i>
-                  Do I need special headphones for relaxing ASMR?
+                  {t('faq.questions.headphones.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  While any headphones work, comfortable over-ear or high-quality earbuds enhance the experience. Avoid noise-canceling for bedtime use, as you want to remain aware of your environment.
+                  {t('faq.questions.headphones.answer')}
                 </p>
               </div>
 
@@ -368,10 +369,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-volume-down-line mr-2 text-pink-300"></i>
-                  What&apos;s the optimal volume for relaxing ASMR?
+                  {t('faq.questions.volume.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Keep volume low - around 20-30% of your device&apos;s maximum. The sounds should be clearly audible but not dominating. If you can&apos;t hear gentle background noises, it&apos;s too loud.
+                  {t('faq.questions.volume.answer')}
                 </p>
               </div>
 
@@ -379,10 +380,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-heart-pulse-line mr-2 text-red-300"></i>
-                  Can ASMR help with anxiety and depression?
+                  {t('faq.questions.anxiety.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  ASMR can be a helpful complementary tool for managing anxiety and mild depression symptoms. The relaxation response and sense of personal attention can provide comfort, though it&apos;s not a replacement for professional treatment.
+                  {t('faq.questions.anxiety.answer')}
                 </p>
               </div>
 
@@ -390,10 +391,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-focus-line mr-2 text-orange-300"></i>
-                  Why don&apos;t I feel ASMR tingles?
+                  {t('faq.questions.tingles.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Not everyone experiences tingles, and that&apos;s completely normal! You can still benefit from the relaxation, stress relief, and sleep improvement that ASMR provides, even without the tingling sensation.
+                  {t('faq.questions.tingles.answer')}
                 </p>
               </div>
 
@@ -401,10 +402,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-refresh-line mr-2 text-cyan-300"></i>
-                  How often should I watch relaxing ASMR?
+                  {t('faq.questions.frequency.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Daily viewing is safe and beneficial. Many people incorporate ASMR into their nightly routine or use it during stressful periods. Listen to your body and adjust frequency based on your needs.
+                  {t('faq.questions.frequency.answer')}
                 </p>
               </div>
 
@@ -412,10 +413,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-lightbulb-line mr-2 text-indigo-300"></i>
-                  What triggers work best for deep relaxation?
+                  {t('faq.questions.triggers.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Gentle tapping, soft brushing sounds, whispered speech, page turning, and nature sounds are highly effective. Personal preference varies, so experiment to find your most relaxing triggers.
+                  {t('faq.questions.triggers.answer')}
                 </p>
               </div>
 
@@ -423,10 +424,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                 <h3 className="font-semibold text-white mb-3 flex items-center">
                   <i className="ri-shield-check-line mr-2 text-teal-300"></i>
-                  Is it safe to fall asleep to ASMR videos?
+                  {t('faq.questions.safety.question')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Yes, it&apos;s perfectly safe! Many videos are designed specifically for sleep. Use a sleep timer to conserve battery, and ensure your device won&apos;t disturb you with notifications or autoplay.
+                  {t('faq.questions.safety.answer')}
                 </p>
               </div>
             </div>
@@ -437,11 +438,10 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
         <div className="text-center mt-16" data-aos="fade-up">
           <div className="bg-gradient-to-r from-green-500/20 to-blue-600/20 backdrop-blur-sm border border-green-400/30 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-white mb-4">
-              Ready to Create Your Relaxing ASMR Content?
+              {t('cta.title')}
             </h2>
             <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-              Transform these peaceful templates into personalized relaxation videos. 
-              Perfect for sleep aids, meditation guides, and stress relief content.
+              {t('cta.description')}
             </p>
             <div className="flex items-center justify-center gap-4">
               <Link
@@ -449,14 +449,14 @@ export default function RelaxingExploreClient({ templates }: RelaxingExploreClie
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <i className="ri-magic-line mr-2"></i>
-                Start Creating with VEO3
+                {t('cta.startCreating')}
               </Link>
               <Link
                 href="/explore"
                 className="inline-flex items-center px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold rounded-full transition-all duration-300"
               >
                 <i className="ri-grid-line mr-2"></i>
-                Browse All Categories
+                {t('cta.browseAll')}
               </Link>
             </div>
           </div>
