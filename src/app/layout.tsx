@@ -1,11 +1,22 @@
 import './globals.css'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { Inter } from 'next/font/google'
 
-// Root layout - minimal configuration
-// The actual layout logic is in [locale]/layout.tsx
+const inter = Inter({ subsets: ['latin'] })
+
+// Root layout for non-internationalized pages
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return children;
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
+    </html>
+  );
 }
