@@ -138,6 +138,89 @@ npm run lint         # Run ESLint
 4. **Implement structured data (JSON-LD)** for better search engine understanding
 5. **Maintain all interactive functionality** while enabling server-side rendering
 
+## Translation Architecture Best Practices
+
+**CRITICAL**: Proper separation of server-side and client-side translation responsibilities to avoid Next-intl FORMATTING_ERROR.
+
+### 🚨 Common Error Pattern (AVOID):
+```javascript
+// ❌ WRONG: Server-side calling translations with interpolation placeholders
+const translations = {
+  credits: {
+    remaining: t('create.credits.remaining'), // Missing {credits} parameter
+    cost: t('create.credits.cost')            // Missing {credits} parameter
+  }
+}
+// Result: IntlError: FORMATTING_ERROR
+```
+
+### ✅ Correct Architecture:
+
+#### Server-Side Responsibilities (page.tsx):
+```javascript
+// ✅ ONLY handle static translations (no interpolation parameters)
+const translations = {
+  title: t('create.title'),                    // Static text
+  subtitle: t('create.subtitle'),              // Static text
+  labels: {
+    prompt: t('create.prompt.label'),          // Static label
+    generate: t('create.generate.button')      // Static button text
+  }
+  // ❌ DON'T include: t('create.credits.remaining') - requires {credits}
+}
+```
+
+#### Client-Side Responsibilities (ClientComponent.tsx):
+```javascript
+// ✅ Handle ALL dynamic translations with real data
+import { useTranslations } from 'next-intl';
+
+export default function ClientComponent() {
+  const tDynamic = useTranslations('create');
+  const { credits } = useCredits();
+  
+  // ✅ Provide actual interpolation parameters
+  const creditsText = tDynamic('credits.remaining', { credits: credits.credits });
+  const costText = tDynamic('credits.cost', { credits: currentCredits });
+  const progressText = tDynamic('progress.processing', { progress: progressPercent });
+}
+```
+
+### Design Principles:
+
+1. **Server-Side Rendering**:
+   - ✅ Static content only (no user-specific data)
+   - ✅ SEO metadata and structure
+   - ❌ No translations requiring interpolation parameters
+
+2. **Client-Side Rendering**:
+   - ✅ All user-specific dynamic content
+   - ✅ Real-time data with `useTranslations`
+   - ✅ Proper loading states while data loads
+
+3. **Data Flow Architecture**:
+   ```
+   Server → Static translations → Client
+   Client → User data + useTranslations → Dynamic UI
+   ```
+
+### Translation Categorization:
+
+| Type | Location | Example | Parameters |
+|------|----------|---------|------------|
+| **Static** | Server | `t('create.title')` | None |
+| **Dynamic** | Client | `tDynamic('credits.remaining', {credits})` | Required |
+| **Labels** | Server | `t('create.prompt.label')` | None |
+| **Progress** | Client | `tDynamic('progress.processing', {progress})` | Required |
+
+### Loading State Handling:
+```javascript
+// ✅ Show loading states for dynamic content
+{creditsLoading ? 'Loading...' : tDynamic('credits.remaining', { credits: userCredits.credits })}
+```
+
+This architecture prevents all Next-intl FORMATTING_ERROR issues and ensures clean separation of concerns.
+
 ## Environment Variables Required
 
 ```env
@@ -498,3 +581,11 @@ export default ENV[process.env.NODE_ENV || 'development'];
 
 ### Template data
 src/data/asmr_templates.json
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+
+      
+      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.
