@@ -742,7 +742,10 @@ const MyVideosContent = () => {
             {t('help.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="btn-secondary bg-purple-600/10 border-purple-400/30 text-purple-900">
+            <button 
+              onClick={() => router.push('/faq')} 
+              className="btn-secondary bg-purple-600/10 border-purple-400/30 text-purple-900"
+            >
               <i className="ri-question-line mr-2"></i>
               {t('help.viewFaq')}
             </button>
