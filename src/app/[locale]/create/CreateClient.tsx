@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import AOS from 'aos';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/hooks/useCredits';
@@ -14,14 +15,8 @@ interface CreateClientProps {
 
 export default function CreateClient({ translations: t }: CreateClientProps) {
   const { user } = useAuth();
-  const { credits: userCredits, refreshCredits } = useCredits();
-  
-  // Helper function to interpolate values into translation strings
-  const interpolate = (template: string, values: Record<string, any> = {}): string => {
-    return template.replace(/\{(\w+)\}/g, (match, key) => {
-      return values[key] !== undefined ? values[key].toString() : match;
-    });
-  };
+  const { credits: userCredits, loading: creditsLoading, refreshCredits } = useCredits();
+  const tDynamic = useTranslations('create'); // For dynamic translations with interpolation
   const searchParams = useSearchParams();
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -232,9 +227,9 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
             break;
           case 'processing':
             if (data.progress >= 75) {
-              setGenerationProgress(data.message || interpolate(t.progress.uploading, { progress: data.progress || 75 }));
+              setGenerationProgress(data.message || tDynamic('progress.uploading', { progress: data.progress || 75 }));
             } else {
-              setGenerationProgress(interpolate(t.progress.processing, { progress: data.progress || 0 }));
+              setGenerationProgress(tDynamic('progress.processing', { progress: data.progress || 0 }));
             }
             break;
           case 'completed':
@@ -289,7 +284,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
 
 
   const handleGenerate = async () => {
-    if (!prompt.trim() || userCredits.credits < currentCredits) return;
+    if (!prompt.trim() || creditsLoading || userCredits.credits < currentCredits) return;
     if (!user) {
       setError(t.generate.loginToGenerate);
       return;
@@ -345,7 +340,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
     }
   };
 
-  const isGenerateDisabled = !prompt.trim() || userCredits.credits < currentCredits || isGenerating;
+  const isGenerateDisabled = !prompt.trim() || creditsLoading || userCredits.credits < currentCredits || isGenerating;
 
   return (
     <div className="pt-20 pb-12">
@@ -379,13 +374,13 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
             <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
               <span className="text-white font-semibold">
                 <i className="ri-coin-line mr-2"></i>
-                {interpolate(t.credits.remaining, { credits: userCredits.credits })}
+                {creditsLoading ? 'Loading...' : tDynamic('credits.remaining', { credits: userCredits.credits })}
               </span>
             </div>
-            <div className={`bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 ${userCredits.credits < currentCredits ? 'border-2 border-red-400' : ''}`}>
-              <span className={`font-semibold ${userCredits.credits < currentCredits ? 'text-red-300' : 'text-yellow-300'}`}>
+            <div className={`bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 ${!creditsLoading && userCredits.credits < currentCredits ? 'border-2 border-red-400' : ''}`}>
+              <span className={`font-semibold ${!creditsLoading && userCredits.credits < currentCredits ? 'text-red-300' : 'text-yellow-300'}`}>
                 <i className="ri-flash-line mr-2"></i>
-                {interpolate(t.credits.cost, { credits: currentCredits })}
+                {tDynamic('credits.cost', { credits: currentCredits })}
               </span>
             </div>
           </div>
@@ -407,7 +402,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
               />
               <div className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
                 <span className="text-sm text-white font-medium">
-                  {interpolate(t.prompt.charCount, { current: prompt.length, max: maxChars })}
+                  {tDynamic('prompt.charCount', { current: prompt.length, max: maxChars })}
                 </span>
               </div>
             </div>
@@ -710,7 +705,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
           </div>
 
           {/* Credit Insufficient Warning */}
-          {userCredits.credits < currentCredits && !isGenerating && (
+          {!creditsLoading && userCredits.credits < currentCredits && !isGenerating && (
             <div className="mb-8" data-aos="fade-up" data-aos-delay="850">
               <div className="bg-gradient-to-r from-yellow-400/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/50 rounded-2xl p-6">
                 <div className="flex items-start gap-4">
@@ -722,10 +717,10 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
                   <div className="flex-1 min-w-0">
                     <p className="text-yellow-300 font-semibold text-lg mb-2">
                       <i className="ri-information-line mr-2"></i>
-                      {interpolate(t.credits.insufficient, { credits: currentCredits })}
+                      {tDynamic('credits.insufficient', { credits: currentCredits })}
                     </p>
                     <p className="text-yellow-200/90 mb-4">
-                      {interpolate(t.credits.currentBalance, { credits: userCredits.credits })}
+                      {creditsLoading ? 'Loading balance...' : tDynamic('credits.currentBalance', { credits: userCredits.credits })}
                     </p>
                     <button
                       onClick={() => window.location.href = '/pricing'}
@@ -745,7 +740,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 order-first lg:order-last lg:sticky lg:top-8 h-fit">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-white mb-2">
-                {generatedVideo ? interpolate(t.preview.result, { provider: provider.toUpperCase() }) : t.preview.title}
+                {generatedVideo ? tDynamic('preview.result', { provider: provider.toUpperCase() }) : t.preview.title}
               </h2>
               <p className="text-white/70">
                 {t.preview.description}
@@ -848,7 +843,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
                     }`}
                   >
                     <i className="ri-download-2-line mr-2"></i>
-                    {interpolate(t.result.download, { provider: provider.toUpperCase() })}
+                    {tDynamic('result.download', { provider: provider.toUpperCase() })}
                   </button>
                 </div>
                 

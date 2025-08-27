@@ -20,16 +20,16 @@ export default async function CreatePage({ params: { locale } }: PageProps) {
     subtitle: t('create.subtitle'),
     loginRequired: t('create.loginRequired'),
     credits: {
-      remaining: t('create.credits.remaining', {credits: 0}), // Template string
-      cost: t('create.credits.cost', {credits: 0}), // Template string  
-      insufficient: t('create.credits.insufficient', {credits: 0}), // Template string
-      currentBalance: t('create.credits.currentBalance', {credits: 0}), // Template string
+      remaining: t('create.credits.remaining'),
+      cost: t('create.credits.cost'),
+      insufficient: t('create.credits.insufficient'),
+      currentBalance: t('create.credits.currentBalance'),
       getCredits: t('create.credits.getCredits')
     },
     prompt: {
       label: t('create.prompt.label'),
       placeholder: t('create.prompt.placeholder'),
-      charCount: t('create.prompt.charCount', {current: 0, max: 0}) // Template string
+      charCount: t('create.prompt.charCount')
     },
     image: {
       label: t('create.image.label'),
@@ -108,7 +108,7 @@ export default async function CreatePage({ params: { locale } }: PageProps) {
     },
     preview: {
       title: t('create.preview.title'),
-      result: t('create.preview.result', {provider: ''}), // Template string
+      result: t('create.preview.result'),
       description: t('create.preview.description'),
       templatePreview: t('create.preview.templatePreview'),
       demo: t('create.preview.demo')
@@ -117,13 +117,13 @@ export default async function CreatePage({ params: { locale } }: PageProps) {
       creating: t('create.progress.creating'),
       starting: t('create.progress.starting'),
       queued: t('create.progress.queued'),
-      processing: t('create.progress.processing', {progress: 0}), // Template string
-      uploading: t('create.progress.uploading', {progress: 0}), // Template string
+      processing: t('create.progress.processing'),
+      uploading: t('create.progress.uploading'),
       ready: t('create.progress.ready')
     },
     result: {
       title: t('create.result.title'),
-      download: t('create.result.download', {provider: ''}), // Template string
+      download: t('create.result.download'),
       withImage: t('create.result.withImage')
     },
     faq: {
