@@ -223,7 +223,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
         
         switch (data.status) {
           case 'pending':
-            setGenerationProgress(t.progress.queued);
+            setGenerationProgress(tDynamic('progress.queued'));
             break;
           case 'processing':
             if (data.progress >= 75) {
@@ -235,7 +235,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
           case 'completed':
             if (data.result?.videoUrl) {
               setGeneratedVideo(data.result.videoUrl);
-              setGenerationProgress(t.progress.ready);
+              setGenerationProgress(tDynamic('progress.ready'));
               setIsGenerating(false);
               
               // Set video ID if provided (from our database)
@@ -293,7 +293,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
     setIsGenerating(true);
     setError(null);
     setGeneratedVideo(null);
-    setGenerationProgress(t.progress.starting);
+    setGenerationProgress(tDynamic('progress.starting'));
 
     try {
       // Generate video with KIE Veo3
@@ -794,7 +794,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
                       <i className="ri-magic-line text-white text-xl"></i>
                     </div>
                   </div>
-                  <h3 className="text-white text-xl font-semibold mt-4 mb-2">{t.progress.creating}</h3>
+                  <h3 className="text-white text-xl font-semibold mt-4 mb-2">{tDynamic('progress.creating')}</h3>
                   <p className="text-white/70">{generationProgress}</p>
                   <div className="mt-4 bg-white/20 rounded-full h-2 w-64 overflow-hidden">
                     <div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-full animate-pulse"></div>
@@ -819,7 +819,7 @@ export default function CreateClient({ translations: t }: CreateClientProps) {
             <div className="mb-8" data-aos="fade-up">
               <h3 className="text-white text-xl font-semibold mb-6 text-center">
                 <i className="ri-video-line mr-2"></i>
-                {t.result.title}
+                {tDynamic('result.title')}
               </h3>
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6 border border-white/30">
                 <video

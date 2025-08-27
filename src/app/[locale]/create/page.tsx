@@ -13,23 +13,17 @@ interface PageProps {
 export default async function CreatePage({ params: { locale } }: PageProps) {
   const t = await getTranslations({ locale });
 
-  // Extract translation messages as plain data instead of passing the function
-  // For dynamic translations, we extract the template strings
+  // Extract only static translation messages (no interpolation needed)
   const translations = {
     title: t('create.title'),
     subtitle: t('create.subtitle'),
     loginRequired: t('create.loginRequired'),
     credits: {
-      remaining: t('create.credits.remaining'),
-      cost: t('create.credits.cost'),
-      insufficient: t('create.credits.insufficient'),
-      currentBalance: t('create.credits.currentBalance'),
       getCredits: t('create.credits.getCredits')
     },
     prompt: {
       label: t('create.prompt.label'),
-      placeholder: t('create.prompt.placeholder'),
-      charCount: t('create.prompt.charCount')
+      placeholder: t('create.prompt.placeholder')
     },
     image: {
       label: t('create.image.label'),
@@ -108,7 +102,6 @@ export default async function CreatePage({ params: { locale } }: PageProps) {
     },
     preview: {
       title: t('create.preview.title'),
-      result: t('create.preview.result'),
       description: t('create.preview.description'),
       templatePreview: t('create.preview.templatePreview'),
       demo: t('create.preview.demo')
@@ -117,13 +110,10 @@ export default async function CreatePage({ params: { locale } }: PageProps) {
       creating: t('create.progress.creating'),
       starting: t('create.progress.starting'),
       queued: t('create.progress.queued'),
-      processing: t('create.progress.processing'),
-      uploading: t('create.progress.uploading'),
       ready: t('create.progress.ready')
     },
     result: {
       title: t('create.result.title'),
-      download: t('create.result.download'),
       withImage: t('create.result.withImage')
     },
     faq: {
