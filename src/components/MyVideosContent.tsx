@@ -749,7 +749,10 @@ const MyVideosContent = () => {
               <i className="ri-question-line mr-2"></i>
               {t('help.viewFaq')}
             </button>
-            <button className="btn-primary">
+            <button 
+              onClick={() => window.open('mailto:support@aiasmr.vip', '_blank')} 
+              className="btn-primary"
+            >
               <i className="ri-mail-line mr-2"></i>
               {t('help.contactSupport')}
             </button>
