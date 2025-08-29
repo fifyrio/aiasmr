@@ -92,12 +92,21 @@ const Navigation = () => {
                 {t('pricing')}
               </Link>
               {user && (
-                <Link 
-                  href={`/${locale}/my-videos`} 
-                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
-                >
-                  {t('myVideos')}
-                </Link>
+                <>
+                  <Link 
+                    href={`/${locale}/free-credits`} 
+                    className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors relative"
+                  >
+                    <span className="mr-1">🎁</span>
+                    {t('freeCredits')}
+                  </Link>
+                  <Link 
+                    href={`/${locale}/my-videos`} 
+                    className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
+                  >
+                    {t('myVideos')}
+                  </Link>
+                </>
               )}              
             </div>
           </div>
@@ -165,6 +174,14 @@ const Navigation = () => {
                     
                     <div className="py-2">
                       <Link
+                        href={`/${locale}/free-credits`}
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-purple-50 transition-colors"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        <span className="w-5 h-5 text-purple-500 flex items-center justify-center text-lg">🎁</span>
+                        <span className="text-gray-700">{t('freeCredits')}</span>
+                      </Link>
+                      <Link
                         href={`/${locale}/my-videos`}
                         className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors"
                         onClick={() => setIsUserDropdownOpen(false)}
@@ -227,9 +244,14 @@ const Navigation = () => {
               {t('create')}
             </Link>
             {user && (
-              <Link href={`/${locale}/my-videos`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
-                {t('myVideos')}
-              </Link>
+              <>
+                <Link href={`/${locale}/free-credits`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+                  <span className="mr-2">🎁</span>{t('freeCredits')}
+                </Link>
+                <Link href={`/${locale}/my-videos`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+                  {t('myVideos')}
+                </Link>
+              </>
             )}
             <Link href={`/${locale}/explore`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
               {t('explore')}

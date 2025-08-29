@@ -12,7 +12,14 @@ export const getBaseUrl = (): string => {
   // Server-side
   if (typeof window === 'undefined') {
     if (isDevelopment) {
-      return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      // Try to get from environment, fallback to detecting from common ports
+      const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      if (envUrl) return envUrl;
+      
+      // Check if port is specified in environment or use detected port
+      // For Next.js dev server, commonly uses 3001 when 3000 is taken
+      const port = process.env.PORT || process.env.NEXT_PORT || '3001';
+      return `http://localhost:${port}`;
     }
     return process.env.NEXT_PUBLIC_PRODUCTION_URL || 'https://www.aiasmr.vip';
   }

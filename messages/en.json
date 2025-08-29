@@ -24,7 +24,8 @@
     "veo3": "VEO3",
     "blog": "Blog",
     "faq": "FAQ",
-    "credits": "Credits"
+    "credits": "Credits",
+    "freeCredits": "Free Credits"
   },
   "auth": {
     "login": {
@@ -35,7 +36,9 @@
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
       "createAccount": "Create one here",
-      "loginButton": "Sign In"
+      "loginButton": "Sign In",
+      "orContinue": "Or continue with",
+      "googleLogin": "Continue with Google"
     },
     "signup": {
       "title": "Create Your Account",
@@ -45,7 +48,9 @@
       "agreeTerms": "I agree to the Terms of Service and Privacy Policy",
       "hasAccount": "Already have an account?",
       "signInHere": "Sign in here",
-      "signupButton": "Create Account"
+      "signupButton": "Create Account",
+      "orContinue": "Or continue with",
+      "googleSignup": "Sign up with Google"
     }
   },
   "hero": {
@@ -899,6 +904,80 @@
       "description": "Transform these templates into high-quality videos using our AI-powered generation tools. Perfect for content creators looking to produce engaging roleplay scenarios.",
       "startCreating": "Start Creating with VEO3",
       "browseAll": "Browse All Categories"
+    }
+  },
+  "freeCredits": {
+    "meta": {
+      "title": "Free Credits - AIASMR Video",
+      "description": "Earn free credits by checking in daily and referring friends to create more ASMR videos"
+    },
+    "title": "Free Credits for You",
+    "subtitle": "Earn credits through daily check-ins and referrals to create more amazing ASMR videos",
+    "credits": {
+      "title": "Credits",
+      "description": "Your current credit balance"
+    },
+    "checkIn": {
+      "title": "Check In",
+      "description": "Check in to get rewards",
+      "consecutiveDays": "Consecutive Days",
+      "todayReward": "Today Reward", 
+      "checkedInToday": "Checked in today",
+      "checkInButton": "Check In",
+      "checkingIn": "Checking in...",
+      "upcomingRewards": "Upcoming Rewards",
+      "day": "Day",
+      "credits": "Credits",
+      "totalCheckIns": "Total Check-ins",
+      "longestStreak": "Longest Streak",
+      "days": "days",
+      "successMessage": "Successfully checked in! Earned {credits} credits.",
+      "noData": "No check-in data available",
+      "errors": {
+        "checkInFailed": "Check-in failed. Please try again."
+      }
+    },
+    "referral": {
+      "title": "Referral",
+      "description": "Referral to get rewards",
+      "reward": "30 Credits / Paid User",
+      "referralLink": "Referral Link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "linkCopied": "Referral link copied!",
+      "copyFailed": "Failed to copy link",
+      "completed": "Completed",
+      "pending": "Pending", 
+      "earned": "Earned",
+      "shareTo": "Share to",
+      "shareMessage": "AI Image Editor - Transform, stylize & enhance photos with one AI click. No design skills needed! Join with my invite link for bonus credits!",
+      "share": "Share",
+      "platform": {
+        "facebook": "AI ASMR Video - Create stunning ASMR videos with AI! Join with my link for bonus credits!",
+        "linkedin": "Professional AI ASMR video creation platform. Join with my invite link for bonus credits!",
+        "whatsapp": "AI ASMR Video - Transform your ideas into amazing ASMR videos! Join with my invite link for bonus credits!"
+      },
+      "recentReferrals": "Recent Referrals",
+      "howItWorks": "How it works",
+      "step1": "Share your referral link with friends",
+      "step2": "They sign up and make their first purchase", 
+      "step3": "You earn 30 credits for each successful referral",
+      "noData": "No referral data available",
+      "status": {
+        "pending": "Pending",
+        "registered": "Registered", 
+        "converted": "Converted",
+        "credited": "Credited"
+      }
+    },
+    "auth": {
+      "loginRequired": "Login Required",
+      "loginDescription": "Please log in to access free credits and start earning rewards",
+      "loginButton": "Log In",
+      "signupButton": "Sign Up"
+    },
+    "errors": {
+      "fetchDataFailed": "Failed to load data. Please try again."
     }
   }
 }

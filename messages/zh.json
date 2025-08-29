@@ -24,7 +24,8 @@
     "veo3": "VEO3",
     "blog": "博客",
     "faq": "常见问题",
-    "credits": "积分"
+    "credits": "积分",
+    "freeCredits": "免费积分"
   },
   "auth": {
     "login": {
@@ -899,6 +900,74 @@
       "description": "使用我们的AI驱动生成工具将这些模板转换为高质量视频。非常适合希望制作引人入胜的角色扮演场景的内容创作者。",
       "startCreating": "开始使用VEO3创建",
       "browseAll": "浏览所有类别"
+    }
+  },
+  "freeCredits": {
+    "meta": {
+      "title": "免费积分 - AIASMR Video",
+      "description": "通过每日签到和推荐好友赚取免费积分，创建更多ASMR视频"
+    },
+    "title": "免费积分送给您",
+    "subtitle": "通过每日签到和推荐好友赚取积分，创建更多精彩的ASMR视频",
+    "credits": {
+      "title": "积分",
+      "description": "您当前的积分余额"
+    },
+    "checkIn": {
+      "title": "签到",
+      "description": "签到获得奖励",
+      "consecutiveDays": "连续天数",
+      "todayReward": "今日奖励",
+      "checkedInToday": "今日已签到",
+      "checkInButton": "签到",
+      "checkingIn": "签到中...",
+      "upcomingRewards": "即将到来的奖励",
+      "day": "第",
+      "credits": "积分",
+      "totalCheckIns": "累计签到",
+      "longestStreak": "最长连续",
+      "days": "天",
+      "successMessage": "签到成功！获得{credits}积分。",
+      "noData": "暂无签到数据",
+      "errors": {
+        "checkInFailed": "签到失败，请重试。"
+      }
+    },
+    "referral": {
+      "title": "推荐",
+      "description": "推荐获得奖励",
+      "reward": "30积分/付费用户",
+      "referralLink": "推荐链接",
+      "copy": "复制",
+      "copied": "已复制",
+      "linkCopied": "推荐链接已复制！",
+      "copyFailed": "复制链接失败",
+      "completed": "已完成",
+      "pending": "待处理",
+      "earned": "已获得",
+      "shareTo": "分享到",
+      "shareMessage": "AI图像编辑器 - 一键AI转换、风格化和增强照片。无需设计技能！通过我的邀请链接加入可获得奖励积分！",
+      "recentReferrals": "最近推荐",
+      "howItWorks": "如何运作",
+      "step1": "与朋友分享您的推荐链接",
+      "step2": "他们注册并完成首次购买",
+      "step3": "每成功推荐一位用户，您将获得30积分",
+      "noData": "暂无推荐数据",
+      "status": {
+        "pending": "待处理",
+        "registered": "已注册",
+        "converted": "已转换",
+        "credited": "已到账"
+      }
+    },
+    "auth": {
+      "loginRequired": "需要登录",
+      "loginDescription": "请登录以访问免费积分并开始赚取奖励",
+      "loginButton": "登录",
+      "signupButton": "注册"
+    },
+    "errors": {
+      "fetchDataFailed": "数据加载失败，请重试。"
     }
   }
 }

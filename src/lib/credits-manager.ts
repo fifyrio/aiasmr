@@ -180,6 +180,81 @@ export async function getUserCredits(userId: string): Promise<{ credits: number;
 }
 
 /**
+ * Add credits to user account (for bonuses, rewards, etc.)
+ */
+export async function addCredits(
+  userId: string, 
+  amount: number, 
+  description: string,
+  transactionType: 'bonus' | 'purchase' = 'bonus',
+  metadata?: {
+    checkInId?: string;
+    referralId?: string;
+    freeCreditsType?: string;
+  }
+): Promise<{ success: boolean; newCredits?: number; error?: string }> {
+  try {
+    const supabase = createServiceClient();
+
+    // Get current credits
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('credits')
+      .eq('id', userId)
+      .single();
+
+    if (profileError || !profile) {
+      console.error('Error fetching user profile for credit addition:', profileError);
+      return { success: false, error: 'Failed to fetch user profile' };
+    }
+
+    // Update user credits (add the amount)
+    const newCredits = profile.credits + amount;
+    const { error: updateError } = await supabase
+      .from('user_profiles')
+      .update({ 
+        credits: newCredits,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', userId);
+
+    if (updateError) {
+      console.error('Error updating user credits:', updateError);
+      return { success: false, error: 'Failed to add credits' };
+    }
+
+    // Log credit transaction
+    const transactionData = {
+      user_id: userId,
+      transaction_type: transactionType,
+      amount: amount, // Positive amount for additions
+      description,
+      created_at: new Date().toISOString(),
+      ...(metadata?.checkInId && { check_in_id: metadata.checkInId }),
+      ...(metadata?.referralId && { referral_id: metadata.referralId }),
+      ...(metadata?.freeCreditsType && { free_credits_type: metadata.freeCreditsType })
+    };
+
+    const { error: transactionError } = await supabase
+      .from('credit_transactions')
+      .insert(transactionData);
+
+    if (transactionError) {
+      console.error('Error logging credit transaction:', transactionError);
+      // Don't fail the operation if transaction logging fails
+    }
+
+    console.log(`🎁 Added ${amount} credits to user ${userId}. New balance: ${newCredits}`);
+    
+    return { success: true, newCredits };
+
+  } catch (error) {
+    console.error('Error in addCredits:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
  * Record a successful video completion (updates transaction with video_id)
  */
 export async function recordVideoCompletion(

@@ -24,7 +24,8 @@
     "veo3": "VEO3",
     "blog": "Blog",
     "faq": "FAQ",
-    "credits": "Credits"
+    "credits": "Credits",
+    "freeCredits": "Kostenlose Credits"
   },
   "auth": {
     "login": {

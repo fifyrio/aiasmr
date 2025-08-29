@@ -221,6 +221,65 @@ export default function ClientComponent() {
 
 This architecture prevents all Next-intl FORMATTING_ERROR issues and ensures clean separation of concerns.
 
+## Authentication Architecture Issues
+
+**CRITICAL**: Google OAuth login functionality was accidentally removed during internationalization (i18n) implementation.
+
+### Current Status:
+- ✅ `AuthContext.tsx` has complete `signInWithGoogle()` implementation
+- ✅ `AuthForm.tsx` (older component) has Google login UI and functionality  
+- ❌ `LoginForm.tsx` and `SignupForm.tsx` (current components) missing Google login buttons
+- ✅ Google OAuth is configured and working in backend/Supabase
+
+### Root Cause:
+During the i18n refactor (commit 80e4f88), new internationalized login/signup forms were created but Google login UI was not migrated from the original `AuthForm.tsx`.
+
+### Required Fix:
+1. Add Google login button to both `LoginForm.tsx` and `SignupForm.tsx`
+2. Import and use `signInWithGoogle` from AuthContext
+3. Add proper translation keys for Google login
+4. Maintain consistent styling with existing purple theme
+
+### Implementation Priority: HIGH
+Google OAuth is a critical UX feature that significantly reduces signup friction. Users expect social login options in modern web applications.
+
+## OAuth Callback Architecture Issues
+
+**CRITICAL**: OAuth callback routes must be carefully configured for internationalized Next.js applications.
+
+### Common Issues Found:
+
+1. **Port Detection Problem**: 
+   - OAuth callbacks hardcoded to port 3000
+   - Next.js dev server often uses 3001 when 3000 is occupied
+   - **Solution**: Dynamic port detection in callback routes
+
+2. **i18n Middleware Interference**:
+   - Middleware intercepting `/auth/callback` routes
+   - OAuth providers expect exact callback URLs without locale prefixes
+   - **Solution**: Exclude OAuth callbacks from i18n middleware matching
+
+3. **Route Structure Conflicts**:
+   - New i18n structure uses `/[locale]/auth/*` for user-facing pages
+   - OAuth callbacks should remain at `/auth/callback` (no locale prefix)
+   - **Solution**: Keep OAuth callbacks at root level, exclude from middleware
+
+### Fixed Configuration:
+
+```typescript
+// middleware.ts - Exclude OAuth callbacks
+matcher: ['/((?!api|_next|_vercel|auth/callback|.*\\..*).*)',]
+
+// callback/route.ts - Dynamic port detection  
+const port = url.port || '3001'; // Detect actual port
+redirectUrl = `http://localhost:${port}${next}`;
+```
+
+### Key Learnings:
+- OAuth callbacks are external integrations and should not be localized
+- Always use dynamic port detection in development environments
+- Test OAuth flows in development with correct port configuration
+
 ## Environment Variables Required
 
 ```env

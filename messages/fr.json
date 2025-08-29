@@ -24,7 +24,8 @@
     "veo3": "VEO3",
     "blog": "Blog",
     "faq": "FAQ",
-    "credits": "Crédits"
+    "credits": "Crédits",
+    "freeCredits": "Crédits Gratuits"
   },
   "auth": {
     "login": {
@@ -76,141 +77,141 @@
     }
   },
   "create": {
-    "title": "Create Your ASMR Video",
-    "subtitle": "Transform your ideas into immersive ASMR experiences with our AI-powered generation",
-    "loginRequired": "Please login to generate videos and save your creations.",
+    "title": "Créez Votre Vidéo ASMR",
+    "subtitle": "Transformez vos idées en expériences ASMR immersives grâce à notre génération alimentée par l'IA",
+    "loginRequired": "Veuillez vous connecter pour générer des vidéos et sauvegarder vos créations.",
     "credits": {
-      "remaining": "{credits} credits remaining",
-      "cost": "Cost: {credits} credits",
-      "insufficient": "You need {credits} credits to generate a video",
-      "currentBalance": "Current balance: {credits} credits",
-      "getCredits": "Get Credits"
+      "remaining": "{credits} crédits restants",
+      "cost": "Coût : {credits} crédits",
+      "insufficient": "Vous avez besoin de {credits} crédits pour générer une vidéo",
+      "currentBalance": "Solde actuel : {credits} crédits",
+      "getCredits": "Obtenir des Crédits"
     },
     "prompt": {
-      "label": "Describe your ASMR scene",
-      "placeholder": "Include textures, sounds, and visuals for better results. Be descriptive and creative...",
+      "label": "Décrivez votre scène ASMR",
+      "placeholder": "Incluez les textures, sons et visuels pour de meilleurs résultats. Soyez descriptif et créatif...",
       "charCount": "{current}/{max}"
     },
     "image": {
-      "label": "Image (Optional)",
-      "dragDrop": "Drag & drop or click",
-      "fileTypes": "PNG, JPG, JPEG or WEBP (max 10MB)",
-      "uploading": "Uploading image...",
-      "uploadSuccess": "Image uploaded successfully",
-      "uploadDescription": "This image will be used as a reference for your video generation",
-      "remove": "Remove",
-      "loginToUpload": "Please login to upload images."
+      "label": "Image (Optionnelle)",
+      "dragDrop": "Glissez-déposez ou cliquez",
+      "fileTypes": "PNG, JPG, JPEG ou WEBP (max 10Mo)",
+      "uploading": "Téléchargement de l'image...",
+      "uploadSuccess": "Image téléchargée avec succès",
+      "uploadDescription": "Cette image sera utilisée comme référence pour la génération de votre vidéo",
+      "remove": "Supprimer",
+      "loginToUpload": "Veuillez vous connecter pour télécharger des images."
     },
     "provider": {
-      "label": "AI Provider",
+      "label": "Fournisseur IA",
       "veo3": {
         "title": "VEO3",
-        "subtitle": "High Quality"
+        "subtitle": "Haute Qualité"
       },
       "runway": {
         "title": "Runway",
-        "subtitle": "Fast Generation"
+        "subtitle": "Génération Rapide"
       }
     },
     "model": {
-      "label": "VEO3 Model",
+      "label": "Modèle VEO3",
       "veo3Fast": {
-        "title": "VEO3 Fast",
-        "subtitle": "60 credits"
+        "title": "VEO3 Rapide",
+        "subtitle": "60 crédits"
       },
       "veo3Standard": {
         "title": "VEO3 Standard",
-        "subtitle": "300 credits"
+        "subtitle": "300 crédits"
       }
     },
     "duration": {
-      "label": "Video Duration",
+      "label": "Durée de la Vidéo",
       "5seconds": {
-        "title": "5 Seconds",
-        "subtitle": "12 credits"
+        "title": "5 Secondes",
+        "subtitle": "12 crédits"
       },
       "8seconds": {
-        "title": "8 Seconds",
-        "subtitle": "30 credits"
+        "title": "8 Secondes",
+        "subtitle": "30 crédits"
       }
     },
     "quality": {
-      "label": "Video Quality",
+      "label": "Qualité Vidéo",
       "720p": {
         "title": "720p HD",
-        "subtitle": "Standard Quality"
+        "subtitle": "Qualité Standard"
       },
       "1080p": {
         "title": "1080p Full HD",
-        "subtitle": "High Quality",
-        "unavailable": "Not available for 8s"
+        "subtitle": "Haute Qualité",
+        "unavailable": "Non disponible pour 8s"
       }
     },
     "aspectRatio": {
-      "label": "Aspect Ratio",
+      "label": "Rapport d'Aspect",
       "ratios": {
-        "16:9": "Landscape",
-        "4:3": "Classic",
-        "1:1": "Square",
+        "16:9": "Paysage",
+        "4:3": "Classique",
+        "1:1": "Carré",
         "3:4": "Photo",
         "9:16": "Portrait"
       }
     },
     "watermark": {
-      "label": "Watermark (Optional)",
-      "placeholder": "Add custom watermark text...",
-      "description": "Leave empty for no watermark. Max 50 characters."
+      "label": "Filigrane (Optionnel)",
+      "placeholder": "Ajouter un texte de filigrane personnalisé...",
+      "description": "Laissez vide pour aucun filigrane. Max 50 caractères."
     },
     "generate": {
-      "button": "Generate ASMR Video",
-      "generating": "Generating...",
-      "loginToGenerate": "Please login to generate videos."
+      "button": "Générer une Vidéo ASMR",
+      "generating": "Génération...",
+      "loginToGenerate": "Veuillez vous connecter pour générer des vidéos."
     },
     "preview": {
-      "title": "Preview",
-      "result": "{provider} Result",
-      "description": "Your professional AI-generated video will appear here",
-      "templatePreview": "Template Preview",
-      "demo": "Demo"
+      "title": "Aperçu",
+      "result": "Résultat {provider}",
+      "description": "Votre vidéo professionnelle générée par IA apparaîtra ici",
+      "templateAperçu": "Aperçu du Modèle",
+      "demo": "Démo"
     },
     "progress": {
-      "creating": "Creating your ASMR video...",
-      "starting": "Starting generation...",
-      "queued": "Task queued, waiting to start...",
-      "processing": "Generating video... {progress}%",
-      "uploading": "Processing and uploading video... {progress}%",
-      "ready": "Video processed and ready!"
+      "creating": "Création de votre vidéo ASMR...",
+      "starting": "Démarrage de la génération...",
+      "queued": "Tâche en file d'attente, en attente de démarrage...",
+      "processing": "Génération de la vidéo... {progress}%",
+      "uploading": "Traitement et téléchargement de la vidéo... {progress}%",
+      "ready": "Vidéo traitée et prête !"
     },
     "result": {
-      "title": "Your Generated ASMR Video",
-      "download": "Download {provider} Video • HD Quality",
-      "withImage": "With Reference Image"
+      "title": "Votre Vidéo ASMR Générée",
+      "download": "Télécharger la Vidéo {provider} • Qualité HD",
+      "withImage": "Avec Image de Référence"
     },
     "faq": {
-      "title": "Frequently Asked Questions",
+      "title": "Questions Fréquemment Posées",
       "failedGeneration": {
-        "title": "What happens if my video generation fails?",
-        "answer": "Failed generations don't cost credits. You can try again without losing any credits."
+        "title": "Que se passe-t-il si ma génération vidéo échoue ?",
+        "answer": "Les générations échouées ne coûtent pas de crédits. Vous pouvez réessayer sans perdre de crédits."
       },
       "generationTime": {
-        "title": "How long does video generation take?",
-        "answer": "Video generation usually takes 1–2 minutes, but may take up to 4 minutes during peak times."
+        "title": "Combien de temps prend la génération vidéo ?",
+        "answer": "La génération vidéo prend généralement 1-2 minutes, mais peut prendre jusqu'à 4 minutes aux heures de pointe."
       },
       "freePlan": {
-        "title": "Can I generate videos on the free plan?",
-        "answer": "Only paid plans can generate videos. Free users can browse and explore existing content."
+        "title": "Puis-je générer des vidéos avec le plan gratuit ?",
+        "answer": "Seuls les plans payants peuvent générer des vidéos. Les utilisateurs gratuits peuvent naviguer et explorer le contenu existant."
       },
       "betterResults": {
-        "title": "How can I get better results?",
-        "answer": "Use clear, rich prompts with detailed descriptions. The prompt content controls the visual style and quality."
+        "title": "Comment puis-je obtenir de meilleurs résultats ?",
+        "answer": "Utilisez des prompts clairs et riches avec des descriptions détaillées. Le contenu du prompt contrôle le style visuel et la qualité."
       },
       "commercialUse": {
-        "title": "Can I use generated videos commercially?",
-        "answer": "Commercial use is permitted for original uploads on paid plans."
+        "title": "Puis-je utiliser les vidéos générées commercialement ?",
+        "answer": "L'utilisation commerciale est autorisée pour les téléchargements originaux sur les plans payants."
       },
       "howToDownload": {
-        "title": "How do I download my video?",
-        "answer": "Click the \"Download HD\" button that appears after your video is generated."
+        "title": "Comment télécharger ma vidéo ?",
+        "answer": "Cliquez sur le bouton \"Télécharger HD\" qui apparaît après la génération de votre vidéo."
       }
     }
   },
@@ -229,174 +230,174 @@
     "ageRestriction": "Restriction d'âge : 18+ | Des restrictions régionales peuvent s'appliquer"
   },
   "pricing": {
-    "title": "Choose Your Plan",
-    "subtitle": "Flexible pricing for every creator",
-    "mostPopular": "Most Popular",
+    "title": "Choisissez Votre Plan",
+    "subtitle": "Tarification flexible pour chaque créateur",
+    "mostPopular": "Le Plus Populaire",
     "plans": {
       "free": {
-        "name": "Free Plan",
-        "price": "$0",
-        "credits": "20 credits",
+        "name": "Plan Gratuit",
+        "price": "0€",
+        "credits": "20 crédits",
         "features": [
-          "20 free credits",
-          "720p video quality",
-          "Basic ASMR triggers",
-          "Community support"
+          "20 crédits gratuits",
+          "Qualité vidéo 720p",
+          "Déclencheurs ASMR de base",
+          "Support communautaire"
         ]
       },
       "basic": {
-        "name": "AI ASMR Basic",
-        "price": "$9.99",
-        "credits": "100 credits",
+        "name": "ASMR IA Basic",
+        "price": "9,99€",
+        "credits": "100 crédits",
         "features": [
-          "100 monthly credits",
-          "1080p video quality",
-          "All ASMR triggers",
-          "Priority support",
-          "Commercial usage"
+          "100 crédits mensuels",
+          "Qualité vidéo 1080p",
+          "Tous les déclencheurs ASMR",
+          "Support prioritaire",
+          "Usage commercial"
         ]
       },
       "pro": {
-        "name": "AI ASMR Pro",
-        "price": "$29.99",
-        "credits": "500 credits",
+        "name": "ASMR IA Pro",
+        "price": "29,99€",
+        "credits": "500 crédits",
         "features": [
-          "500 monthly credits",
-          "4K video quality",
-          "Custom triggers",
-          "API access",
-          "Priority processing",
-          "Commercial usage"
+          "500 crédits mensuels",
+          "Qualité vidéo 4K",
+          "Déclencheurs personnalisés",
+          "Accès API",
+          "Traitement prioritaire",
+          "Usage commercial"
         ]
       }
     }
   },
   "explore": {
-    "title": "AI ASMR Video Showcase",
-    "subtitle": "Discover immersive 4K ASMR content created by our community. Experience the perfect blend of visual artistry and relaxing sounds.",
-    "searchPlaceholder": "Search videos...",
+    "title": "Vitrine Vidéo ASMR IA",
+    "subtitle": "Découvrez du contenu ASMR immersif en 4K créé par notre communauté. Vivez le mélange parfait d'art visuel et de sons relaxants.",
+    "searchPlaceholder": "Rechercher des vidéos...",
     "filters": {
-      "all": "All",
-      "hot": "HOT",
-      "new": "NEW",
-      "trending": "TRENDING"
+      "all": "Tout",
+      "hot": "TENDANCE",
+      "new": "NOUVEAU",
+      "trending": "POPULAIRE"
     },
-    "aiTemplate": "AI Template",
-    "view": "View",
-    "loadMore": "Load More Videos",
+    "aiTemplate": "Modèle IA",
+    "view": "Voir",
+    "loadMore": "Charger Plus de Vidéos",
     "testimonials": {
-      "title": "What Our Community Says",
-      "sarah": "\"The AI-generated ASMR videos are incredibly realistic and helped me relax after stressful days. The quality is amazing!\"",
-      "mike": "\"As a content creator, this platform saves me hours of work. The AI understands exactly what makes good ASMR content.\"",
-      "wei": "\"The variety of triggers and the 4K quality make this my go-to platform for ASMR content. Highly recommended!\""
+      "title": "Ce Que Dit Notre Communauté",
+      "sarah": "\"Les vidéos ASMR générées par IA sont incroyablement réalistes et m'ont aidé à me détendre après des journées stressantes. La qualité est incroyable !\"",
+      "mike": "\"En tant que créateur de contenu, cette plateforme me fait économiser des heures de travail. L'IA comprend exactement ce qui fait un bon contenu ASMR.\"",
+      "wei": "\"La variété des déclencheurs et la qualité 4K font de cette plateforme mon choix de prédilection pour le contenu ASMR. Hautement recommandé !\""
     },
     "faq": {
-      "title": "Quick Answers",
+      "title": "Réponses Rapides",
       "whatTypes": {
-        "title": "What types can be created?",
-        "answer": "Our AI can generate cutting videos, water sounds, whisper content, object interactions, and more with realistic 4K visuals."
+        "title": "Quels types peuvent être créés ?",
+        "answer": "Notre IA peut générer des vidéos de découpe, des sons d'eau, du contenu chuchoté, des interactions d'objets, et plus encore avec des visuels 4K réalistes."
       },
       "howFast": {
-        "title": "How fast is generation?",
-        "answer": "Most videos are generated within 1-2 minutes, ensuring you get high-quality content quickly without long wait times."
+        "title": "Quelle est la rapidité de génération ?",
+        "answer": "La plupart des vidéos sont générées en 1-2 minutes, vous garantissant un contenu de haute qualité rapidement sans longs temps d'attente."
       },
       "qualityAdvantages": {
-        "title": "Quality advantages?",
-        "answer": "AI-generated content offers perfect audio-visual sync, consistent quality, and 4K resolution that rivals professional ASMR videos."
+        "title": "Avantages qualité ?",
+        "answer": "Le contenu généré par IA offre une synchronisation audio-visuelle parfaite, une qualité constante et une résolution 4K qui rivalise avec les vidéos ASMR professionnelles."
       },
       "whoBenefits": {
-        "title": "Who benefits most?",
-        "answer": "Content creators, relaxation enthusiasts, and anyone seeking personalized ASMR experiences benefit from our platform."
+        "title": "Qui en bénéficie le plus ?",
+        "answer": "Les créateurs de contenu, les amateurs de détente et quiconque cherche des expériences ASMR personnalisées bénéficient de notre plateforme."
       }
     },
     "cta": {
-      "title": "Ready to Create Your Own ASMR Video?",
-      "subtitle": "Join thousands of creators and start generating personalized ASMR content today.",
-      "createButton": "Create Your Own",
-      "pricingButton": "View Pricing"
+      "title": "Prêt à Créer Votre Propre Vidéo ASMR ?",
+      "subtitle": "Rejoignez des milliers de créateurs et commencez à générer du contenu ASMR personnalisé dès aujourd'hui.",
+      "createButton": "Créez le Vôtre",
+      "pricingButton": "Voir les Tarifs"
     }
   },
   "veo3": {
     "metadata": {
-      "title": "VEO3 AI Video Generator | Premium ASMR Content Creation | AIASMR",
-      "description": "Create high-quality ASMR videos with Google's VEO3 AI model. Generate professional 720p-1080p videos from text prompts with advanced neural technology.",
-      "keywords": "VEO3 AI video generator, ASMR video creation, Google VEO3 model, AI video generation, professional ASMR content, text to video AI, video synthesis, neural video generation, 720p 1080p video, commercial video license",
-      "imageAlt": "VEO3 AI Video Generator - Create Premium ASMR Videos"
+      "title": "Générateur Vidéo IA VEO3 | Création de Contenu ASMR Premium | AIASMR",
+      "description": "Créez des vidéos ASMR de haute qualité avec le modèle IA VEO3 de Google. Générez des vidéos professionnelles 720p-1080p à partir de prompts texte avec la technologie neuronale avancée.",
+      "keywords": "générateur vidéo IA VEO3, création vidéo ASMR, modèle Google VEO3, génération vidéo IA, contenu ASMR professionnel, IA texte vers vidéo, synthèse vidéo, génération vidéo neuronale, vidéo 720p 1080p, licence vidéo commerciale",
+      "imageAlt": "Générateur Vidéo IA VEO3 - Créez des Vidéos ASMR Premium"
     },
     "client": {
       "header": {
-        "title": "VEO3 AI Video Generator",
-        "subtitle": "Experience the highest quality ASMR video generation with Google's VEO3 model",
-        "loginRequired": "Please login to generate videos and save your creations."
+        "title": "Générateur Vidéo IA VEO3",
+        "subtitle": "Découvrez la génération vidéo ASMR de plus haute qualité avec le modèle VEO3 de Google",
+        "loginRequired": "Veuillez vous connecter pour générer des vidéos et sauvegarder vos créations."
       },
       "credits": {
-        "remaining": "{credits} credits remaining",
-        "cost": "Cost: {credits} credits",
-        "insufficient": "You need {credits} credits to generate a video",
-        "currentBalance": "Current balance: {credits} credits",
-        "getCredits": "Get Credits"
+        "remaining": "{credits} crédits restants",
+        "cost": "Coût : {credits} credits",
+        "insufficient": "Vous avez besoin de {credits} credits pour générer une vidéo",
+        "currentBalance": "Solde actuel : {credits} credits",
+        "getCredits": "Obtenir des Crédits"
       },
       "form": {
         "prompt": {
-          "label": "Describe your ASMR scene",
-          "placeholder": "Include textures, sounds, and visuals for better results. Be descriptive and creative..."
+          "label": "Décrivez votre scène ASMR",
+          "placeholder": "Incluez les textures, sons et visuels pour de meilleurs résultats. Soyez descriptif et créatif..."
         },
         "image": {
-          "label": "Image (Optional)",
-          "dragDrop": "Drag & drop or click",
+          "label": "Image (Optionnelle)",
+          "dragDrop": "Glissez-déposez ou cliquez",
           "fileTypes": "PNG, JPG, JPEG or WEBP (max 10MB)",
-          "uploading": "Uploading image...",
-          "uploadSuccess": "Image uploaded successfully",
-          "uploadDescription": "This image will be used as a reference for your video generation",
-          "remove": "Remove",
-          "loginToUpload": "Please login to upload images."
+          "uploading": "Téléchargement de l'image...",
+          "uploadSuccess": "Image téléchargée avec succès",
+          "uploadDescription": "Cette image sera utilisée comme référence pour la génération de votre vidéo",
+          "remove": "Supprimer",
+          "loginToUpload": "Veuillez vous connecter pour télécharger des images."
         },
         "model": {
-          "label": "VEO3 Model",
+          "label": "Modèle VEO3",
           "veo3Fast": {
-            "title": "VEO3 Fast",
-            "subtitle": "60 credits"
+            "title": "VEO3 Rapide",
+            "subtitle": "60 crédits"
           },
           "veo3Standard": {
             "title": "VEO3 Standard",
-            "subtitle": "300 credits"
+            "subtitle": "300 crédits"
           }
         },
         "quality": {
-          "label": "Video Quality",
+          "label": "Qualité Vidéo",
           "720p": {
             "title": "720p HD",
-            "subtitle": "Standard Quality"
+            "subtitle": "Qualité Standard"
           },
           "1080p": {
             "title": "1080p Full HD",
-            "subtitle": "High Quality"
+            "subtitle": "Haute Qualité"
           }
         },
         "aspectRatio": {
-          "label": "Aspect Ratio",
+          "label": "Rapport d'Aspect",
           "ratios": {
-            "16:9": "Landscape",
+            "16:9": "Paysage",
             "9:16": "Portrait"
           }
         },
         "watermark": {
-          "label": "Watermark (Optional)",
-          "placeholder": "Add custom watermark text...",
-          "description": "Leave empty for no watermark. Max 50 characters."
+          "label": "Filigrane (Optionnel)",
+          "placeholder": "Ajouter un texte de filigrane personnalisé...",
+          "description": "Laissez vide pour aucun filigrane. Max 50 caractères."
         },
         "generate": {
-          "button": "Generate with VEO3",
-          "generating": "Generating...",
-          "loginToGenerate": "Please login to generate videos."
+          "button": "Générer avec VEO3",
+          "generating": "Génération...",
+          "loginToGenerate": "Veuillez vous connecter pour générer des vidéos."
         }
       },
       "preview": {
-        "title": "Preview",
-        "result": "VEO3 Result",
+        "title": "Aperçu",
+        "result": "Résultat VEO3",
         "description": "Your professional VEO3 AI-generated video will appear here",
-        "templatePreview": "Template Preview",
-        "demo": "Demo"
+        "templateAperçu": "Template Aperçu",
+        "demo": "Démo"
       },
       "progress": {
         "creating": "Creating your VEO3 video...",
@@ -443,7 +444,7 @@
           },
           "time": {
             "question": "How long does VEO3 video generation take?",
-            "answer": "VEO3 Fast typically takes 2-4 minutes, while VEO3 Standard takes 5-8 minutes for higher quality results. Processing time may vary during peak hours."
+            "answer": "VEO3 Rapide typically takes 2-4 minutes, while VEO3 Standard takes 5-8 minutes for higher quality results. Processing time may vary during peak hours."
           },
           "aspectRatios": {
             "question": "What aspect ratios does VEO3 support?",
@@ -476,7 +477,7 @@
         "failed": "Failed to copy prompt"
       },
       "errors": {
-        "loginRequired": "Please login to generate videos.",
+        "loginRequired": "Veuillez vous connecter pour générer des vidéos.",
         "downloadFailed": "Failed to download video. Please try again.",
         "videoNotAvailable": "Video not available for download. Please try regenerating the video.",
         "generationFailed": "Video generation failed",
@@ -601,7 +602,7 @@
       "title": "ASMR Examples",
       "category": "Category:",
       "duration": "Duration:",
-      "aspectRatio": "Aspect Ratio:",
+      "aspectRatio": "Rapport d'Aspect:",
       "copyPrompt": "Copy this prompt to generate a similar video:",
       "tags": "Tags:",
       "audioIncluded": "Audio Included",
@@ -646,12 +647,12 @@
       "deleteSelected": "Delete Selected"
     },
     "videoCard": {
-      "preview": "Preview",
+      "preview": "Aperçu",
       "download": "Download",
       "regenerate": "Regenerate",
       "delete": "Delete",
       "credits": "credits",
-      "clickToPreview": "Click to Preview"
+      "clickToAperçu": "Click to Aperçu"
     },
     "empty": {
       "title": "No videos found",
@@ -693,12 +694,12 @@
   },
   "asmrModal": {
     "title": "ASMR Template",
-    "videoPreview": "Video Preview",
+    "videoAperçu": "Video Aperçu",
     "audioIncluded": "Audio Included",
     "details": {
       "category": "Category:",
       "duration": "Duration:",
-      "aspectRatio": "Aspect Ratio:",
+      "aspectRatio": "Rapport d'Aspect:",
       "downloads": "Downloads:",
       "tags": "Tags:"
     },
@@ -828,7 +829,7 @@
     "videosText": "En Vedette",
     "subtitle": "Découvrez des vidéos ASMR incroyables créées par notre IA. Inspirez-vous et créez votre propre chef-d'œuvre.",
     "aiGenerated": "Généré par IA",
-    "clickToPreview": "Cliquer pour Prévisualiser",
+    "clickToAperçu": "Cliquer pour Prévisualiser",
     "exploreAllVideos": "Explorer Toutes les Vidéos"
   },
   "roleplayExplore": {
