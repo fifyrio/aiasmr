@@ -25,7 +25,15 @@ export async function GET(request: NextRequest) {
     // 如果用户没有推荐代码，创建一个
     if (!referralCode) {
       const code = await generateReferralCode();
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aiasmr.vip';
+      
+      // 根据环境确定正确的base URL
+      let baseUrl;
+      if (process.env.NODE_ENV === 'production') {
+        baseUrl = process.env.NEXT_PUBLIC_PRODUCTION_URL || 'https://www.aiasmr.vip';
+      } else {
+        baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      }
+      
       const referralLink = `${baseUrl}/auth/signup?ref=${code}`;
 
       const { data: newReferralCode, error: insertError } = await supabase
