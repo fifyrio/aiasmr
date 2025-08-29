@@ -355,3 +355,27 @@ SELECT
 FROM auth.users u
 LEFT JOIN public.referral_codes rc ON u.id = rc.user_id
 LEFT JOIN public.user_free_credits_stats s ON u.id = s.user_id;
+
+-- ===============================
+-- 10. 用户积分管理函数
+-- ===============================
+
+-- 增加用户积分的函数
+CREATE OR REPLACE FUNCTION public.increment_user_credits(
+  user_id_param uuid,
+  credit_amount integer
+)
+RETURNS void AS $$
+BEGIN
+  -- 更新用户积分
+  UPDATE public.user_profiles 
+  SET credits = credits + credit_amount,
+      updated_at = now()
+  WHERE id = user_id_param;
+  
+  -- 如果没有更新任何行，说明用户不存在
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'User not found: %', user_id_param;
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

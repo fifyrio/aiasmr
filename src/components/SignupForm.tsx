@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -13,13 +13,52 @@ export default function SignupForm() {
   const [agreeTerms, setAgreeTerms] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [referralCode, setReferralCode] = useState<string | null>(null)
   
   const { signUp, signInWithGoogle } = useAuth()
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const locale = params.locale as string
   const t = useTranslations('auth.signup')
   const tCommon = useTranslations('common')
+
+  // 获取URL中的ref参数
+  useEffect(() => {
+    const ref = searchParams.get('ref')
+    if (ref) {
+      setReferralCode(ref)
+      console.log('Referral code found:', ref)
+    }
+  }, [searchParams])
+
+  // 处理推荐注册
+  const handleReferralRegistration = async (userId: string) => {
+    if (!referralCode) return
+
+    try {
+      const response = await fetch('/api/free-credits/referral/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          referralCode,
+          newUserId: userId,
+        }),
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        console.log('Referral registration successful:', result.data)
+      } else {
+        console.error('Referral registration failed:', result.error)
+      }
+    } catch (error) {
+      console.error('Error calling referral registration API:', error)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,7 +78,17 @@ export default function SignupForm() {
     }
 
     try {
-      await signUp(email, password)
+      const { error, data } = await signUp(email, password)
+      
+      if (error) {
+        throw error
+      }
+
+      // 如果注册成功且有推荐码，调用推荐注册API
+      if (data?.user?.id && referralCode) {
+        await handleReferralRegistration(data.user.id)
+      }
+
       router.push(`/${locale}/`)
     } catch (err: any) {
       setError(err.message || tCommon('error'))
