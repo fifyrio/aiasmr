@@ -91,29 +91,27 @@ const Navigation = () => {
               >
                 {t('pricing')}
               </Link>
+              <Link 
+                href={`/${locale}/free-credits`} 
+                className="relative px-3 py-2 rounded-md text-xs font-medium transition-all duration-300 group
+                           border border-purple-500/30 bg-gradient-to-r from-purple-500/10 via-purple-400/5 to-purple-500/10 
+                           hover:border-purple-400/60 hover:bg-gradient-to-r hover:from-purple-500/20 hover:via-purple-400/10 hover:to-purple-500/20
+                           hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105
+                           text-purple-300 hover:text-purple-200"
+              >
+                <div className="absolute inset-0 rounded-md bg-gradient-to-r from-purple-600/0 via-purple-400/10 to-purple-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="relative flex items-center">
+                  <span className="mr-1.5">🎁</span>
+                  {t('freeCredits')}
+                </span>
+              </Link>
               {user && (
-                <>
-                  <Link 
-                    href={`/${locale}/free-credits`} 
-                    className="relative px-3 py-2 rounded-md text-xs font-medium transition-all duration-300 group
-                               border border-purple-500/30 bg-gradient-to-r from-purple-500/10 via-purple-400/5 to-purple-500/10 
-                               hover:border-purple-400/60 hover:bg-gradient-to-r hover:from-purple-500/20 hover:via-purple-400/10 hover:to-purple-500/20
-                               hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105
-                               text-purple-300 hover:text-purple-200"
-                  >
-                    <div className="absolute inset-0 rounded-md bg-gradient-to-r from-purple-600/0 via-purple-400/10 to-purple-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative flex items-center">
-                      <span className="mr-1.5">🎁</span>
-                      {t('freeCredits')}
-                    </span>
-                  </Link>
-                  <Link 
-                    href={`/${locale}/my-videos`} 
-                    className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
-                  >
-                    {t('myVideos')}
-                  </Link>
-                </>
+                <Link 
+                  href={`/${locale}/my-videos`} 
+                  className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
+                >
+                  {t('myVideos')}
+                </Link>
               )}              
             </div>
           </div>
@@ -250,23 +248,21 @@ const Navigation = () => {
             <Link href={`/${locale}/create`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
               {t('create')}
             </Link>
+            <Link href={`/${locale}/free-credits`} className="relative block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 group
+                                                          border border-purple-500/30 bg-gradient-to-r from-purple-500/10 via-purple-400/5 to-purple-500/10 
+                                                          hover:border-purple-400/60 hover:bg-gradient-to-r hover:from-purple-500/20 hover:via-purple-400/10 hover:to-purple-500/20
+                                                          hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.02]
+                                                          text-purple-300 hover:text-purple-200">
+              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-purple-600/0 via-purple-400/10 to-purple-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative flex items-center">
+                <span className="mr-2">🎁</span>
+                {t('freeCredits')}
+              </span>
+            </Link>
             {user && (
-              <>
-                <Link href={`/${locale}/free-credits`} className="relative block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 group
-                                                              border border-purple-500/30 bg-gradient-to-r from-purple-500/10 via-purple-400/5 to-purple-500/10 
-                                                              hover:border-purple-400/60 hover:bg-gradient-to-r hover:from-purple-500/20 hover:via-purple-400/10 hover:to-purple-500/20
-                                                              hover:shadow-lg hover:shadow-purple-500/20 hover:scale-[1.02]
-                                                              text-purple-300 hover:text-purple-200">
-                  <div className="absolute inset-0 rounded-md bg-gradient-to-r from-purple-600/0 via-purple-400/10 to-purple-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative flex items-center">
-                    <span className="mr-2">🎁</span>
-                    {t('freeCredits')}
-                  </span>
-                </Link>
-                <Link href={`/${locale}/my-videos`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
-                  {t('myVideos')}
-                </Link>
-              </>
+              <Link href={`/${locale}/my-videos`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+                {t('myVideos')}
+              </Link>
             )}
             <Link href={`/${locale}/explore`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
               {t('explore')}

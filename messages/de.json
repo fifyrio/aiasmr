@@ -901,5 +901,80 @@
       "startCreating": "Mit VEO3 erstellen beginnen",
       "browseAll": "Alle Kategorien durchsuchen"
     }
+  },
+  "freeCredits": {
+    "meta": {
+      "title": "Kostenlose Credits - AIASMR Video",
+      "description": "Verdienen Sie kostenlose Credits durch tägliches Einchecken und Freunde einladen, um mehr ASMR-Videos zu erstellen"
+    },
+    "title": "Kostenlose Credits für Sie",
+    "subtitle": "Verdienen Sie Credits durch tägliches Einchecken und Empfehlungen, um mehr tolle ASMR-Videos zu erstellen",
+    "credits": {
+      "title": "Credits",
+      "description": "Ihr aktueller Kreditsaldo"
+    },
+    "checkIn": {
+      "title": "Einchecken",
+      "description": "Checken Sie ein, um Belohnungen zu erhalten",
+      "consecutiveDays": "Aufeinanderfolgende Tage",
+      "todayReward": "Heutige Belohnung", 
+      "checkedInToday": "Heute eingecheckt",
+      "checkInButton": "Einchecken",
+      "checkingIn": "Einchecken...",
+      "upcomingRewards": "Kommende Belohnungen",
+      "day": "Tag",
+      "credits": "Credits",
+      "totalCheckIns": "Gesamte Check-ins",
+      "longestStreak": "Längste Serie",
+      "days": "Tage",
+      "successMessage": "Erfolgreich eingecheckt! {credits} Credits verdient.",
+      "noData": "Keine Check-in-Daten verfügbar",
+      "errors": {
+        "checkInFailed": "Check-in fehlgeschlagen. Bitte versuchen Sie es erneut."
+      }
+    },
+    "referral": {
+      "title": "Freunde einladen",
+      "description": "Verdienen Sie Credits für jeden Freund, der sich anmeldet",
+      "reward": "30 Credits",
+      "yourLink": "Ihr Empfehlungslink",
+      "linkGenerated": "Ihr persönlicher Empfehlungslink wurde generiert",
+      "copyLink": "Link kopieren",
+      "copied": "Kopiert!",
+      "totalReferrals": "Gesamte Empfehlungen",
+      "totalEarned": "Gesamte Verdienste",
+      "pendingRewards": "Ausstehende Belohnungen",
+      "pending": "Ausstehend", 
+      "earned": "Verdient",
+      "shareTo": "Teilen mit",
+      "shareMessage": "AI ASMR Video - Erstellen Sie beeindruckende ASMR-Videos mit KI! Treten Sie mit meinem Link bei für Bonus-Credits!",
+      "share": "Teilen",
+      "platform": {
+        "facebook": "AI ASMR Video - Erstellen Sie beeindruckende ASMR-Videos mit KI! Treten Sie mit meinem Link bei für Bonus-Credits!",
+        "linkedin": "Professionelle AI ASMR Video-Erstellungsplattform. Treten Sie mit meinem Einladungslink bei für Bonus-Credits!",
+        "whatsapp": "AI ASMR Video - Verwandeln Sie Ihre Ideen in tolle ASMR-Videos! Treten Sie mit meinem Einladungslink bei für Bonus-Credits!"
+      },
+      "recentReferrals": "Kürzliche Empfehlungen",
+      "howItWorks": "Wie es funktioniert",
+      "step1": "Teilen Sie Ihren Empfehlungslink mit Freunden",
+      "step2": "Sie melden sich an und tätigen ihren ersten Kauf", 
+      "step3": "Sie verdienen 30 Credits für jede erfolgreiche Empfehlung",
+      "noData": "Keine Empfehlungsdaten verfügbar",
+      "status": {
+        "pending": "Ausstehend",
+        "registered": "Registriert", 
+        "converted": "Konvertiert",
+        "credited": "Gutgeschrieben"
+      }
+    },
+    "auth": {
+      "loginRequired": "Anmeldung erforderlich",
+      "loginDescription": "Bitte melden Sie sich an, um auf kostenlose Credits zuzugreifen und Belohnungen zu verdienen",
+      "loginButton": "Anmelden",
+      "signupButton": "Registrieren"
+    },
+    "errors": {
+      "fetchDataFailed": "Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut."
+    }
   }
 }

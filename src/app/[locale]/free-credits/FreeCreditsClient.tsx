@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCredits } from '@/contexts/CreditsContext';
 import CheckInSection from './components/CheckInSection';
@@ -25,11 +27,13 @@ interface FreeCreditsClientProps {
 
 export default function FreeCreditsClient({ translations }: FreeCreditsClientProps) {
   const t = useTranslations('freeCredits');
+  const params = useParams();
+  const locale = params.locale as string;
   const { user, loading: authLoading } = useAuth();
   const { credits, loading: creditsLoading, refreshCredits } = useCredits();
   const [checkInData, setCheckInData] = useState(null);
   const [referralData, setReferralData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
@@ -78,8 +82,39 @@ export default function FreeCreditsClient({ translations }: FreeCreditsClientPro
     fetchFreeCreditsData(); // Refresh referral data
   };
 
-  // Show loading state
-  if (authLoading || creditsLoading || loading) {
+  // Show login prompt for unauthenticated users first (no loading needed)
+  if (!authLoading && !user) {
+    return (
+      <div className="text-center py-16">
+        <div className="bg-gray-800 rounded-2xl shadow-lg p-8 max-w-md mx-auto border border-gray-700">
+          <div className="text-6xl mb-4">🔒</div>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            {t('auth.loginRequired')}
+          </h2>
+          <p className="text-gray-300 mb-6">
+            {t('auth.loginDescription')}
+          </p>
+          <div className="space-y-3">
+            <Link
+              href={`/${locale}/auth/login`}
+              className="block w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            >
+              {t('auth.loginButton')}
+            </Link>
+            <Link
+              href={`/${locale}/auth/signup`}
+              className="block w-full border border-purple-600 text-purple-400 py-3 px-6 rounded-lg font-semibold hover:bg-purple-600/10 transition-colors"
+            >
+              {t('auth.signupButton')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state only for authenticated users
+  if (authLoading || (user && (creditsLoading || loading))) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
@@ -87,7 +122,7 @@ export default function FreeCreditsClient({ translations }: FreeCreditsClientPro
     );
   }
 
-  // Show login prompt for unauthenticated users
+  // This shouldn't happen, but just in case
   if (!user) {
     return (
       <div className="text-center py-16">
@@ -100,18 +135,18 @@ export default function FreeCreditsClient({ translations }: FreeCreditsClientPro
             {t('auth.loginDescription')}
           </p>
           <div className="space-y-3">
-            <a
-              href="/auth/login"
+            <Link
+              href={`/${locale}/auth/login`}
               className="block w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
             >
               {t('auth.loginButton')}
-            </a>
-            <a
-              href="/auth/signup"
+            </Link>
+            <Link
+              href={`/${locale}/auth/signup`}
               className="block w-full border border-purple-600 text-purple-400 py-3 px-6 rounded-lg font-semibold hover:bg-purple-600/10 transition-colors"
             >
               {t('auth.signupButton')}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

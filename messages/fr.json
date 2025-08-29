@@ -896,10 +896,85 @@
       }
     },
     "cta": {
-      "title": "Ready to Create Professional Roleplay ASMR?",
-      "description": "Transform these templates into high-quality videos using our AI-powered generation tools. Perfect for content creators looking to produce engaging roleplay scenarios.",
-      "startCreating": "Start Creating with VEO3",
-      "browseAll": "Browse All Categories"
+      "title": "Prêt à créer de l'ASMR de jeu de rôle professionnel ?",
+      "description": "Transformez ces modèles en vidéos de haute qualité grâce à nos outils de génération alimentés par l'IA. Parfait pour les créateurs de contenu qui cherchent à produire des scénarios de jeu de rôle engageants.",
+      "startCreating": "Commencer à créer avec VEO3",
+      "browseAll": "Parcourir toutes les catégories"
+    }
+  },
+  "freeCredits": {
+    "meta": {
+      "title": "Crédits gratuits - AIASMR Video",
+      "description": "Gagnez des crédits gratuits en vous connectant quotidiennement et en parrainant des amis pour créer plus de vidéos ASMR"
+    },
+    "title": "Crédits gratuits pour vous",
+    "subtitle": "Gagnez des crédits grâce aux connexions quotidiennes et aux parrainages pour créer plus de vidéos ASMR extraordinaires",
+    "credits": {
+      "title": "Crédits",
+      "description": "Votre solde de crédits actuel"
+    },
+    "checkIn": {
+      "title": "Se connecter",
+      "description": "Connectez-vous pour obtenir des récompenses",
+      "consecutiveDays": "Jours consécutifs",
+      "todayReward": "Récompense d'aujourd'hui", 
+      "checkedInToday": "Connecté aujourd'hui",
+      "checkInButton": "Se connecter",
+      "checkingIn": "Connexion en cours...",
+      "upcomingRewards": "Récompenses à venir",
+      "day": "Jour",
+      "credits": "Crédits",
+      "totalCheckIns": "Total des connexions",
+      "longestStreak": "Plus longue série",
+      "days": "jours",
+      "successMessage": "Connexion réussie ! {credits} crédits gagnés.",
+      "noData": "Aucune donnée de connexion disponible",
+      "errors": {
+        "checkInFailed": "Échec de la connexion. Veuillez réessayer."
+      }
+    },
+    "referral": {
+      "title": "Inviter des amis",
+      "description": "Gagnez des crédits pour chaque ami qui s'inscrit",
+      "reward": "30 crédits",
+      "yourLink": "Votre lien de parrainage",
+      "linkGenerated": "Votre lien de parrainage personnel a été généré",
+      "copyLink": "Copier le lien",
+      "copied": "Copié !",
+      "totalReferrals": "Total des parrainages",
+      "totalEarned": "Total gagné",
+      "pendingRewards": "Récompenses en attente",
+      "pending": "En attente", 
+      "earned": "Gagné",
+      "shareTo": "Partager sur",
+      "shareMessage": "AI ASMR Video - Créez de superbes vidéos ASMR avec l'IA ! Rejoignez avec mon lien pour des crédits bonus !",
+      "share": "Partager",
+      "platform": {
+        "facebook": "AI ASMR Video - Créez de superbes vidéos ASMR avec l'IA ! Rejoignez avec mon lien pour des crédits bonus !",
+        "linkedin": "Plateforme professionnelle de création de vidéos AI ASMR. Rejoignez avec mon lien d'invitation pour des crédits bonus !",
+        "whatsapp": "AI ASMR Video - Transformez vos idées en vidéos ASMR extraordinaires ! Rejoignez avec mon lien d'invitation pour des crédits bonus !"
+      },
+      "recentReferrals": "Parrainages récents",
+      "howItWorks": "Comment ça marche",
+      "step1": "Partagez votre lien de parrainage avec des amis",
+      "step2": "Ils s'inscrivent et font leur premier achat", 
+      "step3": "Vous gagnez 30 crédits pour chaque parrainage réussi",
+      "noData": "Aucune donnée de parrainage disponible",
+      "status": {
+        "pending": "En attente",
+        "registered": "Inscrit", 
+        "converted": "Converti",
+        "credited": "Crédité"
+      }
+    },
+    "auth": {
+      "loginRequired": "Connexion requise",
+      "loginDescription": "Veuillez vous connecter pour accéder aux crédits gratuits et commencer à gagner des récompenses",
+      "loginButton": "Se connecter",
+      "signupButton": "S'inscrire"
+    },
+    "errors": {
+      "fetchDataFailed": "Échec du chargement des données. Veuillez réessayer."
     }
   }
 }
