@@ -45,6 +45,19 @@ CREATE TABLE public.categories (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT categories_pkey PRIMARY KEY (id)
 );
+CREATE TABLE public.check_in_rewards (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  day_sequence integer NOT NULL UNIQUE CHECK (day_sequence >= 1 AND day_sequence <= 7),
+  credits_reward integer NOT NULL,
+  is_special_reward boolean DEFAULT false,
+  reward_title text,
+  reward_description text,
+  icon text,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT check_in_rewards_pkey PRIMARY KEY (id)
+);
 CREATE TABLE public.credit_transactions (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id uuid,
@@ -55,9 +68,14 @@ CREATE TABLE public.credit_transactions (
   subscription_id uuid,
   created_at timestamp with time zone DEFAULT now(),
   task_id text,
+  check_in_id uuid,
+  referral_id uuid,
+  free_credits_type text CHECK (free_credits_type = ANY (ARRAY['check_in'::text, 'referral'::text, 'bonus'::text])),
   CONSTRAINT credit_transactions_pkey PRIMARY KEY (id),
-  CONSTRAINT credit_transactions_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(id),
-  CONSTRAINT fk_credit_transactions_video FOREIGN KEY (video_id) REFERENCES public.videos(id)
+  CONSTRAINT fk_credit_transactions_video FOREIGN KEY (video_id) REFERENCES public.videos(id),
+  CONSTRAINT credit_transactions_referral_id_fkey FOREIGN KEY (referral_id) REFERENCES public.user_referrals(id),
+  CONSTRAINT credit_transactions_check_in_id_fkey FOREIGN KEY (check_in_id) REFERENCES public.user_check_ins(id),
+  CONSTRAINT credit_transactions_subscription_id_fkey FOREIGN KEY (subscription_id) REFERENCES public.subscriptions(id)
 );
 CREATE TABLE public.faqs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -158,6 +176,32 @@ CREATE TABLE public.products (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT products_pkey PRIMARY KEY (id)
 );
+CREATE TABLE public.referral_codes (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL UNIQUE,
+  referral_code text NOT NULL UNIQUE,
+  referral_link text NOT NULL,
+  total_referrals integer DEFAULT 0,
+  successful_referrals integer DEFAULT 0,
+  total_credits_earned integer DEFAULT 0,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT referral_codes_pkey PRIMARY KEY (id),
+  CONSTRAINT referral_codes_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.referral_rewards (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  reward_type text NOT NULL UNIQUE CHECK (reward_type = ANY (ARRAY['registration'::text, 'first_payment'::text, 'subscription'::text])),
+  credits_reward integer NOT NULL,
+  minimum_spending integer DEFAULT 0,
+  reward_title text,
+  reward_description text,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT referral_rewards_pkey PRIMARY KEY (id)
+);
 CREATE TABLE public.subscription_usage (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id uuid,
@@ -211,6 +255,36 @@ CREATE TABLE public.triggers (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT triggers_pkey PRIMARY KEY (id)
 );
+CREATE TABLE public.user_check_ins (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  check_in_date date NOT NULL,
+  credits_earned integer NOT NULL DEFAULT 1,
+  consecutive_days integer NOT NULL DEFAULT 1,
+  is_bonus_reward boolean DEFAULT false,
+  timezone text DEFAULT 'UTC'::text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_check_ins_pkey PRIMARY KEY (id),
+  CONSTRAINT user_check_ins_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.user_free_credits_stats (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL UNIQUE,
+  total_check_ins integer DEFAULT 0,
+  current_consecutive_days integer DEFAULT 0,
+  longest_consecutive_days integer DEFAULT 0,
+  last_check_in_date date,
+  total_check_in_credits integer DEFAULT 0,
+  total_referrals_sent integer DEFAULT 0,
+  successful_referrals integer DEFAULT 0,
+  pending_referrals integer DEFAULT 0,
+  total_referral_credits integer DEFAULT 0,
+  total_free_credits_earned integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_free_credits_stats_pkey PRIMARY KEY (id),
+  CONSTRAINT user_free_credits_stats_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
 CREATE TABLE public.user_profiles (
   id uuid NOT NULL,
   email text,
@@ -230,6 +304,27 @@ CREATE TABLE public.user_profiles (
   commercial_rights boolean DEFAULT false,
   CONSTRAINT user_profiles_pkey PRIMARY KEY (id),
   CONSTRAINT user_profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.user_referrals (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  referrer_id uuid NOT NULL,
+  referred_user_id uuid,
+  referral_code text NOT NULL,
+  referred_email text,
+  status text DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'registered'::text, 'converted'::text, 'credited'::text])),
+  credits_awarded integer DEFAULT 0,
+  conversion_date timestamp with time zone,
+  credited_date timestamp with time zone,
+  ip_address inet,
+  user_agent text,
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_referrals_pkey PRIMARY KEY (id),
+  CONSTRAINT user_referrals_referrer_id_fkey FOREIGN KEY (referrer_id) REFERENCES auth.users(id),
+  CONSTRAINT user_referrals_referred_user_id_fkey FOREIGN KEY (referred_user_id) REFERENCES auth.users(id)
 );
 CREATE TABLE public.user_sessions (
   id uuid NOT NULL DEFAULT gen_random_uuid(),

@@ -29,7 +29,7 @@ This is an AI ASMR video generation platform called "AIASMR Video" that allows u
 
 ### Database Schema (Supabase PostgreSQL)
 
-**IMPORTANT**: Always use the correct table names as defined in SUPABASE_DATABASE_DESIGN.sql:
+**IMPORTANT**: Always use the correct table names as defined in database/SUPABASE_DATABASE_DESIGN.sql:
 
 #### Core Tables:
 - `user_profiles` (NOT `profiles`) - User information and credits
