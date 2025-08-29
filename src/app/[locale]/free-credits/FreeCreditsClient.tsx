@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCredits } from '@/hooks/useCredits';
+import { useCredits } from '@/contexts/CreditsContext';
 import CheckInSection from './components/CheckInSection';
 import ReferralSection from './components/ReferralSection';
 import { toast } from 'react-hot-toast';

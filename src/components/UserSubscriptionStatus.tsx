@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
-import { useCredits } from '@/hooks/useCredits';
+import { useCredits } from '@/contexts/CreditsContext';
 
 const UserSubscriptionStatus = () => {
   const { subscription, loading: subLoading } = useSubscription();

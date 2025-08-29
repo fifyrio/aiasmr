@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import AOS from 'aos';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCredits } from '@/hooks/useCredits';
+import { useCredits } from '@/contexts/CreditsContext';
 import { calculateCredits, getAvailableDurations, getAvailableAspectRatios } from '@/lib/credit-calculator';
 import asmrTemplates from '@/data/asmr_templates.json';
 

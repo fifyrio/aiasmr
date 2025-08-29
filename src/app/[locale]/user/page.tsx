@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCredits } from '@/hooks/useCredits';
+import { useCredits } from '@/contexts/CreditsContext';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
