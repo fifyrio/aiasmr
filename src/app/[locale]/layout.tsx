@@ -8,6 +8,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CreditsProvider } from '@/contexts/CreditsContext'
+import ReferralTrackerComponent from '@/components/ReferralTracker'
 import Script from 'next/script'
 import { GA_TRACKING_ID } from '@/lib/analytics'
 import { Toaster } from 'react-hot-toast'
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <AuthProvider>
             <CreditsProvider>
+              <ReferralTrackerComponent />
               {children}
             <Analytics />
             <SpeedInsights />

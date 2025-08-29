@@ -22,19 +22,18 @@ export async function GET(request: NextRequest) {
       .eq('user_id', user.id)
       .single();
 
+    // 根据环境确定正确的base URL
+    let baseUrl;
+    if (process.env.NODE_ENV === 'production') {
+      baseUrl = process.env.NEXT_PUBLIC_PRODUCTION_URL || 'https://www.aiasmr.vip';
+    } else {
+      baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    }
+
     // 如果用户没有推荐代码，创建一个
     if (!referralCode) {
       const code = await generateReferralCode();
-      
-      // 根据环境确定正确的base URL
-      let baseUrl;
-      if (process.env.NODE_ENV === 'production') {
-        baseUrl = process.env.NEXT_PUBLIC_PRODUCTION_URL || 'https://www.aiasmr.vip';
-      } else {
-        baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-      }
-      
-      const referralLink = `${baseUrl}/auth/signup?ref=${code}`;
+      const referralLink = `${baseUrl}?ref=${code}`;
 
       const { data: newReferralCode, error: insertError } = await supabase
         .from('referral_codes')
@@ -55,6 +54,31 @@ export async function GET(request: NextRequest) {
       }
 
       referralCode = newReferralCode;
+    } else {
+      // 检查现有推荐码的链接格式是否需要更新
+      const expectedLink = `${baseUrl}?ref=${referralCode.referral_code}`;
+      
+      if (referralCode.referral_link !== expectedLink) {
+        console.log(`[ReferralAPI] Updating referral link for user ${user.id}: ${referralCode.referral_link} → ${expectedLink}`);
+        
+        // 更新推荐链接格式
+        const { data: updatedReferralCode, error: updateError } = await supabase
+          .from('referral_codes')
+          .update({ 
+            referral_link: expectedLink,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', user.id)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error('Failed to update referral link format:', updateError);
+          // 继续使用旧的数据，不影响用户体验
+        } else {
+          referralCode = updatedReferralCode;
+        }
+      }
     }
 
     // 获取推荐统计

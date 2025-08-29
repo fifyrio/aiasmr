@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useAuth } from '@/contexts/AuthContext'
+import { ReferralTracker } from '@/utils/referral-tracker'
 
 export default function SignupForm() {
   const [email, setEmail] = useState('')
@@ -23,12 +24,21 @@ export default function SignupForm() {
   const t = useTranslations('auth.signup')
   const tCommon = useTranslations('common')
 
-  // 获取URL中的ref参数
+  // 获取推荐码 - 从多个来源（URL、localStorage、sessionStorage等）
   useEffect(() => {
+    // 优先从URL获取推荐码
     const ref = searchParams.get('ref')
     if (ref) {
+      ReferralTracker.setReferralCode(ref)
       setReferralCode(ref)
-      console.log('Referral code found:', ref)
+      console.log('[SignupForm] Referral code found in URL:', ref)
+    } else {
+      // 从存储中获取推荐码
+      const storedRef = ReferralTracker.getReferralCode()
+      if (storedRef) {
+        setReferralCode(storedRef)
+        console.log('[SignupForm] Referral code found in storage:', storedRef)
+      }
     }
   }, [searchParams])
 
