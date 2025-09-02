@@ -6,6 +6,49 @@ import { useParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
+// Custom CSS for sliders
+const sliderStyles = `
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    cursor: pointer;
+    outline: none;
+  }
+  .slider::-webkit-slider-track {
+    background: transparent;
+    height: 4px;
+    border-radius: 2px;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    border: 2px solid white;
+    cursor: pointer;
+    margin-top: -6px;
+  }
+  .slider::-moz-range-track {
+    background: transparent;
+    height: 4px;
+    border-radius: 2px;
+    border: none;
+  }
+  .slider::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    border: 2px solid white;
+    cursor: pointer;
+    border: none;
+  }
+`;
+
 export default function ASMRMusicPage() {
   const t = useTranslations('asmrMusic');
   const params = useParams();
@@ -165,7 +208,8 @@ export default function ASMRMusicPage() {
   const currentSounds = soundData[activeCategory as keyof typeof soundData] || soundData.Focus;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900">
+    <div className="min-h-screen bg-[#1a1625]">
+      <style jsx>{sliderStyles}</style>
       <Navigation />
       
       <div className="pt-20 pb-12">
@@ -180,7 +224,7 @@ export default function ASMRMusicPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/80"></div>
             </div>
-            <div className="relative p-8 md:p-12 text-center">
+            <div className="relative p-12 md:p-16 text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 Find your focus
               </h1>
@@ -295,9 +339,9 @@ export default function ASMRMusicPage() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-white font-semibold mb-1">{preset.name}</h3>
-                    <p className="text-white/70 text-sm">{preset.description}</p>
+                  <div className="p-6">
+                    <h3 className="text-white font-semibold mb-2">{preset.name}</h3>
+                    <p className="text-white/70 text-sm leading-relaxed">{preset.description}</p>
                   </div>
                 </div>
               ))}
