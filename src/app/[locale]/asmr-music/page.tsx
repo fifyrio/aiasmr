@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
@@ -58,6 +58,10 @@ export default function ASMRMusicPage() {
   const [volume, setVolume] = useState(50);
   const [activeCategory, setActiveCategory] = useState('Focus');
   const [activeSounds, setActiveSounds] = useState<string[]>([]);
+  const [soundVolumes, setSoundVolumes] = useState<{[key: string]: number}>({});
+  const audioRefs = useRef<{[key: string]: HTMLAudioElement}>({});
+  const [openFaqItem, setOpenFaqItem] = useState<number | null>(null);
+  const defaultFocusAudio = useRef<HTMLAudioElement | null>(null);
 
   // Sound categories
   const categories = ['Focus', 'Relax', 'Sleep', 'Nature', 'Ambient'];
@@ -193,19 +197,182 @@ export default function ASMRMusicPage() {
     }
   ];
 
+  // ASMR Music FAQ data
+  const asmrFaqData = [
+    {
+      question: "How do I use the ASMR music player?",
+      answer: "Select a category (Focus, Relax, Sleep, etc.), click on sound icons to activate them, then hit the play button. You can mix multiple sounds and adjust individual volumes for a personalized experience."
+    },
+    {
+      question: "Can I play multiple sounds at the same time?",
+      answer: "Yes! You can activate multiple sounds simultaneously to create your perfect ambient mix. Each sound has its own volume control for fine-tuning."
+    },
+    {
+      question: "What's the difference between sound categories?",
+      answer: "Focus sounds help with concentration and productivity. Relax sounds reduce stress and anxiety. Sleep sounds promote better rest. Nature and Ambient provide various environmental atmospheres."
+    },
+    {
+      question: "Are the sounds loop continuously?",
+      answer: "Yes, all sounds are designed to loop seamlessly so you can listen for extended periods without interruption. Perfect for work, study, or sleep sessions."
+    },
+    {
+      question: "Can I use this with headphones for better effect?",
+      answer: "Absolutely! ASMR sounds are often more effective with headphones as they provide better stereo separation and immersive experience, especially for binaural audio effects."
+    },
+    {
+      question: "Why are some sounds not working?",
+      answer: "If sounds aren't playing, check your browser's audio permissions and ensure your device isn't muted. Some browsers block autoplay - try clicking the sound icon after the play button."
+    },
+    {
+      question: "Can I save my favorite sound combinations?",
+      answer: "The preset library contains pre-made combinations. Custom preset saving is coming in a future update. For now, remember your favorite combinations manually."
+    },
+    {
+      question: "Is this free to use?",
+      answer: "Yes! The ASMR music player is completely free to use. You can enjoy unlimited listening with all sound categories and mixing features at no cost."
+    }
+  ];
+
+  // Initialize audio elements
+  useEffect(() => {
+    // Initialize default Focus audio
+    if (!defaultFocusAudio.current) {
+      const focusAudio = new Audio('/sounds/Focus.mp3');
+      focusAudio.loop = true;
+      focusAudio.volume = volume / 100;
+      defaultFocusAudio.current = focusAudio;
+    }
+    
+    const allSounds = Object.values(soundData).flat();
+    allSounds.forEach(sound => {
+      if (!audioRefs.current[sound.id]) {
+        // Try WAV first, fallback to MP3
+        const audio = new Audio(`/sounds/${sound.id}.wav`);
+        audio.loop = true;
+        audio.volume = (soundVolumes[sound.id] || 50) / 100 * (volume / 100);
+        
+        // Error handling for missing files
+        audio.onerror = () => {
+          console.log(`WAV not found for ${sound.id}, trying MP3...`);
+          audio.src = `/sounds/${sound.id}.mp3`;
+        };
+        
+        audioRefs.current[sound.id] = audio;
+      }
+    });
+  }, [soundVolumes, volume]);
+
   const toggleSound = (soundId: string) => {
-    setActiveSounds(prev => 
-      prev.includes(soundId) 
+    setActiveSounds(prev => {
+      const newActiveSounds = prev.includes(soundId) 
         ? prev.filter(id => id !== soundId)
-        : [...prev, soundId]
-    );
+        : [...prev, soundId];
+      
+      // Handle audio playback
+      const audio = audioRefs.current[soundId];
+      if (audio) {
+        if (newActiveSounds.includes(soundId) && isPlaying) {
+          audio.play().catch(console.error);
+        } else {
+          audio.pause();
+        }
+      }
+      
+      return newActiveSounds;
+    });
   };
 
   const togglePlay = () => {
-    setIsPlaying(!isPlaying);
+    const newPlayState = !isPlaying;
+    setIsPlaying(newPlayState);
+    
+    if (newPlayState) {
+      // If no sounds are active, play default Focus.mp3
+      if (activeSounds.length === 0 && defaultFocusAudio.current) {
+        defaultFocusAudio.current.play().catch(console.error);
+      } else {
+        // Control all active sounds
+        activeSounds.forEach(soundId => {
+          const audio = audioRefs.current[soundId];
+          if (audio) {
+            audio.play().catch(console.error);
+          }
+        });
+      }
+    } else {
+      // Pause default Focus audio
+      if (defaultFocusAudio.current) {
+        defaultFocusAudio.current.pause();
+      }
+      
+      // Pause all active sounds
+      activeSounds.forEach(soundId => {
+        const audio = audioRefs.current[soundId];
+        if (audio) {
+          audio.pause();
+        }
+      });
+    }
   };
 
+  const updateSoundVolume = (soundId: string, newVolume: number) => {
+    setSoundVolumes(prev => ({
+      ...prev,
+      [soundId]: newVolume
+    }));
+    
+    const audio = audioRefs.current[soundId];
+    if (audio) {
+      audio.volume = newVolume / 100 * (volume / 100);
+    }
+  };
+
+  // Update all audio volumes when master volume changes
+  useEffect(() => {
+    // Update default Focus audio volume
+    if (defaultFocusAudio.current) {
+      defaultFocusAudio.current.volume = volume / 100;
+    }
+    
+    Object.keys(audioRefs.current).forEach(soundId => {
+      const audio = audioRefs.current[soundId];
+      if (audio) {
+        audio.volume = (soundVolumes[soundId] || 50) / 100 * (volume / 100);
+      }
+    });
+  }, [volume, soundVolumes]);
+
   const currentSounds = soundData[activeCategory as keyof typeof soundData] || soundData.Focus;
+
+  // FAQ item component
+  const ASMRFAQItem = ({ question, answer, index }: { question: string; answer: string; index: number }) => {
+    const isOpen = openFaqItem === index;
+    
+    return (
+      <div className="border border-white/20 rounded-lg overflow-hidden">
+        <button
+          onClick={() => setOpenFaqItem(isOpen ? null : index)}
+          className="w-full px-6 py-4 text-left bg-white/5 hover:bg-white/10 transition-colors flex justify-between items-center"
+        >
+          <span className="font-semibold text-white pr-4">{question}</span>
+          <svg 
+            className={`w-5 h-5 text-purple-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="px-6 py-4 bg-white/5 border-t border-white/10">
+            <p className="text-white/80 leading-relaxed">{answer}</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#1a1625]">
@@ -226,8 +393,11 @@ export default function ASMRMusicPage() {
             </div>
             <div className="relative p-12 md:p-16 text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Find your focus
+                Free ASMR Music Player
               </h1>
+              <p className="text-2xl md:text-3xl font-semibold text-white/90 mb-4">
+                Find your focus
+              </p>
               <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
                 Create your ideal soundscape to focus, relax, or sleep.
               </p>
@@ -291,10 +461,11 @@ export default function ASMRMusicPage() {
                         type="range"
                         min="0"
                         max="100"
-                        defaultValue="50"
+                        value={soundVolumes[sound.id] || 50}
+                        onChange={(e) => updateSoundVolume(sound.id, parseInt(e.target.value))}
                         className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
                         style={{
-                          background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 100%)`
+                          background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${soundVolumes[sound.id] || 50}%, rgba(255,255,255,0.2) ${soundVolumes[sound.id] || 50}%, rgba(255,255,255,0.2) 100%)`
                         }}
                       />
                     </div>
@@ -365,7 +536,7 @@ export default function ASMRMusicPage() {
           </div>
 
           {/* Testimonials */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/10 mb-12">
             <h2 className="text-2xl font-bold text-white text-center mb-8">
               Loved by users worldwide
             </h2>
@@ -378,6 +549,23 @@ export default function ASMRMusicPage() {
                   <p className="text-white/90 text-sm mb-4 italic">"{testimonial.quote}"</p>
                   <p className="text-white font-medium">- {testimonial.name}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+            <h2 className="text-2xl font-bold text-white text-center mb-8">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4">
+              {asmrFaqData.map((faq, index) => (
+                <ASMRFAQItem 
+                  key={index}
+                  question={faq.question}
+                  answer={faq.answer}
+                  index={index}
+                />
               ))}
             </div>
           </div>
