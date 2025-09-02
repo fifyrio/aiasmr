@@ -21,6 +21,7 @@
     "logout": "Logout",
     "account": "Account",
     "aiPrompts": "AI Prompts",
+    "asmrMusic": "ASMR Music",
     "veo3": "VEO3",
     "blog": "Blog",
     "faq": "FAQ",
@@ -978,6 +979,109 @@
     },
     "errors": {
       "fetchDataFailed": "Failed to load data. Please try again."
+    }
+  },
+  "asmrMusic": {
+    "meta": {
+      "title": "ASMR Music - Focus, Relax & Sleep Soundscapes",
+      "description": "Create your perfect soundscape for focus, relaxation, and sleep with our ASMR music player"
+    },
+    "hero": {
+      "title": "Find your focus",
+      "subtitle": "Create your ideal soundscape to focus, relax, or sleep."
+    },
+    "categories": {
+      "focus": "Focus",
+      "relax": "Relax", 
+      "sleep": "Sleep",
+      "nature": "Nature",
+      "ambient": "Ambient"
+    },
+    "sounds": {
+      "rain": "Rain",
+      "thunder": "Thunder",
+      "wind": "Wind",
+      "birds": "Birds",
+      "fireplace": "Fireplace",
+      "river": "River",
+      "cafe": "Cafe",
+      "noise": "Noise",
+      "ocean": "Ocean",
+      "forest": "Forest",
+      "meditation": "Meditation",
+      "piano": "Piano",
+      "singing": "Singing",
+      "bells": "Bells",
+      "chimes": "Chimes",
+      "bamboo": "Bamboo",
+      "whitenoise": "White Noise",
+      "pinknoise": "Pink Noise",
+      "brownnoise": "Brown Noise",
+      "lullaby": "Lullaby",
+      "heartbeat": "Heartbeat",
+      "womb": "Womb",
+      "clock": "Clock",
+      "silence": "Silence",
+      "desert": "Desert",
+      "mountain": "Mountain",
+      "jungle": "Jungle",
+      "beach": "Beach",
+      "meadow": "Meadow",
+      "cave": "Cave",
+      "city": "City",
+      "library": "Library",
+      "office": "Office",
+      "train": "Train",
+      "plane": "Plane",
+      "underwater": "Underwater",
+      "space": "Space",
+      "vintage": "Vintage"
+    },
+    "controls": {
+      "volume": "Volume",
+      "play": "Play",
+      "pause": "Pause"
+    },
+    "sections": {
+      "presetLibrary": "Preset Library",
+      "useCases": "Use Cases",
+      "testimonials": "Loved by users worldwide"
+    },
+    "presets": {
+      "forest": {
+        "name": "Forest",
+        "description": "Sounds of a peaceful forest"
+      },
+      "ocean": {
+        "name": "Ocean", 
+        "description": "Sounds of the ocean waves"
+      },
+      "city": {
+        "name": "City",
+        "description": "Sounds of a bustling city"
+      },
+      "rain": {
+        "name": "Rain",
+        "description": "Sounds of gentle rain"
+      },
+      "fire": {
+        "name": "Fire",
+        "description": "Sounds of a crackling fire"
+      }
+    },
+    "useCases": {
+      "focus": {
+        "title": "Focus",
+        "description": "Improve concentration with ambient sounds"
+      },
+      "relax": {
+        "title": "Relax", 
+        "description": "Reduce stress with calming soundscapes"
+      },
+      "sleep": {
+        "title": "Sleep",
+        "description": "Fall asleep faster with soothing sounds"
+      }
     }
   }
 }

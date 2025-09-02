@@ -21,6 +21,7 @@
     "logout": "退出",
     "account": "账户",
     "aiPrompts": "AI提示词",
+    "asmrMusic": "ASMR音乐",
     "veo3": "VEO3",
     "blog": "博客",
     "faq": "常见问题",
@@ -968,6 +969,109 @@
     },
     "errors": {
       "fetchDataFailed": "数据加载失败，请重试。"
+    }
+  },
+  "asmrMusic": {
+    "meta": {
+      "title": "ASMR音乐 - 专注、放松与睡眠音景",
+      "description": "使用我们的ASMR音乐播放器创建完美的专注、放松和睡眠音景"
+    },
+    "hero": {
+      "title": "找到你的专注",
+      "subtitle": "创建理想的音景来专注、放松或睡眠。"
+    },
+    "categories": {
+      "focus": "专注",
+      "relax": "放松", 
+      "sleep": "睡眠",
+      "nature": "自然",
+      "ambient": "环境"
+    },
+    "sounds": {
+      "rain": "雨声",
+      "thunder": "雷声",
+      "wind": "风声",
+      "birds": "鸟鸣",
+      "fireplace": "壁炉",
+      "river": "河流",
+      "cafe": "咖啡厅",
+      "noise": "噪音",
+      "ocean": "海洋",
+      "forest": "森林",
+      "meditation": "冥想",
+      "piano": "钢琴",
+      "singing": "歌唱",
+      "bells": "铃铛",
+      "chimes": "风铃",
+      "bamboo": "竹子",
+      "whitenoise": "白噪音",
+      "pinknoise": "粉噪音",
+      "brownnoise": "棕噪音",
+      "lullaby": "摇篮曲",
+      "heartbeat": "心跳",
+      "womb": "子宫",
+      "clock": "时钟",
+      "silence": "静音",
+      "desert": "沙漠",
+      "mountain": "山脉",
+      "jungle": "丛林",
+      "beach": "海滩",
+      "meadow": "草原",
+      "cave": "洞穴",
+      "city": "城市",
+      "library": "图书馆",
+      "office": "办公室",
+      "train": "火车",
+      "plane": "飞机",
+      "underwater": "水下",
+      "space": "太空",
+      "vintage": "复古"
+    },
+    "controls": {
+      "volume": "音量",
+      "play": "播放",
+      "pause": "暂停"
+    },
+    "sections": {
+      "presetLibrary": "预设音库",
+      "useCases": "使用场景",
+      "testimonials": "全球用户喜爱"
+    },
+    "presets": {
+      "forest": {
+        "name": "森林",
+        "description": "宁静森林的声音"
+      },
+      "ocean": {
+        "name": "海洋", 
+        "description": "海浪的声音"
+      },
+      "city": {
+        "name": "城市",
+        "description": "繁忙城市的声音"
+      },
+      "rain": {
+        "name": "雨声",
+        "description": "轻柔雨声"
+      },
+      "fire": {
+        "name": "火焰",
+        "description": "火焰燃烧的声音"
+      }
+    },
+    "useCases": {
+      "focus": {
+        "title": "专注",
+        "description": "通过环境音改善注意力"
+      },
+      "relax": {
+        "title": "放松", 
+        "description": "通过平静的音景减轻压力"
+      },
+      "sleep": {
+        "title": "睡眠",
+        "description": "通过舒缓的声音更快入睡"
+      }
     }
   }
 }

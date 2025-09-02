@@ -74,6 +74,12 @@ const Navigation = () => {
                 {t('aiPrompts')}
               </Link>
               <Link 
+                href={`/${locale}/asmr-music`} 
+                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
+              >
+                {t('asmrMusic')}
+              </Link>
+              <Link 
                 href={`/${locale}/veo3`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
               >
@@ -272,6 +278,9 @@ const Navigation = () => {
             </Link>
             <Link href={`/${locale}/ai-asmr-prompts`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
               {t('aiPrompts')}
+            </Link>
+            <Link href={`/${locale}/asmr-music`} className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-purple-400 hover:bg-gray-700">
+              {t('asmrMusic')}
             </Link>
             <div className="border-t border-gray-700 pt-3">
               <div className="px-3 py-2">
