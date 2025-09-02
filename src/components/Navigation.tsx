@@ -85,12 +85,7 @@ const Navigation = () => {
               >
                 {t('veo3')}
               </Link>
-              <Link 
-                href={`/${locale}/explore`} 
-                className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"
-              >
-                {t('explore')}
-              </Link>
+              
               <Link 
                 href={`/${locale}/pricing`} 
                 className="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-xs font-medium transition-colors"

@@ -79,35 +79,35 @@ export default function ASMRMusicPage() {
       id: 'forest',
       name: 'Forest',
       description: 'Sounds of a peaceful forest',
-      image: '/images/presets/forest.jpg',
+      image: '/images/Forest.png',
       sounds: ['birds', 'wind', 'forest']
     },
     {
       id: 'ocean',
       name: 'Ocean',
       description: 'Sounds of the ocean waves',
-      image: '/images/presets/ocean.jpg',
+      image: '/images/Ocean.png',
       sounds: ['ocean', 'wind']
     },
     {
       id: 'city',
       name: 'City',
       description: 'Sounds of a bustling city',
-      image: '/images/presets/city.jpg',
+      image: '/images/City.png',
       sounds: ['city', 'traffic']
     },
     {
       id: 'rain',
       name: 'Rain',
       description: 'Sounds of gentle rain',
-      image: '/images/presets/rain.jpg',
+      image: '/images/Rain.png',
       sounds: ['rain', 'thunder']
     },
     {
       id: 'fire',
       name: 'Fire',
       description: 'Sounds of a crackling fire',
-      image: '/images/presets/fire.jpg',
+      image: '/images/Fire.png',
       sounds: ['fireplace']
     }
   ];
@@ -172,7 +172,14 @@ export default function ASMRMusicPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
           <div className="relative bg-gradient-to-r from-green-600/20 to-teal-600/20 backdrop-blur-lg rounded-3xl overflow-hidden mb-12 border border-white/10">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/80"></div>
+            <div className="absolute inset-0">
+              <img 
+                src="/images/asmr-music-banner.jpeg" 
+                alt="ASMR Music Banner"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/80"></div>
+            </div>
             <div className="relative p-8 md:p-12 text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 Find your focus
@@ -282,9 +289,11 @@ export default function ASMRMusicPage() {
                   className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer"
                 >
                   <div className="aspect-video bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                    <div className="w-full h-full bg-gray-700/50 flex items-center justify-center">
-                      <span className="text-white/50 text-sm">Preview</span>
-                    </div>
+                    <img 
+                      src={preset.image} 
+                      alt={preset.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="p-4">
                     <h3 className="text-white font-semibold mb-1">{preset.name}</h3>
