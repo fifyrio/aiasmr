@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
@@ -66,8 +66,8 @@ export default function ASMRMusicPage() {
   // Sound categories
   const categories = ['Focus', 'Relax', 'Sleep', 'Nature', 'Ambient'];
 
-  // Sound data for each category
-  const soundData = {
+  // Sound data for each category - memoized to prevent useEffect dependency warning
+  const soundData = useMemo(() => ({
     Focus: [
       { id: 'rain', name: 'Rain', icon: '🌧️' },
       { id: 'thunder', name: 'Thunder', icon: '⛈️' },
@@ -118,7 +118,7 @@ export default function ASMRMusicPage() {
       { id: 'space', name: 'Space', icon: '🌌' },
       { id: 'vintage', name: 'Vintage', icon: '📻' }
     ]
-  };
+  }), []);
 
   // Preset library data
   const presets = [
@@ -260,7 +260,7 @@ export default function ASMRMusicPage() {
         audioRefs.current[sound.id] = audio;
       }
     });
-  }, [soundVolumes, volume]);
+  }, [soundVolumes, volume, soundData]);
 
   const toggleSound = (soundId: string) => {
     setActiveSounds(prev => {
@@ -546,7 +546,7 @@ export default function ASMRMusicPage() {
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl">{testimonial.avatar}</span>
                   </div>
-                  <p className="text-white/90 text-sm mb-4 italic">"{testimonial.quote}"</p>
+                  <p className="text-white/90 text-sm mb-4 italic">&quot;{testimonial.quote}&quot;</p>
                   <p className="text-white font-medium">- {testimonial.name}</p>
                 </div>
               ))}
