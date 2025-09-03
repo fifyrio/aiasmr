@@ -324,9 +324,19 @@ export default function ASMRMusicPage() {
     setIsPlaying(newPlayState);
     
     if (newPlayState) {
-      // If no sounds are active, play default Focus.mp3
-      if (activeSounds.length === 0 && defaultFocusAudio.current) {
-        defaultFocusAudio.current.play().catch(console.error);
+      // If no sounds are active, automatically activate and play Focus
+      if (activeSounds.length === 0) {
+        // Activate Focus sound
+        setActiveSounds(['Focus']);
+        
+        // Play Focus audio
+        const focusAudio = audioRefs.current['Focus'];
+        if (focusAudio) {
+          focusAudio.play().catch(console.error);
+        } else if (defaultFocusAudio.current) {
+          // Fallback to default Focus audio if Focus from audioRefs is not ready
+          defaultFocusAudio.current.play().catch(console.error);
+        }
       } else {
         // Control all active sounds
         activeSounds.forEach(soundId => {
