@@ -1,0 +1,146 @@
+{
+  "summary": {
+    "startTime": "2025-09-03T01:58:20.399Z",
+    "endTime": "2025-09-03T01:58:54.757Z",
+    "totalTime": 34.36,
+    "successSteps": 4,
+    "errorSteps": 0,
+    "options": {
+      "skipConversion": false,
+      "skipUpload": false,
+      "skipUrlGen": false,
+      "validateUrls": false,
+      "cleanTemp": false,
+      "verbose": false,
+      "dryRun": false,
+      "help": false
+    }
+  },
+  "steps": [
+    {
+      "step": "deps",
+      "status": "start",
+      "message": "Checking dependencies...",
+      "timestamp": "2025-09-03T01:58:20.399Z",
+      "data": {}
+    },
+    {
+      "step": "deps",
+      "status": "success",
+      "message": "All dependencies satisfied",
+      "timestamp": "2025-09-03T01:58:20.426Z",
+      "data": {
+        "checks": [
+          {
+            "name": "Node.js",
+            "required": ">=14.0.0",
+            "current": "v18.20.8",
+            "status": "ok"
+          },
+          {
+            "name": "FFmpeg",
+            "required": "any",
+            "current": "ffmpeg-static",
+            "status": "ok"
+          },
+          {
+            "name": "@aws-sdk/client-s3",
+            "required": "installed",
+            "current": "found",
+            "status": "ok"
+          },
+          {
+            "name": "dotenv",
+            "required": "installed",
+            "current": "found",
+            "status": "ok"
+          },
+          {
+            "name": "R2_ACCOUNT_ID",
+            "required": "configured",
+            "current": "set",
+            "status": "ok"
+          },
+          {
+            "name": "R2_ACCESS_KEY_ID",
+            "required": "configured",
+            "current": "set",
+            "status": "ok"
+          },
+          {
+            "name": "R2_SECRET_ACCESS_KEY",
+            "required": "configured",
+            "current": "set",
+            "status": "ok"
+          },
+          {
+            "name": "R2_BUCKET_NAME",
+            "required": "configured",
+            "current": "set",
+            "status": "ok"
+          },
+          {
+            "name": "R2_ENDPOINT",
+            "required": "configured",
+            "current": "set",
+            "status": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "step": "convert",
+      "status": "start",
+      "message": "Starting audio conversion (MP3 → AAC)...",
+      "timestamp": "2025-09-03T01:58:20.426Z",
+      "data": {}
+    },
+    {
+      "step": "convert",
+      "status": "success",
+      "message": "Audio conversion completed",
+      "timestamp": "2025-09-03T01:58:48.984Z",
+      "data": {
+        "successful": 10,
+        "failed": 0,
+        "compressionRatio": 26.7
+      }
+    },
+    {
+      "step": "upload",
+      "status": "start",
+      "message": "Starting cloud upload to R2...",
+      "timestamp": "2025-09-03T01:58:48.984Z",
+      "data": {}
+    },
+    {
+      "step": "upload",
+      "status": "success",
+      "message": "Cloud upload completed",
+      "timestamp": "2025-09-03T01:58:50.887Z",
+      "data": {
+        "successful": 10,
+        "failed": 0,
+        "totalSize": 47835991
+      }
+    },
+    {
+      "step": "urls",
+      "status": "start",
+      "message": "Generating URLs and updating frontend config...",
+      "timestamp": "2025-09-03T01:58:50.887Z",
+      "data": {}
+    },
+    {
+      "step": "urls",
+      "status": "success",
+      "message": "URL management completed",
+      "timestamp": "2025-09-03T01:58:54.757Z",
+      "data": {
+        "totalSounds": 10,
+        "validUrls": 10,
+        "categories": 5
+      }
+    }
+  ]
+}

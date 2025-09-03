@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:veo2": "node scripts/test-veo2.js"
+    "test:veo2": "node scripts/test-veo2.js",
+    "audio:process": "node scripts/process-audio.js",
+    "audio:convert": "node scripts/audio-pipeline/convert.js",
+    "audio:upload": "node scripts/audio-pipeline/upload.js",
+    "audio:urls": "node scripts/audio-pipeline/url-generator.js",
+    "audio:help": "node scripts/process-audio.js --help"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.864.0",

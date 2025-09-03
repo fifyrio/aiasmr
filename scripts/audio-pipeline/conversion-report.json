@@ -1,0 +1,97 @@
+{
+  "conversion": {
+    "summary": {
+      "timestamp": "2025-09-03T01:58:48.983Z",
+      "totalFiles": 10,
+      "successful": 10,
+      "failed": 0,
+      "totalOriginalSize": 65286343,
+      "totalConvertedSize": 47835991,
+      "totalCompressionRatio": 26.7,
+      "totalProcessingTime": "28.55",
+      "averageProcessingTime": "2.85"
+    },
+    "details": [
+      {
+        "success": true,
+        "name": "Birds",
+        "originalSize": 5091116,
+        "convertedSize": 10411082,
+        "compressionRatio": -104.5,
+        "processingTime": 5.05
+      },
+      {
+        "success": true,
+        "name": "Cafe",
+        "originalSize": 653688,
+        "convertedSize": 333574,
+        "compressionRatio": 49,
+        "processingTime": 0.24
+      },
+      {
+        "success": true,
+        "name": "Fireplace",
+        "originalSize": 9600985,
+        "convertedSize": 10505750,
+        "compressionRatio": -9.4,
+        "processingTime": 8.88
+      },
+      {
+        "success": true,
+        "name": "Focus",
+        "originalSize": 43202304,
+        "convertedSize": 22024944,
+        "compressionRatio": 49,
+        "processingTime": 11.65
+      },
+      {
+        "success": true,
+        "name": "Noise",
+        "originalSize": 343296,
+        "convertedSize": 175122,
+        "compressionRatio": 49,
+        "processingTime": 0.18
+      },
+      {
+        "success": true,
+        "name": "Ocean",
+        "originalSize": 4226403,
+        "convertedSize": 2161185,
+        "compressionRatio": 48.9,
+        "processingTime": 1.3
+      },
+      {
+        "success": true,
+        "name": "Rain",
+        "originalSize": 417168,
+        "convertedSize": 428649,
+        "compressionRatio": -2.8,
+        "processingTime": 0.26
+      },
+      {
+        "success": true,
+        "name": "River",
+        "originalSize": 417168,
+        "convertedSize": 428649,
+        "compressionRatio": -2.8,
+        "processingTime": 0.26
+      },
+      {
+        "success": true,
+        "name": "Thunder",
+        "originalSize": 828440,
+        "convertedSize": 851473,
+        "compressionRatio": -2.8,
+        "processingTime": 0.47
+      },
+      {
+        "success": true,
+        "name": "Wind",
+        "originalSize": 505775,
+        "convertedSize": 515563,
+        "compressionRatio": -1.9,
+        "processingTime": 0.25
+      }
+    ]
+  }
+}

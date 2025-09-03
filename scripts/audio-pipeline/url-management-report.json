@@ -1,0 +1,226 @@
+{
+  "summary": {
+    "timestamp": "2025-09-03T01:58:54.756Z",
+    "totalSounds": 10,
+    "validUrls": 10,
+    "invalidUrls": 0,
+    "categories": 5,
+    "filesGenerated": [
+      "/Users/shenhongmei/Documents/APPDeveloper/aiasmr/src/config/audio-config.json",
+      "/Users/shenhongmei/Documents/APPDeveloper/aiasmr/src/services/audio-service.js",
+      "/Users/shenhongmei/Documents/APPDeveloper/aiasmr/scripts/AUDIO_SERVICE_DOCS.md"
+    ]
+  },
+  "validationResults": {
+    "Birds": {
+      "valid": true,
+      "status": 200
+    },
+    "Cafe": {
+      "valid": true,
+      "status": 200
+    },
+    "Fireplace": {
+      "valid": true,
+      "status": 200
+    },
+    "Focus": {
+      "valid": true,
+      "status": 200
+    },
+    "Noise": {
+      "valid": true,
+      "status": 200
+    },
+    "Ocean": {
+      "valid": true,
+      "status": 200
+    },
+    "Rain": {
+      "valid": true,
+      "status": 200
+    },
+    "River": {
+      "valid": true,
+      "status": 200
+    },
+    "Thunder": {
+      "valid": true,
+      "status": 200
+    },
+    "Wind": {
+      "valid": true,
+      "status": 200
+    }
+  },
+  "audioConfig": {
+    "metadata": {
+      "version": "1.0.0",
+      "generated": "2025-09-03T01:58:54.751Z",
+      "description": "ASMR Music Player Audio Configuration",
+      "totalFiles": 10
+    },
+    "r2Config": {
+      "bucketName": "aiasmr",
+      "baseUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev",
+      "pathPrefix": "sounds/"
+    },
+    "fallback": {
+      "enabled": true,
+      "localPath": "/sounds/",
+      "format": ".mp3"
+    },
+    "sounds": {
+      "Birds": {
+        "name": "Birds",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Birds.aac",
+        "localUrl": "/sounds/Birds.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Cafe": {
+        "name": "Cafe",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Cafe.aac",
+        "localUrl": "/sounds/Cafe.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Fireplace": {
+        "name": "Fireplace",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Fireplace.aac",
+        "localUrl": "/sounds/Fireplace.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Focus": {
+        "name": "Focus",
+        "category": "Ambient",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Focus.aac",
+        "localUrl": "/sounds/Focus.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Noise": {
+        "name": "Noise",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Noise.aac",
+        "localUrl": "/sounds/Noise.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Ocean": {
+        "name": "Ocean",
+        "category": "Relax",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Ocean.aac",
+        "localUrl": "/sounds/Ocean.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Rain": {
+        "name": "Rain",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Rain.aac",
+        "localUrl": "/sounds/Rain.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "River": {
+        "name": "River",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/River.aac",
+        "localUrl": "/sounds/River.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Thunder": {
+        "name": "Thunder",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Thunder.aac",
+        "localUrl": "/sounds/Thunder.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      },
+      "Wind": {
+        "name": "Wind",
+        "category": "Focus",
+        "cloudUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Wind.aac",
+        "localUrl": "/sounds/Wind.mp3",
+        "format": "aac",
+        "quality": "high",
+        "loop": true,
+        "preload": "metadata",
+        "crossOrigin": "anonymous"
+      }
+    },
+    "categories": {
+      "Focus": {
+        "name": "Focus",
+        "sounds": [
+          "Rain",
+          "Thunder",
+          "Wind",
+          "Birds",
+          "Fireplace",
+          "River",
+          "Cafe",
+          "Noise"
+        ],
+        "count": 8
+      },
+      "Relax": {
+        "name": "Relax",
+        "sounds": [
+          "Ocean"
+        ],
+        "count": 1
+      },
+      "Sleep": {
+        "name": "Sleep",
+        "sounds": [],
+        "count": 0
+      },
+      "Nature": {
+        "name": "Nature",
+        "sounds": [],
+        "count": 0
+      },
+      "Ambient": {
+        "name": "Ambient",
+        "sounds": [
+          "Focus"
+        ],
+        "count": 1
+      }
+    }
+  }
+}

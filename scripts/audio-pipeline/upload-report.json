@@ -1,0 +1,160 @@
+{
+  "upload": {
+    "summary": {
+      "timestamp": "2025-09-03T01:58:50.884Z",
+      "totalFiles": 10,
+      "successful": 10,
+      "failed": 0,
+      "skipped": 10,
+      "uploaded": 0,
+      "totalSize": 47835991,
+      "totalUploadTime": 0,
+      "totalProcessTime": "1.90",
+      "averageSpeed": 0,
+      "urls": [
+        {
+          "fileName": "Birds",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Birds.aac"
+        },
+        {
+          "fileName": "Cafe",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Cafe.aac"
+        },
+        {
+          "fileName": "Fireplace",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Fireplace.aac"
+        },
+        {
+          "fileName": "Focus",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Focus.aac"
+        },
+        {
+          "fileName": "Noise",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Noise.aac"
+        },
+        {
+          "fileName": "Ocean",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Ocean.aac"
+        },
+        {
+          "fileName": "Rain",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Rain.aac"
+        },
+        {
+          "fileName": "River",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/River.aac"
+        },
+        {
+          "fileName": "Thunder",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Thunder.aac"
+        },
+        {
+          "fileName": "Wind",
+          "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Wind.aac"
+        }
+      ]
+    },
+    "details": [
+      {
+        "success": true,
+        "fileName": "Birds",
+        "r2Key": "sounds/Birds.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Birds.aac",
+        "size": 10411082,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Cafe",
+        "r2Key": "sounds/Cafe.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Cafe.aac",
+        "size": 333574,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Fireplace",
+        "r2Key": "sounds/Fireplace.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Fireplace.aac",
+        "size": 10505750,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Focus",
+        "r2Key": "sounds/Focus.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Focus.aac",
+        "size": 22024944,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Noise",
+        "r2Key": "sounds/Noise.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Noise.aac",
+        "size": 175122,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Ocean",
+        "r2Key": "sounds/Ocean.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Ocean.aac",
+        "size": 2161185,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Rain",
+        "r2Key": "sounds/Rain.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Rain.aac",
+        "size": 428649,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "River",
+        "r2Key": "sounds/River.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/River.aac",
+        "size": 428649,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Thunder",
+        "r2Key": "sounds/Thunder.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Thunder.aac",
+        "size": 851473,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      },
+      {
+        "success": true,
+        "fileName": "Wind",
+        "r2Key": "sounds/Wind.aac",
+        "publicUrl": "https://pub-a0da9daa5c8a415793ac89043f791f12.r2.dev/sounds/Wind.aac",
+        "size": 515563,
+        "uploadTime": 0,
+        "skipped": true,
+        "message": "File already exists"
+      }
+    ]
+  }
+}
