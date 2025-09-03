@@ -554,30 +554,31 @@ export default function ASMRMusicPage() {
                   )}
                 </button>
                 
-                {/* Audio Wave Visualization */}
-                <AudioWave isPlaying={isPlaying} />
-                
-                {/* Now Playing Text */}
-                {isPlaying && activeSounds.length > 0 && (
-                  <div className="mt-2 text-center">
-                    <p className="text-white/70 text-sm">Now Playing</p>
-                    <p className="text-white text-sm font-medium">
-                      {activeSounds.map((soundId, index) => (
-                        <span key={soundId}>
-                          {(audioConfig.sounds as any)[soundId]?.name || soundId}
-                          {index < activeSounds.length - 1 && ' + '}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                )}
-                
-                {/* Default Focus Playing Text */}
-                {isPlaying && activeSounds.length === 0 && (
-                  <div className="mt-2 text-center">
-                    <p className="text-white/70 text-sm">Now Playing</p>
-                    <p className="text-white text-sm font-medium">Focus</p>
-                  </div>
+                {/* Audio Wave Visualization - Only show when playing */}
+                {isPlaying && (
+                  <>
+                    <AudioWave isPlaying={isPlaying} />
+                    
+                    {/* Now Playing Text */}
+                    {activeSounds.length > 0 ? (
+                      <div className="mt-2 text-center">
+                        <p className="text-white/70 text-sm">Now Playing</p>
+                        <p className="text-white text-sm font-medium">
+                          {activeSounds.map((soundId, index) => (
+                            <span key={soundId}>
+                              {(audioConfig.sounds as any)[soundId]?.name || soundId}
+                              {index < activeSounds.length - 1 && ' + '}
+                            </span>
+                          ))}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="mt-2 text-center">
+                        <p className="text-white/70 text-sm">Now Playing</p>
+                        <p className="text-white text-sm font-medium">Focus</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
