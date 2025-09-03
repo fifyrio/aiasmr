@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { audioService } from '@/services/audio-service';
 import audioConfig from '@/config/audio-config.json';
 
-// Custom CSS for sliders
+// Custom CSS for sliders and audio wave animation
 const sliderStyles = `
   .slider {
     -webkit-appearance: none;
@@ -48,6 +48,77 @@ const sliderStyles = `
     border: 2px solid white;
     cursor: pointer;
     border: none;
+  }
+
+  /* Audio Wave Animation */
+  .audio-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 32px;
+  }
+  
+  .wave-bar {
+    width: 3px;
+    background: linear-gradient(180deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+    border-radius: 2px;
+    animation: waveAnimation 1.5s ease-in-out infinite;
+    transform-origin: center;
+  }
+  
+  .wave-bar:nth-child(1) { 
+    height: 8px; 
+    animation-delay: 0s; 
+  }
+  .wave-bar:nth-child(2) { 
+    height: 16px; 
+    animation-delay: 0.1s; 
+  }
+  .wave-bar:nth-child(3) { 
+    height: 24px; 
+    animation-delay: 0.2s; 
+  }
+  .wave-bar:nth-child(4) { 
+    height: 32px; 
+    animation-delay: 0.3s; 
+  }
+  .wave-bar:nth-child(5) { 
+    height: 20px; 
+    animation-delay: 0.4s; 
+  }
+  .wave-bar:nth-child(6) { 
+    height: 12px; 
+    animation-delay: 0.5s; 
+  }
+  .wave-bar:nth-child(7) { 
+    height: 18px; 
+    animation-delay: 0.6s; 
+  }
+  
+  @keyframes waveAnimation {
+    0%, 100% {
+      transform: scaleY(0.3);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+  
+  .wave-container {
+    transition: all 0.3s ease;
+  }
+  
+  .wave-container.playing {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .wave-container.paused {
+    opacity: 0.3;
+    transform: scale(0.8);
   }
 `;
 
@@ -391,6 +462,23 @@ export default function ASMRMusicPage() {
 
   const currentSounds = soundData[activeCategory as keyof typeof soundData] || soundData.Focus;
 
+  // Audio Wave Animation Component
+  const AudioWave = ({ isPlaying }: { isPlaying: boolean }) => {
+    return (
+      <div className={`wave-container ${isPlaying ? 'playing' : 'paused'}`}>
+        <div className="audio-wave">
+          <div className="wave-bar"></div>
+          <div className="wave-bar"></div>
+          <div className="wave-bar"></div>
+          <div className="wave-bar"></div>
+          <div className="wave-bar"></div>
+          <div className="wave-bar"></div>
+          <div className="wave-bar"></div>
+        </div>
+      </div>
+    );
+  };
+
   // FAQ item component
   const ASMRFAQItem = ({ question, answer, index }: { question: string; answer: string; index: number }) => {
     const isOpen = openFaqItem === index;
@@ -449,21 +537,49 @@ export default function ASMRMusicPage() {
                 Create your ideal soundscape to focus, relax, or sleep.
               </p>
               
-              {/* Play Button */}
-              <button
-                onClick={togglePlay}
-                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full w-16 h-16 flex items-center justify-center transition-all duration-300 mx-auto mb-8 shadow-lg hover:shadow-purple-500/25"
-              >
-                {isPlaying ? (
-                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                  </svg>
-                ) : (
-                  <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
+              {/* Play Button with Audio Wave */}
+              <div className="flex flex-col items-center mb-8">
+                <button
+                  onClick={togglePlay}
+                  className="bg-purple-600 hover:bg-purple-700 text-white rounded-full w-16 h-16 flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-purple-500/25 mb-4"
+                >
+                  {isPlaying ? (
+                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                  ) : (
+                    <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  )}
+                </button>
+                
+                {/* Audio Wave Visualization */}
+                <AudioWave isPlaying={isPlaying} />
+                
+                {/* Now Playing Text */}
+                {isPlaying && activeSounds.length > 0 && (
+                  <div className="mt-2 text-center">
+                    <p className="text-white/70 text-sm">Now Playing</p>
+                    <p className="text-white text-sm font-medium">
+                      {activeSounds.map((soundId, index) => (
+                        <span key={soundId}>
+                          {(audioConfig.sounds as any)[soundId]?.name || soundId}
+                          {index < activeSounds.length - 1 && ' + '}
+                        </span>
+                      ))}
+                    </p>
+                  </div>
                 )}
-              </button>
+                
+                {/* Default Focus Playing Text */}
+                {isPlaying && activeSounds.length === 0 && (
+                  <div className="mt-2 text-center">
+                    <p className="text-white/70 text-sm">Now Playing</p>
+                    <p className="text-white text-sm font-medium">Focus</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
