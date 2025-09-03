@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { audioService } from '@/services/audio-service';
+import audioConfig from '@/config/audio-config.json';
 
 // Custom CSS for sliders
 const sliderStyles = `
@@ -63,99 +65,80 @@ export default function ASMRMusicPage() {
   const [openFaqItem, setOpenFaqItem] = useState<number | null>(null);
   const defaultFocusAudio = useRef<HTMLAudioElement | null>(null);
 
-  // Sound categories
-  const categories = ['Focus', 'Relax', 'Sleep', 'Nature', 'Ambient'];
-
-  // Sound data for each category - memoized to prevent useEffect dependency warning
-  const soundData = useMemo(() => ({
-    Focus: [
-      { id: 'rain', name: 'Rain', icon: '🌧️' },
-      { id: 'thunder', name: 'Thunder', icon: '⛈️' },
-      { id: 'wind', name: 'Wind', icon: '💨' },
-      { id: 'birds', name: 'Birds', icon: '🐦' },
-      { id: 'fireplace', name: 'Fireplace', icon: '🔥' },
-      { id: 'river', name: 'River', icon: '🏞️' },
-      { id: 'cafe', name: 'Cafe', icon: '☕' },
-      { id: 'noise', name: 'Noise', icon: '📻' }
-    ],
-    Relax: [
-      { id: 'ocean', name: 'Ocean', icon: '🌊' },
-      { id: 'forest', name: 'Forest', icon: '🌲' },
-      { id: 'meditation', name: 'Meditation', icon: '🧘' },
-      { id: 'piano', name: 'Piano', icon: '🎹' },
-      { id: 'singing', name: 'Singing', icon: '🎵' },
-      { id: 'bells', name: 'Bells', icon: '🔔' },
-      { id: 'chimes', name: 'Chimes', icon: '🎐' },
-      { id: 'bamboo', name: 'Bamboo', icon: '🎋' }
-    ],
-    Sleep: [
-      { id: 'whitenoise', name: 'White Noise', icon: '⚪' },
-      { id: 'pinknoise', name: 'Pink Noise', icon: '🌸' },
-      { id: 'brownnoise', name: 'Brown Noise', icon: '🟤' },
-      { id: 'lullaby', name: 'Lullaby', icon: '🎵' },
-      { id: 'heartbeat', name: 'Heartbeat', icon: '💓' },
-      { id: 'womb', name: 'Womb', icon: '🤱' },
-      { id: 'clock', name: 'Clock', icon: '⏰' },
-      { id: 'silence', name: 'Silence', icon: '🤫' }
-    ],
-    Nature: [
-      { id: 'forest', name: 'Forest', icon: '🌲' },
-      { id: 'ocean', name: 'Ocean', icon: '🌊' },
-      { id: 'desert', name: 'Desert', icon: '🏜️' },
-      { id: 'mountain', name: 'Mountain', icon: '🏔️' },
-      { id: 'jungle', name: 'Jungle', icon: '🌿' },
-      { id: 'beach', name: 'Beach', icon: '🏖️' },
-      { id: 'meadow', name: 'Meadow', icon: '🌾' },
-      { id: 'cave', name: 'Cave', icon: '🕳️' }
-    ],
-    Ambient: [
-      { id: 'city', name: 'City', icon: '🏙️' },
-      { id: 'library', name: 'Library', icon: '📚' },
-      { id: 'office', name: 'Office', icon: '🏢' },
-      { id: 'train', name: 'Train', icon: '🚂' },
-      { id: 'plane', name: 'Plane', icon: '✈️' },
-      { id: 'underwater', name: 'Underwater', icon: '🐠' },
-      { id: 'space', name: 'Space', icon: '🌌' },
-      { id: 'vintage', name: 'Vintage', icon: '📻' }
-    ]
+  // Icon mapping for sounds
+  const soundIcons = useMemo(() => ({
+    'Birds': '🐦',
+    'Cafe': '☕',
+    'Fireplace': '🔥',
+    'Focus': '🎯',
+    'Noise': '📻',
+    'Ocean': '🌊',
+    'Rain': '🌧️',
+    'River': '🏞️',
+    'Thunder': '⛈️',
+    'Wind': '💨'
   }), []);
 
-  // Preset library data
+  // Get available categories from audio config
+  const categories = useMemo(() => {
+    return Object.keys(audioConfig.categories).filter((category: string) => 
+      (audioConfig.categories as any)[category].count > 0
+    );
+  }, []);
+
+  // Generate sound data from audio configuration
+  const soundData = useMemo(() => {
+    const data: { [key: string]: Array<{ id: string; name: string; icon: string }> } = {};
+    
+    // Build sound data by category using actual configuration
+    categories.forEach((category: string) => {
+      const categoryData = (audioConfig.categories as any)[category];
+      data[category] = categoryData.sounds.map((soundId: string) => ({
+        id: soundId,
+        name: (audioConfig.sounds as any)[soundId]?.name || soundId,
+        icon: (soundIcons as any)[soundId] || '🎵'
+      }));
+    });
+    
+    return data;
+  }, [categories, soundIcons]);
+
+  // Preset library data - using actual available sounds
   const presets = [
     {
-      id: 'forest',
-      name: 'Forest',
-      description: 'Sounds of a peaceful forest',
+      id: 'nature',
+      name: 'Nature Mix',
+      description: 'Sounds of nature for deep focus',
       image: '/images/Forest.png',
-      sounds: ['birds', 'wind', 'forest']
+      sounds: ['Birds', 'Wind', 'River']
     },
     {
       id: 'ocean',
-      name: 'Ocean',
-      description: 'Sounds of the ocean waves',
+      name: 'Ocean Breeze',
+      description: 'Relaxing ocean sounds',
       image: '/images/Ocean.png',
-      sounds: ['ocean', 'wind']
+      sounds: ['Ocean', 'Wind']
     },
     {
-      id: 'city',
-      name: 'City',
-      description: 'Sounds of a bustling city',
+      id: 'cafe',
+      name: 'Cafe Ambience',
+      description: 'Coffee shop atmosphere',
       image: '/images/City.png',
-      sounds: ['city', 'traffic']
+      sounds: ['Cafe', 'Noise']
     },
     {
       id: 'rain',
-      name: 'Rain',
-      description: 'Sounds of gentle rain',
+      name: 'Rainy Day',
+      description: 'Perfect for concentration',
       image: '/images/Rain.png',
-      sounds: ['rain', 'thunder']
+      sounds: ['Rain', 'Thunder']
     },
     {
-      id: 'fire',
-      name: 'Fire',
-      description: 'Sounds of a crackling fire',
+      id: 'fireplace',
+      name: 'Cozy Evening',
+      description: 'Warm fireplace sounds',
       image: '/images/Fire.png',
-      sounds: ['fireplace']
+      sounds: ['Fireplace']
     }
   ];
 
@@ -233,34 +216,88 @@ export default function ASMRMusicPage() {
     }
   ];
 
-  // Initialize audio elements
+  // Initialize audio elements using the audio service
   useEffect(() => {
-    // Initialize default Focus audio
-    if (!defaultFocusAudio.current) {
-      const focusAudio = new Audio('/sounds/Focus.mp3');
-      focusAudio.loop = true;
-      focusAudio.volume = volume / 100;
-      defaultFocusAudio.current = focusAudio;
-    }
-    
-    const allSounds = Object.values(soundData).flat();
-    allSounds.forEach(sound => {
-      if (!audioRefs.current[sound.id]) {
-        // Try WAV first, fallback to MP3
-        const audio = new Audio(`/sounds/${sound.id}.wav`);
-        audio.loop = true;
-        audio.volume = (soundVolumes[sound.id] || 50) / 100 * (volume / 100);
+    const initializeAudio = async () => {
+      try {
+        // Initialize default Focus audio from cloud
+        if (!defaultFocusAudio.current && audioConfig.sounds.Focus) {
+          const focusUrl = audioService.getAudioUrl('Focus');
+          if (focusUrl) {
+            const focusAudio = new Audio(focusUrl);
+            focusAudio.loop = true;
+            focusAudio.volume = volume / 100;
+            focusAudio.crossOrigin = 'anonymous';
+            defaultFocusAudio.current = focusAudio;
+          }
+        }
         
-        // Error handling for missing files
-        audio.onerror = () => {
-          console.log(`WAV not found for ${sound.id}, trying MP3...`);
-          audio.src = `/sounds/${sound.id}.mp3`;
-        };
+        // Initialize all available sounds from configuration
+        const availableSounds = Object.keys(audioConfig.sounds);
         
-        audioRefs.current[sound.id] = audio;
+        for (const soundId of availableSounds) {
+          if (!audioRefs.current[soundId]) {
+            try {
+              const audioUrl = audioService.getAudioUrl(soundId);
+              if (audioUrl) {
+                const audio = new Audio(audioUrl);
+                audio.loop = true;
+                audio.volume = (soundVolumes[soundId] || 50) / 100 * (volume / 100);
+                audio.crossOrigin = 'anonymous';
+                
+                // Enhanced error handling with fallback
+                audio.onerror = () => {
+                  console.warn(`Failed to load cloud audio for ${soundId}, trying fallback...`);
+                  const fallbackUrl = (audioConfig.sounds as any)[soundId]?.localUrl;
+                  if (fallbackUrl) {
+                    audio.src = fallbackUrl;
+                  }
+                };
+                
+                audioRefs.current[soundId] = audio;
+              }
+            } catch (error) {
+              console.error(`Error initializing audio for ${soundId}:`, error);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing audio system:', error);
+      }
+    };
+
+    initializeAudio();
+  }, [soundVolumes, volume]);
+
+  // Preset player functionality
+  const playPreset = (preset: typeof presets[0]) => {
+    // Stop all current sounds
+    Object.keys(audioRefs.current).forEach(soundId => {
+      const audio = audioRefs.current[soundId];
+      if (audio) {
+        audio.pause();
       }
     });
-  }, [soundVolumes, volume, soundData]);
+    if (defaultFocusAudio.current) {
+      defaultFocusAudio.current.pause();
+    }
+    
+    // Set active sounds to preset sounds
+    const availablePresetSounds = preset.sounds.filter((soundId: string) => 
+      (audioConfig.sounds as any)[soundId]
+    );
+    
+    setActiveSounds(availablePresetSounds);
+    setIsPlaying(true);
+    
+    // Play preset sounds
+    availablePresetSounds.forEach(soundId => {
+      const audio = audioRefs.current[soundId];
+      if (audio) {
+        audio.play().catch(console.error);
+      }
+    });
+  };
 
   const toggleSound = (soundId: string) => {
     setActiveSounds(prev => {
@@ -501,18 +538,33 @@ export default function ASMRMusicPage() {
               {presets.map(preset => (
                 <div
                   key={preset.id}
-                  className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer"
+                  onClick={() => playPreset(preset)}
+                  className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 hover:bg-white/20 transition-all duration-300 cursor-pointer group"
                 >
-                  <div className="aspect-video bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+                  <div className="aspect-video bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center relative">
                     <img 
                       src={preset.image} 
                       alt={preset.name}
                       className="w-full h-full object-cover"
                     />
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="bg-purple-600 rounded-full p-3">
+                        <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                   <div className="p-6">
                     <h3 className="text-white font-semibold mb-2">{preset.name}</h3>
-                    <p className="text-white/70 text-sm leading-relaxed">{preset.description}</p>
+                    <p className="text-white/70 text-sm leading-relaxed mb-2">{preset.description}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {preset.sounds.filter((soundId: string) => (audioConfig.sounds as any)[soundId]).map((soundId: string) => (
+                        <span key={soundId} className="text-xs bg-purple-600/20 text-purple-300 px-2 py-1 rounded">
+                          {(soundIcons as any)[soundId]} {(audioConfig.sounds as any)[soundId]?.name}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
