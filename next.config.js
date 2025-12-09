@@ -21,7 +21,7 @@ const nextConfig = {
 
   // 优化产物大小和包导入
   experimental: {
-    optimizeCss: true,
+    // optimizeCss 在某些情况下会导致预渲染错误，暂时禁用
     optimizePackageImports: ['remixicon', 'aos', 'swiper', 'fslightbox-react'],
   },
 
