@@ -8,6 +8,7 @@ import { getTranslations } from 'next-intl/server'
 
 // ISR配置：每小时重新生成页面
 export const revalidate = 3600
+export const dynamic = 'force-static'
 
 // SEO元数据
 export async function generateMetadata({

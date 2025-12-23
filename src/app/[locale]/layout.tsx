@@ -15,6 +15,10 @@ import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.aiasmr.vip'),
   title: 'AIASMR Video - Generate ASMR videos with AI in seconds',
